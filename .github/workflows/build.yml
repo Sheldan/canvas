@@ -15,7 +15,8 @@ jobs:
         with:
           node-version: '21.x'
       - name: Install dependencies
-        run: cd src/ && npm ci && npx vite build
+        run: npm ci && npx vite build
+        working-directory: src
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
