@@ -1,7 +1,9 @@
-module.exports = {
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+    base: './',
     root: 'src',
     build: {
-        base: '/orbits/',
         outDir: '../dist'
     }
-}
+})
