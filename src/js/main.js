@@ -11,7 +11,7 @@ const loader = new FontLoader();
 
 const config = {
     gravitationalConstant: 6.67430e-11,
-    timestep: 1 * 3600,
+    timeStep: 1 * 3600,
     AU: 149_597_870_700,
     lines: true
 }
@@ -54,7 +54,7 @@ function render() {
 }
 
 function act() {
-    spheresAct(spheres.spheres, config.timestep)
+    spheresAct(spheres.spheres, config.timeStep)
     if(config.lines) {
         spheres.spheres.forEach(sphere => {
             if(!(sphere.name in lines)) {
