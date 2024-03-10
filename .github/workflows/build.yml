@@ -18,7 +18,6 @@ jobs:
         run: | 
           npm ci
           npx vite build
-        working-directory: src
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
