@@ -18,7 +18,7 @@ const config = {
     currentTime: 1710633600 // Sun Mar 17 2024 00:00:00 GMT+0000
 }
 
-const maxPoints = 100_000;
+const maxPoints = 50_000;
 const scene = new THREE.Scene();
 const container = document.getElementById( 'container' );
 const currentTimeSpan = document.getElementById( 'currentTime' );
