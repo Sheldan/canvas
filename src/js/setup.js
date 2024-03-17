@@ -24,789 +24,905 @@ function generateBasicPlanet() {
 }
 
 function createSpheres() {
-    const spheres = []
-    //var increment = 2 * Math.PI / config.orbitingSpheres.amount;
-    //var currentArc = 0;
-    //for (var i = 0; i < config.orbitingSpheres.amount; i++) {
-    //    var sphere = {};
-    //    sphere.arc = currentArc;
-    //    sphere.mass = 100;
-    //    sphere.vx = 0;
-    //    sphere.vy = 0;
-    //    sphere.x = mousePos.x + config.orbitingSpheres.spread * Math.cos(sphere.arc);
-    //    sphere.y = mousePos.y + config.orbitingSpheres.spread * Math.sin(sphere.arc);
-    //    spheres.push(sphere);
-    //    currentArc += increment;
-    //}
-    // used is data from 6.6.2017 0:00
-    // commented out is data of 1.1.1970 00:00
+    let spheres = []
+    let sun = generateBasicPlanet();
+    sun.name = 'sun'
+    sun.radius = 695700 * 1000;
+    sun.mass = 1988500 * Math.pow(10, 24);
+    sun.x = -7.577189629307818E-03 * config.AU;
+    sun.y = -3.420054015754318E-03 * config.AU;
+    sun.z = 2.062676576101573E-04 * config.AU;
 
-    const sun = generateBasicPlanet();
-    sun.name = 'sun';
-    sun.color = {
-        r: 0xfc, g: 0x92, b: 0x01
-    };
-    sun.radius = 696342 * 1000;
-    sun.mass = 1.98892 * Math.pow(10, 30);
-    sun.x = 2.850766546470957E-03 * config.AU;
-    sun.y = 4.956963665727667E-03 * config.AU;
-    sun.z = -1.444369038454740E-04 * config.AU;
-    sun.vx = auPerDayToMPerSecond(-4.226964281155967E-06);
-    sun.vy = auPerDayToMPerSecond(6.171203031582879E-06);
-    sun.vz = auPerDayToMPerSecond(9.439081475650780E-08);
+    sun.vx = auPerDayToMPerSecond(5.426634415919629E-06);
+    sun.vy = auPerDayToMPerSecond(-6.475170768987241E-06);
+    sun.vz = auPerDayToMPerSecond(-6.299868606630686E-08);
+    let mercury = generateBasicPlanet();
+    mercury.name = 'mercury'
+    mercury.radius = 2439 * 1000;
+    mercury.mass = 3.302 * Math.pow(10, 23);
+    mercury.x = 8.256843552486795E-02 * config.AU;
+    mercury.y = 2.903037148394667E-01 * config.AU;
+    mercury.z = 1.594120399193073E-02 * config.AU;
 
-    const merkur = generateBasicPlanet();
-    merkur.name = 'mercury';
-    merkur.color = {
-        r: 0x8c, g: 0x86, b: 0x88
-    };
-    merkur.radius = 4879.4 * 1000;
-    merkur.mass = 3.3011 * Math.pow(10, 23);
-    merkur.x = 3.563920740763323E-01 * config.AU;
-    merkur.y = 5.717187678804200E-03 * config.AU;
-    merkur.z = -3.251628630906487E-02 * config.AU;
-    merkur.vx = auPerDayToMPerSecond(-5.498625279495372E-03);
-    merkur.vy = auPerDayToMPerSecond(2.939907891055230E-02);
-    merkur.vz = auPerDayToMPerSecond(2.905916882777411E-03);
-
-    const venus = generateBasicPlanet();
-    venus.name = 'venus';
-    venus.color = {
-        r: 0xde, g: 0xde, b: 0xd6
-    };
-    venus.radius = 12103.6 * 1000;
-    venus.mass = 4.8675 * Math.pow(10, 24);
-    venus.x = 3.714287363667594E-01 * config.AU;
-    venus.y = -6.223065873025234E-01 * config.AU;
-    venus.z = -3.001784089847719E-02 * config.AU;
-    venus.vx = auPerDayToMPerSecond(1.729787164697147E-02);
-    venus.vy = auPerDayToMPerSecond(1.018360946690303E-02);
-    venus.vz = auPerDayToMPerSecond(-8.587441076085737E-04);
-
-    const earth = generateBasicPlanet();
-    earth.name = 'earth';
-    earth.color = {
-        r: 0x37, g: 0x43, b: 0x5d
-    };
-    earth.radius = 12756.32 * 1000;
-    earth.mass = 5.97237 * Math.pow(10, 24);
-    earth.x = -2.553538585508089E-01 * config.AU;
-    earth.y = -9.763411304535361E-01 * config.AU;
-    earth.z = -1.052513783569142E-04 * config.AU;
-    earth.vx = auPerDayToMPerSecond(1.635001487036944E-02);
-    earth.vy = auPerDayToMPerSecond(-4.430797621704561E-03);
-    earth.vz = auPerDayToMPerSecond(-2.101776519643229E-08);
-    earth.link = venus;
-
-    const mars = generateBasicPlanet();
-    mars.name = 'mars';
-    mars.color = {
-        r: 0x8d, g: 0x5f, b: 0x3b
-    };
-    mars.radius = 6792.4 * 1000;
-    mars.mass = 6.4171 * Math.pow(10, 23);
-    mars.x = -2.841551665529732E-01 * config.AU;
-    mars.y = 1.572607284356505E+00 * config.AU;
-    mars.z = 3.975013478435811E-02 * config.AU;
-    mars.vx = auPerDayToMPerSecond(-1.323899118392277E-02);
-    mars.vy = auPerDayToMPerSecond(-1.324079074777860E-03);
-    mars.vz = auPerDayToMPerSecond(2.970233768304195E-04);
-
-    const jupiter = generateBasicPlanet();
-    jupiter.name = 'jupiter';
-    jupiter.color = {
-        r: 0xa7, g: 0x8c, b: 0x77
-    };
-    jupiter.radius = 142984 * 1000;
-    jupiter.mass = 1.8986 * Math.pow(10, 27);
-    jupiter.x = -5.035296751383366E+00 * config.AU;
-    jupiter.y = -2.079389405758550E+00 * config.AU;
-    jupiter.z = 1.212458388046286E-01 * config.AU;
-    jupiter.vx = auPerDayToMPerSecond(2.792948935544964E-03);
-    jupiter.vy = auPerDayToMPerSecond(-6.616959801585691E-03);
-    jupiter.vz = auPerDayToMPerSecond(-3.497144769094454E-05);
-
-    const saturn = generateBasicPlanet();
-    saturn.name = 'saturn';
-    saturn.color = {
-        r: 0xbf, g: 0xaa, b: 0x8d
-    };
-    saturn.radius = 120536 * 1000;
-    saturn.mass = 568.34 * Math.pow(10, 24);
-    saturn.x = -1.052026933700409E+00 * config.AU;
-    saturn.y = -9.994978492278472E+00 * config.AU;
-    saturn.z = 2.156536677039137E-01 * config.AU;
-    saturn.vx = auPerDayToMPerSecond(5.241668381800872E-03);
-    saturn.vy = auPerDayToMPerSecond(-6.012163316021670E-04);
-    saturn.vz = auPerDayToMPerSecond(-1.984428527740341E-04);
-
-    const uranus = generateBasicPlanet();
-    uranus.name = 'uranus';
-    uranus.color = {
-        r: 0xaf, g: 0xd6, b: 0xdb
-    };
-    uranus.radius = 26000 * 1000;
-    uranus.mass = 8.6810 * Math.pow(10, 25);
-    uranus.x = 1.808894256948102E+01 * config.AU;
-    uranus.y = 8.362208575257883E+00 * config.AU;
-    uranus.z = -2.032877227125995E-01 * config.AU;
-    uranus.vx = auPerDayToMPerSecond(-1.679096933165243E-03);
-    uranus.vy = auPerDayToMPerSecond(3.386709085903006E-03);
-    uranus.vz = auPerDayToMPerSecond(3.424044542155598E-05);
-
-    const neptune = generateBasicPlanet();
-    neptune.name = 'neptune';
-    neptune.color = {
-        r: 0x49, g: 0x79, b: 0xfd
-    };
-    neptune.radius = 49528 * 1000;
-    neptune.mass = 1.0243 * Math.pow(10, 26);
-    neptune.x = 2.849083024398218E+01 * config.AU;
-    neptune.y = -9.221924603790701E+00 * config.AU;
-    neptune.z = -4.666923015623424E-01 * config.AU;
-    neptune.vx = auPerDayToMPerSecond(9.453663134275120E-04);
-    neptune.vy = auPerDayToMPerSecond(3.005146529509257E-03);
-    neptune.vz = auPerDayToMPerSecond(-8.341370560621744E-05);
-
-    const moon = generateBasicPlanet();
-    moon.name = 'moon';
-    moon.color = {
-        r: 0x51, g: 0x4d, b: 0x4a
-    };
-    moon.radius = 1738 * 1000;
-    moon.mass = 7.342 * Math.pow(10, 22);
-    moon.labelPosition = -1;
-    moon.isMoon = true;
-    moon.x = -2.575166907126450E-01 * config.AU;
-    moon.y = -9.779348173678579E-01 * config.AU;
-    moon.z = 1.160472013440968E-04 * config.AU;
-    moon.vx = auPerDayToMPerSecond(1.667315603093720E-02);
-    moon.vy = auPerDayToMPerSecond(-4.891796261925801E-03);
-    moon.vz = auPerDayToMPerSecond(1.856253978047449E-05);
-
-    const halley = generateBasicPlanet();
-    halley.name = 'halley';
-    halley.radius = 15.3 * 1000;
-    halley.mass = 2.2 * Math.pow(10, 14);
-    halley.color = {
-        r: 0xff, g: 0xff, b: 0xff
-    };
-    halley.x = -2.045192296457553E+01 * config.AU;
-    halley.y = 2.596711161357241E+01 * config.AU;
-    halley.z = -9.905915924770314E+00 * config.AU;
-    halley.vx = auPerDayToMPerSecond(8.168960874672513E-05);
-    halley.vy = auPerDayToMPerSecond(7.556015133006348E-04);
-    halley.vz = auPerDayToMPerSecond(-1.028407459053017E-04);
-
-    const hale = generateBasicPlanet();
-    hale.name = 'hale-bopp';
-    hale.radius = 60 * 1000;
-    hale.mass = 1.3 * Math.pow(10, 16);
-    hale.color = {
-        r: 0xff, g: 0xff, b: 0xff
-    };
-    hale.x = 3.147734450822550E+00 * config.AU;
-    hale.y = -1.599685285595860E+01 * config.AU;
-    hale.z = -3.631228356343570E+01 * config.AU;
-    hale.vx = auPerDayToMPerSecond(4.025449982019777E-04);
-    hale.vy = auPerDayToMPerSecond(-1.963599893518909E-03);
-    hale.vz = auPerDayToMPerSecond(-3.035345413770859E-03);
-    hale.start = 844819200;
-
-    const pluto = generateBasicPlanet();
-    pluto.name = 'pluto';
-    pluto.radius = 60 * 1000;
-    pluto.mass = 1.303 * Math.pow(10, 22);
-    pluto.color = {
-        r: 0xb2, g: 0xaa, b: 0x9d
-    };
-    pluto.x = 1.014124003514971E+01 * config.AU;
-    pluto.y = -3.175483419042463E+01 * config.AU;
-    pluto.z = 4.645108131789219E-01 * config.AU;
-    pluto.vx = auPerDayToMPerSecond(3.051988326221818E-03);
-    pluto.vy = auPerDayToMPerSecond(3.040012335837204E-04);
-    pluto.vz = auPerDayToMPerSecond(-9.034090662794829E-04);
-
-    const ganymede = generateBasicPlanet();
-    ganymede.name = 'ganymede';
-    ganymede.radius = 2410.3 * 1000;
-    ganymede.mass = 1.4819 * Math.pow(10, 23);
-    ganymede.color = {
-        r: 0x8c, g: 0x7c, b: 0x6c
-    };
-    ganymede.x = -5.038545162105024E+00 * config.AU;
-    ganymede.y = -2.073001766415427E+00 * config.AU;
-    ganymede.z = 1.214444510403471E-01 * config.AU;
-    ganymede.vx = auPerDayToMPerSecond(-2.802399876020957E-03);
-    ganymede.vy = auPerDayToMPerSecond(-9.445554901806956E-03);
-    ganymede.vz = auPerDayToMPerSecond(-2.158793174958044E-04);
-    ganymede.labelPosition = -2;
-    ganymede.isMoon = true;
-
-    const callisto = generateBasicPlanet();
-    callisto.name = 'callisto';
-    callisto.radius = 2410.3 * 1000;
-    callisto.mass = 1.075938 * Math.pow(10, 23);
-    callisto.color = {
-        r: 0xaa, g: 0xa1, b: 0x92
-    };
-    callisto.x = -5.043546136432461E+00 * config.AU;
-    callisto.y = -2.088970248927962E+00 * config.AU;
-    callisto.z = 1.208319766139647E-01 * config.AU;
-    callisto.vx = auPerDayToMPerSecond(6.380893216887173E-03);
-    callisto.vy = auPerDayToMPerSecond(-9.672660525049762E-03);
-    callisto.vz = auPerDayToMPerSecond(-8.392504518043012E-05);
-    callisto.labelPosition = -1;
-    callisto.isMoon = true;
-
-    const io = generateBasicPlanet();
-    io.name = 'io';
-    io.radius = 1821.6 * 1000;
+    mercury.vx = auPerDayToMPerSecond(-3.252787956859120E-02);
+    mercury.vy = auPerDayToMPerSecond(9.311356719181202E-03);
+    mercury.vz = auPerDayToMPerSecond(3.745461829055633E-03);
+    let io = generateBasicPlanet();
+    io.name = 'io'
+    io.radius = 1821 * 1000;
     io.mass = 8.931938 * Math.pow(10, 22);
-    io.color = {
-        r: 0xfc, g: 0xfc, b: 0x8c
-    };
-    io.x = -5.033395021092241E+00 * config.AU;
-    io.y = -2.077324466186377E+00 * config.AU;
-    io.z = 1.213462690631602E-01 * config.AU;
-    io.vx = auPerDayToMPerSecond(-4.588618536023535E-03);
-    io.vy = auPerDayToMPerSecond(2.016343119445475E-04);
-    io.vz = auPerDayToMPerSecond(1.026701978370372E-04);
-    io.labelPosition = 1;
+    io.x = 3.045257656465551E+00 * config.AU;
+    io.y = 3.952988471661503E+00 * config.AU;
+    io.z = -8.467448818258004E-02 * config.AU;
+
+    io.vx = auPerDayToMPerSecond(3.045283490361494E-03);
+    io.vy = auPerDayToMPerSecond(8.249925603587586E-04);
+    io.vz = auPerDayToMPerSecond(1.023891470938110E-04);
     io.isMoon = true;
+    let europa = generateBasicPlanet();
+    europa.name = 'europa'
+    europa.radius = 1560 * 1000;
+    europa.mass = 4.79984 * Math.pow(10, 22);
+    europa.x = 3.044443711206144E+00 * config.AU;
+    europa.y = 3.959541248303633E+00 * config.AU;
+    europa.z = -8.447684744361743E-02 * config.AU;
 
-    const europa = generateBasicPlanet();
-    europa.name = 'europa';
-    europa.radius = 1560.8 * 1000;
-    europa.mass = 4.799844 * Math.pow(10, 22);
-    europa.color = {
-        r: 0xbc, g: 0x94, b: 0x61
-    };
-    europa.x = -5.031515268951983E+00 * config.AU;
-    europa.y = -2.076909297177093E+00 * config.AU;
-    europa.z = 1.214212115321035E-01 * config.AU;
-    europa.vx = auPerDayToMPerSecond(-1.539101640693913E-03);
-    europa.vy = auPerDayToMPerSecond(-5.365528961176684E-05);
-    europa.vz = auPerDayToMPerSecond(1.724641804134938E-04);
-    europa.labelPosition = 2;
+    europa.vx = auPerDayToMPerSecond(-1.317583525972777E-02);
+    europa.vy = auPerDayToMPerSecond(1.354436425512521E-03);
+    europa.vz = auPerDayToMPerSecond(-1.659527091698417E-04);
     europa.isMoon = true;
+    let atlas = generateBasicPlanet();
+    atlas.name = 'atlas'
+    atlas.radius = 20.5 * 1000;
+    atlas.mass = 5.490 * Math.pow(10, 15);
+    atlas.x = 9.118534347237434E+00 * config.AU;
+    atlas.y = -3.325538939241388E+00 * config.AU;
+    atlas.z = -3.048691719235289E-01 * config.AU;
 
-    const amalthea = generateBasicPlanet();
-    amalthea.name = 'amalthea';
-    amalthea.radius = 83 * 1000;
-    amalthea.mass = 2.07 * Math.pow(10, 18);
-    amalthea.color = {
-        r: 0xbc, g: 0x94, b: 0x61
-    };
-    amalthea.x = -5.035827467478209E+00 * config.AU;
-    amalthea.y = -2.080474247795096E+00 * config.AU;
-    amalthea.z = 1.212064605253680E-01 * config.AU;
-    amalthea.vx = auPerDayToMPerSecond(1.657996095034024E-02);
-    amalthea.vy = auPerDayToMPerSecond(-1.334482721782156E-02);
-    amalthea.vz = auPerDayToMPerSecond(-3.237861792010454E-05);
-    amalthea.labelPosition = -2;
-    amalthea.isMoon = true;
+    atlas.vx = auPerDayToMPerSecond(1.029051492291125E-02);
+    atlas.vy = auPerDayToMPerSecond(8.429352222497549E-03);
+    atlas.vz = auPerDayToMPerSecond(-2.672909679782244E-03);
+    atlas.isMoon = true;
+    let cordelia = generateBasicPlanet();
+    cordelia.name = 'cordelia'
+    cordelia.radius = 13 * 1000;
+    cordelia.mass = 6.08 * Math.pow(10, 16);
+    cordelia.x = 1.202610334692100E+01 * config.AU;
+    cordelia.y = 1.546874734925943E+01 * config.AU;
+    cordelia.z = -9.804548174178303E-02 * config.AU;
 
+    cordelia.vx = auPerDayToMPerSecond(2.573488390743416E-03);
+    cordelia.vy = auPerDayToMPerSecond(1.301669442983582E-03);
+    cordelia.vz = auPerDayToMPerSecond(2.397349360385772E-03);
+    cordelia.isMoon = true;
+    let venus = generateBasicPlanet();
+    venus.name = 'venus'
+    venus.radius = 6051 * 1000;
+    venus.mass = 48.685 * Math.pow(10, 23);
+    venus.x = 4.325281397909347E-01 * config.AU;
+    venus.y = -5.826104280739627E-01 * config.AU;
+    venus.z = -3.314247694719329E-02 * config.AU;
 
-    const himalia = generateBasicPlanet();
-    himalia.name = 'himalia';
-    himalia.radius = 65 * 1000;
-    himalia.mass = 6.7 * Math.pow(10, 18);
-    himalia.color = {
-        r: 0xbc, g: 0x94, b: 0x61
-    };
-    himalia.x = -5.072371995431338E+00 * config.AU;
-    himalia.y = -2.156554393560907E+00 * config.AU;
-    himalia.z = 1.050266303022453E-01 * config.AU;
-    himalia.vx = auPerDayToMPerSecond(4.193659551801877E-03);
-    himalia.vy = auPerDayToMPerSecond(-7.097916485160895E-03);
-    himalia.vz = auPerDayToMPerSecond(-8.080490186851024E-04);
-    himalia.labelPosition = 3;
-    himalia.isMoon = true;
+    venus.vx = auPerDayToMPerSecond(1.597624320838894E-02);
+    venus.vy = auPerDayToMPerSecond(1.215882949002014E-02);
+    venus.vz = auPerDayToMPerSecond(-7.545201235617505E-04);
+    let earth = generateBasicPlanet();
+    earth.name = 'earth'
+    earth.radius = 6371 * 1000;
+    earth.mass = 5.97219 * Math.pow(10, 24);
+    earth.x = -1.000794677435791E+00 * config.AU;
+    earth.y = 5.635596743548544E-02 * config.AU;
+    earth.z = 2.061098973285846E-04 * config.AU;
 
-    const elara = generateBasicPlanet();
-    elara.name = 'elara';
-    elara.radius = 40 * 1000;
-    elara.mass = 0.866 * Math.pow(10, 17);
-    elara.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    elara.x = -5.014621175337712E+00 * config.AU;
-    elara.y = -1.969506299365096E+00 * config.AU;
-    elara.z = 1.000787752262437E-01 * config.AU;
-    elara.vx = auPerDayToMPerSecond(1.524659277582985E-03);
-    elara.vy = auPerDayToMPerSecond(-5.651897335601934E-03);
-    elara.vz = auPerDayToMPerSecond(6.325379271585594E-04);
-    elara.labelPosition = -1;
-    elara.isMoon = true;
+    earth.vx = auPerDayToMPerSecond(-1.301287525499020E-03);
+    earth.vy = auPerDayToMPerSecond(-1.724567306734189E-02);
+    earth.vz = auPerDayToMPerSecond(6.335519318540921E-07);
+    let thebe = generateBasicPlanet();
+    thebe.name = 'thebe'
+    thebe.radius = 49 * 1000;
+    thebe.mass = 4.3 * Math.pow(10, 17);
+    thebe.x = 3.047871983659116E+00 * config.AU;
+    thebe.y = 3.955987751997244E+00 * config.AU;
+    thebe.z = -8.452532534290566E-02 * config.AU;
 
+    thebe.vx = auPerDayToMPerSecond(-1.018432666328773E-02);
+    thebe.vy = auPerDayToMPerSecond(1.796035933041871E-02);
+    thebe.vz = auPerDayToMPerSecond(2.696319153737251E-04);
+    thebe.isMoon = true;
+    let juliet = generateBasicPlanet();
+    juliet.name = 'juliet'
+    juliet.radius = 42 * 1000;
+    juliet.mass = 3.871 * Math.pow(10, 17);
+    juliet.x = 1.202595770270131E+01 * config.AU;
+    juliet.y = 1.546868826894987E+01 * config.AU;
+    juliet.z = -9.869282403898311E-02 * config.AU;
 
-    const titan = generateBasicPlanet();
-    titan.name = 'titan';
-    titan.radius = 2575.5 * 1000;
-    titan.mass = 1.3452 * Math.pow(10, 23);
-    titan.color = {
-        r: 0xe1, g: 0xc4, b: 0x71
-    };
-    titan.x = -1.059235736139216E+00 * config.AU;
-    titan.y = -9.998348099923559E+00 * config.AU;
-    titan.z = 2.181058505306635E-01 * config.AU;
-    titan.vx = auPerDayToMPerSecond(6.853875311363549E-03);
-    titan.vy = auPerDayToMPerSecond(-3.075089450150591E-03);
-    titan.vz = auPerDayToMPerSecond(9.166319520668074E-04);
-    titan.labelPosition = 1;
-    titan.isMoon = true;
+    juliet.vx = auPerDayToMPerSecond(-7.344912471338696E-03);
+    juliet.vy = auPerDayToMPerSecond(3.604665312583214E-03);
+    juliet.vz = auPerDayToMPerSecond(3.286878864632380E-03);
+    juliet.isMoon = true;
+    let caliban = generateBasicPlanet();
+    caliban.name = 'caliban'
+    caliban.radius = 30 * 1000;
+    caliban.mass = 2.5 * Math.pow(10, 17);
+    caliban.x = 1.204080648312407E+01 * config.AU;
+    caliban.y = 1.550429541282110E+01 * config.AU;
+    caliban.z = -6.716138276419442E-02 * config.AU;
 
-    const rhea = generateBasicPlanet();
-    rhea.name = 'rhea';
-    rhea.radius = 763.8 * 1000;
-    rhea.mass = 2.306518 * Math.pow(10, 21);
-    rhea.color = {
-        r: 0xa0, g: 0xa0, b: 0xa0
-    };
-    rhea.x = -1.055074560884458E+00 * config.AU;
-    rhea.y = -9.996421454730990E+00 * config.AU;
-    rhea.z = 2.166812678080307E-01 * config.AU;
-    rhea.vx = auPerDayToMPerSecond(7.673546925478059E-03);
-    rhea.vy = auPerDayToMPerSecond(-4.462020056778185E-03);
-    rhea.vz = auPerDayToMPerSecond(1.581959501854047E-03);
-    rhea.labelPosition = -1;
-    rhea.isMoon = true;
+    caliban.vx = auPerDayToMPerSecond(-2.645746781833649E-03);
+    caliban.vy = auPerDayToMPerSecond(2.127813373129267E-03);
+    caliban.vz = auPerDayToMPerSecond(-6.018982978126972E-06);
+    caliban.isMoon = true;
+    let adrastea = generateBasicPlanet();
+    adrastea.name = 'adrastea'
+    adrastea.radius = 49 * 1000;
+    adrastea.mass = 2 * Math.pow(10, 15);
+    adrastea.x = 3.047871983659116E+00 * config.AU;
+    adrastea.y = 3.955987751997244E+00 * config.AU;
+    adrastea.z = -8.452532534290566E-02 * config.AU;
 
-    const dione = generateBasicPlanet();
-    dione.name = 'dione';
-    dione.radius = 561.4 * 1000;
-    dione.mass = 1.095452 * Math.pow(10, 21);
-    dione.color = {
-        r: 0x88, g: 0x88, b: 0x88
-    };
-    dione.x = -1.053520439143635E+00 * config.AU;
-    dione.y = -9.996714998865288E+00 * config.AU;
-    dione.z = 2.167075374650221E-01 * config.AU;
-    dione.vx = auPerDayToMPerSecond(9.877997376464179E-03);
-    dione.vy = auPerDayToMPerSecond(-3.845177625540359E-03);
-    dione.vz = auPerDayToMPerSecond(1.054513452173930E-03);
-    dione.labelPosition = 2;
-    dione.isMoon = true;
+    adrastea.vx = auPerDayToMPerSecond(-1.018432666328773E-02);
+    adrastea.vy = auPerDayToMPerSecond(1.796035933041871E-02);
+    adrastea.vz = auPerDayToMPerSecond(2.696319153737251E-04);
+    adrastea.isMoon = true;
+    let triton = generateBasicPlanet();
+    triton.name = 'triton'
+    triton.radius = 1352 * 1000;
+    triton.mass = 2.1389 * Math.pow(10, 22);
+    triton.x = 2.984843718233790E+01 * config.AU;
+    triton.y = -1.554557354452041E+00 * config.AU;
+    triton.z = -6.575198724321076E-01 * config.AU;
 
+    triton.vx = auPerDayToMPerSecond(-1.129457120285340E-03);
+    triton.vy = auPerDayToMPerSecond(1.114229216436171E-03);
+    triton.vz = auPerDayToMPerSecond(-8.739052649758250E-04);
+    triton.isMoon = true;
+    let puck = generateBasicPlanet();
+    puck.name = 'puck'
+    puck.radius = 77 * 1000;
+    puck.mass = 1.91 * Math.pow(10, 18);
+    puck.x = 1.202637062413694E+01 * config.AU;
+    puck.y = 1.546872473072478E+01 * config.AU;
+    puck.z = -9.779832679706565E-02 * config.AU;
 
-    const tethys = generateBasicPlanet();
-    tethys.name = 'tethys';
-    tethys.radius = 530 * 1000;
-    tethys.mass = 6.17449 * Math.pow(10, 20);
-    tethys.color = {
-        r: 0x9e, g: 0x9e, b: 0x9e
-    };
-    tethys.x = -1.051406948047674E+00 * config.AU;
-    tethys.y = -9.996641909835828E+00 * config.AU;
-    tethys.z = 2.165065785911795E-01 * config.AU;
-    tethys.vx = auPerDayToMPerSecond(1.144551147694172E-02);
-    tethys.vy = auPerDayToMPerSecond(9.911242134414222E-04);
-    tethys.vz = auPerDayToMPerSecond(-1.602194758400593E-03);
-    tethys.labelPosition = 3;
-    tethys.isMoon = true;
+    puck.vx = auPerDayToMPerSecond(1.331228474474280E-03);
+    puck.vy = auPerDayToMPerSecond(1.113049324888690E-03);
+    puck.vz = auPerDayToMPerSecond(-1.093696137724142E-03);
+    puck.isMoon = true;
+    let phobos = generateBasicPlanet();
+    phobos.name = 'phobos'
+    phobos.radius = 13.1 * 1000;
+    phobos.mass = 1.06 * Math.pow(10, 16);
+    phobos.x = 7.587749821255644E-01 * config.AU;
+    phobos.y = -1.175213578909629E+00 * config.AU;
+    phobos.z = -4.316357393458079E-02 * config.AU;
 
-    const iapetus = generateBasicPlanet();
-    iapetus.name = 'iapetus';
-    iapetus.radius = 718 * 1000;
-    iapetus.mass = 1.6 * Math.pow(10, 21);
-    iapetus.color = {
-        r: 0x9e, g: 0x9e, b: 0x9e
-    };
-    iapetus.x = -1.039798919596755E+00 * config.AU;
-    iapetus.y = -1.001499652938064E+01 * config.AU;
-    iapetus.z = 2.178171743017579E-01 * config.AU;
-    iapetus.vx = auPerDayToMPerSecond(6.801709156549861E-03);
-    iapetus.vy = auPerDayToMPerSecond(3.515761783623368E-04);
-    iapetus.vz = auPerDayToMPerSecond(-7.338084599493610E-04);
-    iapetus.labelPosition = -2;
-    iapetus.isMoon = true;
+    phobos.vx = auPerDayToMPerSecond(1.324655707122446E-02);
+    phobos.vy = auPerDayToMPerSecond(9.464334071768891E-03);
+    phobos.vz = auPerDayToMPerSecond(-5.517320223304464E-04);
+    phobos.isMoon = true;
+    let jupiter = generateBasicPlanet();
+    jupiter.name = 'jupiter'
+    jupiter.radius = 69911 * 1000;
+    jupiter.mass = 189818.722 * Math.pow(10, 22);
+    jupiter.x = 3.046434809710982E+00 * config.AU;
+    jupiter.y = 3.955550953658615E+00 * config.AU;
+    jupiter.z = -8.456720104862854E-02 * config.AU;
 
-    const enceladus = generateBasicPlanet();
-    enceladus.name = 'enceladus';
-    enceladus.radius = 252.3 * 1000;
+    jupiter.vx = auPerDayToMPerSecond(-6.062264249802511E-03);
+    jupiter.vy = auPerDayToMPerSecond(4.963087612853924E-03);
+    jupiter.vz = auPerDayToMPerSecond(1.150670851699106E-04);
+    let uranus = generateBasicPlanet();
+    uranus.name = 'uranus'
+    uranus.radius = 25362 * 1000;
+    uranus.mass = 86.813 * Math.pow(10, 24);
+    uranus.x = 1.202621748354450E+01 * config.AU;
+    uranus.y = 1.546867962187796E+01 * config.AU;
+    uranus.z = -9.835098230836571E-02 * config.AU;
+
+    uranus.vx = auPerDayToMPerSecond(-3.134006229451117E-03);
+    uranus.vy = auPerDayToMPerSecond(2.230804226578676E-03);
+    uranus.vz = auPerDayToMPerSecond(4.897818862086593E-05);
+    let neptune = generateBasicPlanet();
+    neptune.name = 'neptune'
+    neptune.radius = 24624 * 1000;
+    neptune.mass = 102.409 * Math.pow(10, 24);
+    neptune.x = 2.984679943709407E+01 * config.AU;
+    neptune.y = -1.554195925006188E+00 * config.AU;
+    neptune.z = -6.558427144952861E-01 * config.AU;
+
+    neptune.vx = auPerDayToMPerSecond(1.425456665284993E-04);
+    neptune.vy = auPerDayToMPerSecond(3.153668198324230E-03);
+    neptune.vz = auPerDayToMPerSecond(-6.811518037631484E-05);
+    let carme = generateBasicPlanet();
+    carme.name = 'carme'
+    carme.radius = 15 * 1000;
+    carme.mass = 1 * Math.pow(10, 20);
+    carme.x = 2.916177478834650E+00 * config.AU;
+    carme.y = 3.845845367673296E+00 * config.AU;
+    carme.z = -8.297430315599200E-02 * config.AU;
+
+    carme.vx = auPerDayToMPerSecond(-6.664537268478028E-03);
+    carme.vy = auPerDayToMPerSecond(6.014717797795010E-03);
+    carme.vz = auPerDayToMPerSecond(4.359279426025868E-04);
+    carme.isMoon = true;
+    let enceladus = generateBasicPlanet();
+    enceladus.name = 'enceladus'
+    enceladus.radius = 252 * 1000;
     enceladus.mass = 10.8 * Math.pow(10, 19);
-    enceladus.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    enceladus.x = -1.053601858437706E+00 * config.AU;
-    enceladus.y = -9.994727231233696E+00 * config.AU;
-    enceladus.z = 2.156744511259708E-01 * config.AU;
-    enceladus.vx = auPerDayToMPerSecond(4.303390304261761E-03);
-    enceladus.vy = auPerDayToMPerSecond(-6.957422208421091E-03);
-    enceladus.vz = auPerDayToMPerSecond(3.222260486782469E-03);
-    enceladus.labelPosition = -3;
+    enceladus.x = 9.116561993831164E+00 * config.AU;
+    enceladus.y = -3.324665071664688E+00 * config.AU;
+    enceladus.z = -3.051359225646553E-01 * config.AU;
+
+    enceladus.vx = auPerDayToMPerSecond(1.296069943361288E-03);
+    enceladus.vy = auPerDayToMPerSecond(-1.197811561701619E-03);
+    enceladus.vz = auPerDayToMPerSecond(3.241855995180087E-03);
     enceladus.isMoon = true;
+    let iapetus = generateBasicPlanet();
+    iapetus.name = 'iapetus'
+    iapetus.radius = 734.5 * 1000;
+    iapetus.mass = 180.5 * Math.pow(10, 19);
+    iapetus.x = 9.139269315119112E+00 * config.AU;
+    iapetus.y = -3.317456228620696E+00 * config.AU;
+    iapetus.z = -3.111767849643537E-01 * config.AU;
 
-    const mimas = generateBasicPlanet();
-    mimas.name = 'mimas';
-    mimas.radius = 198.8 * 1000;
+    iapetus.vx = auPerDayToMPerSecond(9.111717220108410E-04);
+    iapetus.vy = auPerDayToMPerSecond(7.022043133548319E-03);
+    iapetus.vz = auPerDayToMPerSecond(-4.298002569335243E-04);
+    iapetus.isMoon = true;
+    let desdemona = generateBasicPlanet();
+    desdemona.name = 'desdemona'
+    desdemona.radius = 29 * 1000;
+    desdemona.mass = 1.237 * Math.pow(10, 17);
+    desdemona.x = 1.202662622034629E+01 * config.AU;
+    desdemona.y = 1.546858702348570E+01 * config.AU;
+    desdemona.z = -9.836626871092910E-02 * config.AU;
+
+    desdemona.vx = auPerDayToMPerSecond(-3.499326666356157E-03);
+    desdemona.vy = auPerDayToMPerSecond(1.553374241455201E-03);
+    desdemona.vz = auPerDayToMPerSecond(-5.452141228019573E-03);
+    desdemona.isMoon = true;
+    let saturn = generateBasicPlanet();
+    saturn.name = 'saturn'
+    saturn.radius = 58232 * 1000;
+    saturn.mass = 5.6834 * Math.pow(10, 26);
+    saturn.x = 9.118150584141549E+00 * config.AU;
+    saturn.y = -3.324782337333880E+00 * config.AU;
+    saturn.z = -3.052286523649955E-01 * config.AU;
+
+    saturn.vx = auPerDayToMPerSecond(1.599363698277643E-03);
+    saturn.vy = auPerDayToMPerSecond(5.229810209691781E-03);
+    saturn.vz = auPerDayToMPerSecond(-1.543725298817018E-04);
+    let ganymede = generateBasicPlanet();
+    ganymede.name = 'ganymede'
+    ganymede.radius = 2631 * 1000;
+    ganymede.mass = 1.4819 * Math.pow(10, 23);
+    ganymede.x = 3.040690752999485E+00 * config.AU;
+    ganymede.y = 3.959846238659248E+00 * config.AU;
+    ganymede.z = -8.448443227044387E-02 * config.AU;
+
+    ganymede.vx = auPerDayToMPerSecond(-9.818101759238631E-03);
+    ganymede.vy = auPerDayToMPerSecond(-4.992643838538633E-05);
+    ganymede.vz = auPerDayToMPerSecond(-1.290575923375866E-04);
+    ganymede.isMoon = true;
+    let despina = generateBasicPlanet();
+    despina.name = 'despina'
+    despina.radius = 74 * 1000;
+    despina.mass = 0.7 * Math.pow(10, 18);
+    despina.x = 2.984705942278039E+01 * config.AU;
+    despina.y = -1.553963600536985E+00 * config.AU;
+    despina.z = -6.558670225485701E-01 * config.AU;
+
+    despina.vx = auPerDayToMPerSecond(-3.581294949255940E-03);
+    despina.vy = auPerDayToMPerSecond(7.609299679903482E-03);
+    despina.vz = auPerDayToMPerSecond(3.052243842473257E-03);
+    despina.isMoon = true;
+    let galatea = generateBasicPlanet();
+    galatea.name = 'galatea'
+    galatea.radius = 79 * 1000;
+    galatea.mass = 1.94 * Math.pow(10, 18);
+    galatea.x = 2.984704447060084E+01 * config.AU;
+    galatea.y = -1.553864720946944E+00 * config.AU;
+    galatea.z = -6.558258540083790E-01 * config.AU;
+
+    galatea.vx = auPerDayToMPerSecond(-4.223730754134592E-03);
+    galatea.vy = auPerDayToMPerSecond(6.223232901385595E-03);
+    galatea.vz = auPerDayToMPerSecond(2.818951586990335E-03);
+    galatea.isMoon = true;
+    let charon = generateBasicPlanet();
+    charon.name = 'charon'
+    charon.radius = 603.6 * 1000;
+    charon.mass = 1.5 * Math.pow(10, 21);
+    charon.x = 1.741529367905759E+01 * config.AU;
+    charon.y = -3.027564048482287E+01 * config.AU;
+    charon.z = -1.797806956578021E+00 * config.AU;
+
+    charon.vx = auPerDayToMPerSecond(2.842064163949556E-03);
+    charon.vy = auPerDayToMPerSecond(9.601700923545320E-04);
+    charon.vz = auPerDayToMPerSecond(-8.372253291390538E-04);
+    charon.isMoon = true;
+    let pluto = generateBasicPlanet();
+    pluto.name = 'pluto'
+    pluto.radius = 1188 * 1000;
+    pluto.mass = 1.307 * Math.pow(10, 22);
+    pluto.x = 1.741537895557906E+01 * config.AU;
+    pluto.y = -3.027560581102193E+01 * config.AU;
+    pluto.z = -1.797900156927030E+00 * config.AU;
+
+    pluto.vx = auPerDayToMPerSecond(2.798155716989571E-03);
+    pluto.vy = auPerDayToMPerSecond(8.653833258541239E-04);
+    pluto.vz = auPerDayToMPerSecond(-9.126612360528768E-04);
+    let luna = generateBasicPlanet();
+    luna.name = 'luna'
+    luna.radius = 1737 * 1000;
+    luna.mass = 7.349 * Math.pow(10, 22);
+    luna.x = -1.000546038356176E+00 * config.AU;
+    luna.y = 5.892260366779448E-02 * config.AU;
+    luna.z = 4.278288822462746E-04 * config.AU;
+
+    luna.vx = auPerDayToMPerSecond(-1.877379282748234E-03);
+    luna.vy = auPerDayToMPerSecond(-1.715317499262588E-02);
+    luna.vz = auPerDayToMPerSecond(2.298548578778105E-05);
+    luna.isMoon = true;
+    let titan = generateBasicPlanet();
+    titan.name = 'titan'
+    titan.radius = 2575 * 1000;
+    titan.mass = 13455.3 * Math.pow(10, 19);
+    titan.x = 9.123334016260872E+00 * config.AU;
+    titan.y = -3.330365620158605E+00 * config.AU;
+    titan.z = -3.028655717423935E-01 * config.AU;
+
+    titan.vx = auPerDayToMPerSecond(4.050454881945360E-03);
+    titan.vy = auPerDayToMPerSecond(7.077426191998711E-03);
+    titan.vz = auPerDayToMPerSecond(-1.351420352073495E-03);
+    titan.isMoon = true;
+    let janus = generateBasicPlanet();
+    janus.name = 'janus'
+    janus.radius = 101.7 * 1000;
+    janus.mass = 1.89388 * Math.pow(10, 20);
+    janus.x = 9.118039361290178E+00 * config.AU;
+    janus.y = -3.323893879208220E+00 * config.AU;
+    janus.z = -3.056864262747936E-01 * config.AU;
+
+    janus.vx = auPerDayToMPerSecond(-7.531339011246679E-03);
+    janus.vy = auPerDayToMPerSecond(4.679699673390042E-03);
+    janus.vz = auPerDayToMPerSecond(1.011122551127797E-03);
+    janus.isMoon = true;
+    let umbriel = generateBasicPlanet();
+    umbriel.name = 'umbriel'
+    umbriel.radius = 584.7 * 1000;
+    umbriel.mass = 11.7 * Math.pow(10, 20);
+    umbriel.x = 1.202532518411944E+01 * config.AU;
+    umbriel.y = 1.546907893033010E+01 * config.AU;
+    umbriel.z = -9.687309161813763E-02 * config.AU;
+
+    umbriel.vx = auPerDayToMPerSecond(-8.679032302729979E-04);
+    umbriel.vy = auPerDayToMPerSecond(1.937231784644946E-03);
+    umbriel.vz = auPerDayToMPerSecond(1.496123072819717E-03);
+    umbriel.isMoon = true;
+    let miranda = generateBasicPlanet();
+    miranda.name = 'miranda'
+    miranda.radius = 240 * 1000;
+    miranda.mass = 0.6 * Math.pow(10, 20);
+    miranda.x = 1.202539743611257E+01 * config.AU;
+    miranda.y = 1.546892593973828E+01 * config.AU;
+    miranda.z = -9.821514790651621E-02 * config.AU;
+
+    miranda.vx = auPerDayToMPerSecond(-2.344124755714323E-03);
+    miranda.vy = auPerDayToMPerSecond(2.797180764585740E-03);
+    miranda.vz = auPerDayToMPerSecond(3.787635006572353E-03);
+    miranda.isMoon = true;
+    let halimede = generateBasicPlanet();
+    halimede.name = 'halimede'
+    halimede.radius = 1 * 1000;
+    halimede.mass = 0;
+    halimede.x = 2.981900289634169E+01 * config.AU;
+    halimede.y = -1.630653750470919E+00 * config.AU;
+    halimede.z = -7.591588209857619E-01 * config.AU;
+
+    halimede.vx = auPerDayToMPerSecond(-1.087702453053518E-04);
+    halimede.vy = auPerDayToMPerSecond(3.010951166735021E-03);
+    halimede.vz = auPerDayToMPerSecond(3.556083322570714E-05);
+    halimede.isMoon = true;
+    let psamathe = generateBasicPlanet();
+    psamathe.name = 'psamathe'
+    psamathe.radius = 1 * 1000;
+    psamathe.mass = 0;
+    psamathe.x = 3.010738262683592E+01 * config.AU;
+    psamathe.y = -1.536159771937663E+00 * config.AU;
+    psamathe.z = -9.279865111130756E-01 * config.AU;
+
+    psamathe.vx = auPerDayToMPerSecond(2.406962865421947E-04);
+    psamathe.vy = auPerDayToMPerSecond(3.015710859656221E-03);
+    psamathe.vz = auPerDayToMPerSecond(-1.218784528772400E-06);
+    psamathe.isMoon = true;
+    let callisto = generateBasicPlanet();
+    callisto.name = 'callisto'
+    callisto.radius = 2410 * 1000;
+    callisto.mass = 1.075938 * Math.pow(10, 23);
+    callisto.x = 3.058927799792611E+00 * config.AU;
+    callisto.y = 3.955478230808057E+00 * config.AU;
+    callisto.z = -8.440246513596142E-02 * config.AU;
+
+    callisto.vx = auPerDayToMPerSecond(-6.042435408137762E-03);
+    callisto.vy = auPerDayToMPerSecond(9.732422981422247E-03);
+    callisto.vz = auPerDayToMPerSecond(2.647168258816008E-04);
+    callisto.isMoon = true;
+    let himalia = generateBasicPlanet();
+    himalia.name = 'himalia'
+    himalia.radius = 85 * 1000;
+    himalia.mass = 4.2 * Math.pow(10, 18);
+    himalia.x = 2.978809759008421E+00 * config.AU;
+    himalia.y = 3.902594193487404E+00 * config.AU;
+    himalia.z = -8.397638774885566E-02 * config.AU;
+
+    himalia.vx = auPerDayToMPerSecond(-5.294835379310222E-03);
+    himalia.vy = auPerDayToMPerSecond(3.695106852504183E-03);
+    himalia.vz = auPerDayToMPerSecond(-7.299522489118194E-04);
+    himalia.isMoon = true;
+    let sinope = generateBasicPlanet();
+    sinope.name = 'sinope'
+    sinope.radius = 14 * 1000;
+    sinope.mass = 0 * Math.pow(10, 20);
+    sinope.x = 2.985397386434592E+00 * config.AU;
+    sinope.y = 3.842757216977271E+00 * config.AU;
+    sinope.z = -6.917367022274271E-02 * config.AU;
+
+    sinope.vx = auPerDayToMPerSecond(-7.614043393190821E-03);
+    sinope.vy = auPerDayToMPerSecond(5.213325723305759E-03);
+    sinope.vz = auPerDayToMPerSecond(-2.988838328706093E-04);
+    sinope.isMoon = true;
+    let pasiphae = generateBasicPlanet();
+    pasiphae.name = 'pasiphae'
+    pasiphae.radius = 18 * 1000;
+    pasiphae.mass = 0 * Math.pow(10, 20);
+    pasiphae.x = 3.165272281742773E+00 * config.AU;
+    pasiphae.y = 3.776805163586147E+00 * config.AU;
+    pasiphae.z = -5.629304010329678E-03 * config.AU;
+
+    pasiphae.vx = auPerDayToMPerSecond(-6.789197532552247E-03);
+    pasiphae.vy = auPerDayToMPerSecond(4.852928537329076E-03);
+    pasiphae.vz = auPerDayToMPerSecond(-1.775399313307015E-04);
+    pasiphae.isMoon = true;
+    let mars = generateBasicPlanet();
+    mars.name = 'mars'
+    mars.radius = 3389 * 1000;
+    mars.mass = 6.4171 * Math.pow(10, 23);
+    mars.x = 7.587495931229030E-01 * config.AU;
+    mars.y = -1.175159748683399E+00 * config.AU;
+    mars.z = -4.314709603203211E-02 * config.AU;
+
+    mars.vx = auPerDayToMPerSecond(1.224497961584462E-02);
+    mars.vy = auPerDayToMPerSecond(8.851853299264183E-03);
+    mars.vz = auPerDayToMPerSecond(-1.146354735967068E-04);
+    let elara = generateBasicPlanet();
+    elara.name = 'elara'
+    elara.radius = 40 * 1000;
+    elara.mass = 0 * Math.pow(10, 20);
+    elara.x = 3.008425668232462E+00 * config.AU;
+    elara.y = 3.900203151955902E+00 * config.AU;
+    elara.z = -6.619292559552481E-02 * config.AU;
+
+    elara.vx = auPerDayToMPerSecond(-4.470432268443124E-03);
+    elara.vy = auPerDayToMPerSecond(3.938751735259350E-03);
+    elara.vz = auPerDayToMPerSecond(-8.554604307192225E-04);
+    elara.isMoon = true;
+    let amalthea = generateBasicPlanet();
+    amalthea.name = 'amalthea'
+    amalthea.radius = 83 * 1000;
+    amalthea.mass = 2.08 * Math.pow(10, 18);
+    amalthea.x = 3.046641290655529E+00 * config.AU;
+    amalthea.y = 3.954357447783229E+00 * config.AU;
+    amalthea.z = -8.460767904171593E-02 * config.AU;
+
+    amalthea.vx = auPerDayToMPerSecond(9.001207418704407E-03);
+    amalthea.vy = auPerDayToMPerSecond(7.612412064047957E-03);
+    amalthea.vz = auPerDayToMPerSecond(3.296953374510347E-04);
+    amalthea.isMoon = true;
+    let deimos = generateBasicPlanet();
+    deimos.name = 'deimos'
+    deimos.radius = 7.8 * 1000;
+    deimos.mass = 1.8 * Math.pow(10, 20);
+    deimos.x = 7.586813695853714E-01 * config.AU;
+    deimos.y = -1.175024557892905E+00 * config.AU;
+    deimos.z = -4.310652081868782E-02 * config.AU;
+
+    deimos.vx = auPerDayToMPerSecond(1.161784725881572E-02);
+    deimos.vy = auPerDayToMPerSecond(8.460276750599767E-03);
+    deimos.vz = auPerDayToMPerSecond(1.357538511418949E-04);
+    deimos.isMoon = true;
+    let ananke = generateBasicPlanet();
+    ananke.name = 'ananke'
+    ananke.radius = 5 * 1000;
+    ananke.mass = 0 * Math.pow(10, 20);
+    ananke.x = 3.039536181667691E+00 * config.AU;
+    ananke.y = 3.888089352692946E+00 * config.AU;
+    ananke.z = -4.907694464378390E-02 * config.AU;
+
+    ananke.vx = auPerDayToMPerSecond(-4.219786768628813E-03);
+    ananke.vy = auPerDayToMPerSecond(4.635650421033859E-03);
+    ananke.vz = auPerDayToMPerSecond(4.228065394234422E-04);
+    ananke.isMoon = true;
+    let nemausa = generateBasicPlanet();
+    nemausa.name = 'nemausa'
+    nemausa.radius = 10 * 1000;
+    nemausa.mass = 3.9 * Math.pow(10, 18);
+    nemausa.x = 3.136749766039815E+00 * config.AU;
+    nemausa.y = 4.016894650554748E+00 * config.AU;
+    nemausa.z = -1.954667223339418E-02 * config.AU;
+
+    nemausa.vx = auPerDayToMPerSecond(-5.504539933046626E-03);
+    nemausa.vy = auPerDayToMPerSecond(3.501986816851405E-03);
+    nemausa.vz = auPerDayToMPerSecond(2.384281408007608E-04);
+    nemausa.isMoon = true;
+    let dione = generateBasicPlanet();
+    dione.name = 'dione'
+    dione.radius = 562 * 1000;
+    dione.mass = 109.5 * Math.pow(10, 19);
+    dione.x = 9.117127404465210E+00 * config.AU;
+    dione.y = -3.322698706551144E+00 * config.AU;
+    dione.z = -3.062199184382934E-01 * config.AU;
+
+    dione.vx = auPerDayToMPerSecond(-3.674563589879509E-03);
+    dione.vy = auPerDayToMPerSecond(3.363888215183650E-03);
+    dione.vz = auPerDayToMPerSecond(1.334452366458849E-03);
+    dione.isMoon = true;
+    let rhea = generateBasicPlanet();
+    rhea.name = 'rhea'
+    rhea.radius = 764 * 1000;
+    rhea.mass = 230.9 * Math.pow(10, 19);
+    rhea.x = 9.116522871626787E+00 * config.AU;
+    rhea.y = -3.327483102879959E+00 * config.AU;
+    rhea.z = -3.036556265957120E-01 * config.AU;
+
+    rhea.vx = auPerDayToMPerSecond(5.928883173693154E-03);
+    rhea.vy = auPerDayToMPerSecond(3.061832857152611E-03);
+    rhea.vz = auPerDayToMPerSecond(5.923146830644473E-04);
+    rhea.isMoon = true;
+    let oberon = generateBasicPlanet();
+    oberon.name = 'oberon'
+    oberon.radius = 761.4 * 1000;
+    oberon.mass = 30.1 * Math.pow(10, 20);
+    oberon.x = 1.202774090080390E+01 * config.AU;
+    oberon.y = 1.546785180272868E+01 * config.AU;
+    oberon.z = -1.018392875189547E-01 * config.AU;
+
+    oberon.vx = auPerDayToMPerSecond(-4.766206018301265E-03);
+    oberon.vy = auPerDayToMPerSecond(2.476486038123523E-03);
+    oberon.vz = auPerDayToMPerSecond(-7.231913561193932E-04);
+    oberon.isMoon = true;
+    let titania = generateBasicPlanet();
+    titania.name = 'titania'
+    titania.radius = 788.9 * 1000;
+    titania.mass = 35.2 * Math.pow(10, 20);
+    titania.x = 1.202791750655064E+01 * config.AU;
+    titania.y = 1.546863789726340E+01 * config.AU;
+    titania.z = -9.598097723202298E-02 * config.AU;
+
+    titania.vx = auPerDayToMPerSecond(-1.485123797982077E-03);
+    titania.vy = auPerDayToMPerSecond(1.702224740385175E-03);
+    titania.vz = auPerDayToMPerSecond(-1.146919604643178E-03);
+    titania.isMoon = true;
+    let mimas = generateBasicPlanet();
+    mimas.name = 'mimas'
+    mimas.radius = 198 * 1000;
     mimas.mass = 3.7 * Math.pow(10, 19);
-    mimas.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    mimas.x = -1.051097033660872E+00 * config.AU;
-    mimas.y = -9.994279866295026E+00 * config.AU;
-    mimas.z = 2.151842450207443E-01 * config.AU;
-    mimas.vx = auPerDayToMPerSecond(-2.688204734439949E-04);
-    mimas.vy = auPerDayToMPerSecond(5.032177205046214E-03);
-    mimas.vz = auPerDayToMPerSecond(-2.376124558320961E-03);
-    mimas.labelPosition = 4;
+    mimas.x = 9.117323343917123E+00 * config.AU;
+    mimas.y = -3.323956929555484E+00 * config.AU;
+    mimas.z = -3.055642817459119E-01 * config.AU;
+
+    mimas.vx = auPerDayToMPerSecond(-4.522521531066720E-03);
+    mimas.vy = auPerDayToMPerSecond(4.748934929066169E-04);
+    mimas.vz = auPerDayToMPerSecond(3.166393033208495E-03);
     mimas.isMoon = true;
+    let tethys = generateBasicPlanet();
+    tethys.name = 'tethys'
+    tethys.radius = 536 * 1000;
+    tethys.mass = 61.7 * Math.pow(10, 19);
+    tethys.x = 9.116722419138361E+00 * config.AU;
+    tethys.y = -3.323516845337742E+00 * config.AU;
+    tethys.z = -3.057183107899077E-01 * config.AU;
 
-    const hyperion = generateBasicPlanet();
-    hyperion.name = 'hyperion';
-    hyperion.radius = 133 * 1000;
-    hyperion.mass = 1.0 * Math.pow(10, 19);
-    hyperion.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    hyperion.x = -1.060513451833684E+00 * config.AU;
-    hyperion.y = -9.989423421224648E+00 * config.AU;
-    hyperion.z = 2.136932183869545E-01 * config.AU;
-    hyperion.vx = auPerDayToMPerSecond(3.417004051701451E-03);
-    hyperion.vy = auPerDayToMPerSecond(-2.425119131929547E-03);
-    hyperion.vz = auPerDayToMPerSecond(8.905694619089313E-04);
-    hyperion.labelPosition = -4;
-    hyperion.isMoon = true;
+    tethys.vx = auPerDayToMPerSecond(-2.864417221905184E-03);
+    tethys.vy = auPerDayToMPerSecond(1.207375241070822E-03);
+    tethys.vz = auPerDayToMPerSecond(2.465968585698774E-03);
+    tethys.isMoon = true;
+    let prometheus = generateBasicPlanet();
+    prometheus.name = 'prometheus'
+    prometheus.radius = 68.2 * 1000;
+    prometheus.mass = 1.59720 * Math.pow(10, 17);
+    prometheus.x = 9.118423563130170E+00 * config.AU;
+    prometheus.y = -3.324005298405396E+00 * config.AU;
+    prometheus.z = -3.056619939143135E-01 * config.AU;
 
-    const phoebe = generateBasicPlanet();
-    phoebe.name = 'phoebe';
+    prometheus.vx = auPerDayToMPerSecond(-7.506670754814214E-03);
+    prometheus.vy = auPerDayToMPerSecond(8.093300651995105E-03);
+    prometheus.vz = auPerDayToMPerSecond(-7.736294934446884E-04);
+    prometheus.isMoon = true;
+    let lysithea = generateBasicPlanet();
+    lysithea.name = 'lysithea'
+    lysithea.radius = 12 * 1000;
+    lysithea.mass = 0 * Math.pow(10, 20);
+    lysithea.x = 3.076253944710646E+00 * config.AU;
+    lysithea.y = 4.008810470675135E+00 * config.AU;
+    lysithea.z = -5.475052811788562E-02 * config.AU;
+
+    lysithea.vx = auPerDayToMPerSecond(-8.010657045149494E-03);
+    lysithea.vy = auPerDayToMPerSecond(5.919820588786170E-03);
+    lysithea.vz = auPerDayToMPerSecond(1.810699470961628E-04);
+    lysithea.isMoon = true;
+    let telesto = generateBasicPlanet();
+    telesto.name = 'telesto'
+    telesto.radius = 16.3 * 1000;
+    telesto.mass = 4 * Math.pow(10, 15);
+    telesto.x = 9.116285722972307E+00 * config.AU;
+    telesto.y = -3.325236808948388E+00 * config.AU;
+    telesto.z = -3.047849431297088E-01 * config.AU;
+
+    telesto.vx = auPerDayToMPerSecond(3.604104384007613E-03);
+    telesto.vy = auPerDayToMPerSecond(-4.252516972574899E-04);
+    telesto.vz = auPerDayToMPerSecond(2.485726949455874E-03);
+    telesto.isMoon = true;
+    let phoebe = generateBasicPlanet();
+    phoebe.name = 'phoebe'
     phoebe.radius = 106.6 * 1000;
     phoebe.mass = 0.8 * Math.pow(10, 19);
-    phoebe.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    phoebe.x = -9.670449012509922E-01 * config.AU;
-    phoebe.y = -9.960191664237993E+00 * config.AU;
-    phoebe.z = 2.055106996099396E-01 * config.AU;
-    phoebe.vx = auPerDayToMPerSecond(5.471959543691085E-03);
-    phoebe.vy = auPerDayToMPerSecond(-1.494403482116299E-03);
-    phoebe.vz = auPerDayToMPerSecond(-2.291404274739634E-04);
-    phoebe.labelPosition = 5;
+    phoebe.x = 9.037368341125891E+00 * config.AU;
+    phoebe.y = -3.305597970697780E+00 * config.AU;
+    phoebe.z = -2.951256116399240E-01 * config.AU;
+
+    phoebe.vx = auPerDayToMPerSecond(1.660273132631272E-03);
+    phoebe.vy = auPerDayToMPerSecond(6.251781994699702E-03);
+    phoebe.vz = auPerDayToMPerSecond(-1.618918829518826E-04);
     phoebe.isMoon = true;
+    let ariel = generateBasicPlanet();
+    ariel.name = 'ariel'
+    ariel.radius = 581.1 * 1000;
+    ariel.mass = 13.5 * Math.pow(10, 20);
+    ariel.x = 1.202737972503779E+01 * config.AU;
+    ariel.y = 1.546836718257161E+01 * config.AU;
+    ariel.z = -9.877402682790670E-02 * config.AU;
 
-    const janus = generateBasicPlanet();
-    janus.name = 'janus';
-    janus.radius = 97 * 1000;
-    janus.mass = 1.9 * Math.pow(10, 18);
-    janus.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    janus.x = -1.052684481244160E+00 * config.AU;
-    janus.y = -9.995640125766046E+00 * config.AU;
-    janus.z = 2.160643033994895E-01 * config.AU;
-    janus.vx = auPerDayToMPerSecond(1.214894764904130E-02);
-    janus.vy = auPerDayToMPerSecond(-6.082872077136453E-03);
-    janus.vz = auPerDayToMPerSecond(2.034204390268128E-03);
-    janus.labelPosition = -5;
-    janus.isMoon = true;
-
-    const epimetheus = generateBasicPlanet();
-    epimetheus.name = 'epimetheus';
-    epimetheus.radius = 69 * 1000;
-    epimetheus.mass = 5.3 * Math.pow(10, 17);
-    epimetheus.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    epimetheus.x = -1.051734384264487E+00 * config.AU;
-    epimetheus.y = -9.995852716719028E+00 * config.AU;
-    epimetheus.z = 2.160861601481482E-01 * config.AU;
-    epimetheus.vx = auPerDayToMPerSecond(1.395403327303425E-02);
-    epimetheus.vy = auPerDayToMPerSecond(1.339509758459710E-03);
-    epimetheus.vz = auPerDayToMPerSecond(-2.000491791292513E-03);
-    epimetheus.labelPosition = 6;
-    epimetheus.isMoon = true;
-
-    const prometheus = generateBasicPlanet();
-    prometheus.name = 'prometheus';
-    prometheus.radius = 74 * 1000;
-    prometheus.mass = 1.6 * Math.pow(10, 17);
-    prometheus.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    prometheus.x = -1.051117237760504E+00 * config.AU;
-    prometheus.y = -9.995173259076218E+00 * config.AU;
-    prometheus.z = 2.156677382792762E-01 * config.AU;
-    prometheus.vx = auPerDayToMPerSecond(7.058855061642105E-03);
-    prometheus.vy = auPerDayToMPerSecond(7.641250840679847E-03);
-    prometheus.vz = auPerDayToMPerSecond(-4.693622819460640E-03);
-    prometheus.labelPosition = -6;
-    prometheus.isMoon = true;
-
-    const ariel = generateBasicPlanet();
-    ariel.name = 'ariel';
-    ariel.radius = 578.9 * 1000;
-    ariel.mass = 1.353 * Math.pow(10, 21);
-    ariel.color = {
-        r: 0x50, g: 0x50, b: 0x50
-    };
-    ariel.x = 1.808831648922740E+01 * config.AU;
-    ariel.y = 8.362494656383751E+00 * config.AU;
-    ariel.z = -2.022127758948894E-01 * config.AU;
-    ariel.vx = auPerDayToMPerSecond(1.010872487068684E-03);
-    ariel.vy = auPerDayToMPerSecond(3.027332203470256E-03);
-    ariel.vz = auPerDayToMPerSecond(1.694227127778885E-03);
-    ariel.labelPosition = -1;
+    ariel.vx = auPerDayToMPerSecond(-4.260251210208968E-03);
+    ariel.vy = auPerDayToMPerSecond(2.065519117891362E-03);
+    ariel.vz = auPerDayToMPerSecond(-2.923707326959595E-03);
     ariel.isMoon = true;
+    let bianca = generateBasicPlanet();
+    bianca.name = 'bianca'
+    bianca.radius = 22 * 1000;
+    bianca.mass = 6.38 * Math.pow(10, 16);
+    bianca.x = 1.202648777522790E+01 * config.AU;
+    bianca.y = 1.546858176623923E+01 * config.AU;
+    bianca.z = -9.862309231714374E-02 * config.AU;
 
-    const umbriel = generateBasicPlanet();
-    umbriel.name = 'umbriel';
-    umbriel.radius = 584.7 * 1000;
-    umbriel.mass = 1.172 * Math.pow(10, 21);
-    umbriel.color = {
-        r: 0x4f, g: 0x4f, b: 0x4f
-    };
-    umbriel.x = 1.808949676684078E+01 * config.AU;
-    umbriel.y = 8.361857990316176E+00 * config.AU;
-    umbriel.z = -2.049473517530728E-01 * config.AU;
-    umbriel.vx = auPerDayToMPerSecond(-4.169953929379627E-03);
-    umbriel.vy = auPerDayToMPerSecond(3.804026654898817E-03);
-    umbriel.vz = auPerDayToMPerSecond(-8.792604644083235E-04);
-    umbriel.labelPosition = 1;
-    umbriel.isMoon = true;
+    bianca.vx = auPerDayToMPerSecond(-7.138762521980637E-03);
+    bianca.vy = auPerDayToMPerSecond(2.551601467214587E-03);
+    bianca.vz = auPerDayToMPerSecond(-4.025173604140387E-03);
+    bianca.isMoon = true;
+    let hyperion = generateBasicPlanet();
+    hyperion.name = 'hyperion'
+    hyperion.radius = 133 * 1000;
+    hyperion.mass = 5.5510 * Math.pow(10, 18);
+    hyperion.x = 9.116188091280131E+00 * config.AU;
+    hyperion.y = -3.332471755918359E+00 * config.AU;
+    hyperion.z = -3.011858691881938E-01 * config.AU;
 
-    const titania = generateBasicPlanet();
-    titania.name = 'titania';
-    titania.radius = 788.4 * 1000;
-    titania.mass = 3.527 * Math.pow(10, 21);
-    titania.color = {
-        r: 0xa8, g: 0x8c, b: 0x74
-    };
-    titania.x = 1.808624856063241E+01 * config.AU;
-    titania.y = 8.362655567513061E+00 * config.AU;
-    titania.z = -2.043179982156845E-01 * config.AU;
-    titania.vx = auPerDayToMPerSecond(-2.356911137729173E-03);
-    titania.vy = auPerDayToMPerSecond(3.807804255730864E-03);
-    titania.vz = auPerDayToMPerSecond(1.980010647572579E-03);
-    titania.labelPosition = 2;
-    titania.isMoon = true;
+    hyperion.vx = auPerDayToMPerSecond(4.767389908952711E-03);
+    hyperion.vy = auPerDayToMPerSecond(4.596232737187168E-03);
+    hyperion.vz = auPerDayToMPerSecond(-1.353500413823235E-04);
+    hyperion.isMoon = true;
+    let naiad = generateBasicPlanet();
+    naiad.name = 'naiad'
+    naiad.radius = 29 * 1000;
+    naiad.mass = 1.2 * Math.pow(10, 17);
+    naiad.x = 2.984650711660756E+01 * config.AU;
+    naiad.y = -1.554202186686891E+00 * config.AU;
+    naiad.z = -6.557062516792322E-01 * config.AU;
 
-    const oberon = generateBasicPlanet();
-    oberon.name = 'oberon';
-    oberon.radius = 761.4 * 1000;
-    oberon.mass = 3.014 * Math.pow(10, 21);
-    oberon.color = {
-        r: 0x82, g: 0x6f, b: 0x72
-    };
-    oberon.x = 1.808831342811963E+01 * config.AU;
-    oberon.y = 8.361801527957326E+00 * config.AU;
-    oberon.z = -2.071134351399648E-01 * config.AU;
-    oberon.vx = auPerDayToMPerSecond(-3.435128721007176E-03);
-    oberon.vy = auPerDayToMPerSecond(3.803281925853312E-03);
-    oberon.vz = auPerDayToMPerSecond(2.773607861591100E-04);
-    oberon.labelPosition = -2;
-    oberon.isMoon = true;
+    naiad.vx = auPerDayToMPerSecond(-8.690503837244501E-04);
+    naiad.vy = auPerDayToMPerSecond(-3.230347690261108E-03);
+    naiad.vz = auPerDayToMPerSecond(-2.423540870188404E-03);
+    naiad.isMoon = true;
+    let calypso = generateBasicPlanet();
+    calypso.name = 'calypso'
+    calypso.radius = 15.3 * 1000;
+    calypso.mass = 2 * Math.pow(10, 15);
+    calypso.x = 9.118716634390184E+00 * config.AU;
+    calypso.y = -3.323158050794820E+00 * config.AU;
+    calypso.z = -3.061865693061674E-01 * config.AU;
 
-    const miranda = generateBasicPlanet();
-    miranda.name = 'miranda';
-    miranda.radius = 235 * 1000;
-    miranda.mass = 6.59 * Math.pow(10, 19);
-    miranda.color = {
-        r: 0xd3, g: 0xd3, b: 0xd3
-    };
-    miranda.x = 1.808936919466282E+01 * config.AU;
-    miranda.y = 8.362238476399092E+00 * config.AU;
-    miranda.z = -2.025317713000837E-01 * config.AU;
-    miranda.vx = auPerDayToMPerSecond(1.634329599010024E-03);
-    miranda.vy = auPerDayToMPerSecond(2.699427288374493E-03);
-    miranda.vz = auPerDayToMPerSecond(-1.814058428868515E-03);
-    miranda.labelPosition = -3;
-    miranda.isMoon = true;
+    calypso.vx = auPerDayToMPerSecond(-4.645521684230479E-03);
+    calypso.vy = auPerDayToMPerSecond(7.206136486094631E-03);
+    calypso.vz = auPerDayToMPerSecond(-4.964462239664254E-04);
+    calypso.isMoon = true;
+    let helene = generateBasicPlanet();
+    helene.name = 'helene'
+    helene.radius = 16 * 1000;
+    helene.mass = 7.1 * Math.pow(10, 15);
+    helene.x = 9.115637897371668E+00 * config.AU;
+    helene.y = -3.324970169639905E+00 * config.AU;
+    helene.z = -3.048976468431989E-01 * config.AU;
 
-    const portia = generateBasicPlanet();
-    portia.name = 'portia';
-    portia.radius = 55 * 1000;
-    portia.mass = 1.7 * Math.pow(10, 18);
-    portia.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    portia.x = 1.808934165455596E+01 * config.AU;
-    portia.y = 8.362097681542858E+00 * config.AU;
-    portia.z = -2.034540065554775E-01 * config.AU;
-    portia.vx = auPerDayToMPerSecond(-3.740968579934781E-03);
-    portia.vy = auPerDayToMPerSecond(3.137859391220525E-03);
-    portia.vz = auPerDayToMPerSecond(-4.961139296322638E-03);
-    portia.labelPosition = -4;
-    portia.isMoon = true;
+    helene.vx = auPerDayToMPerSecond(2.318280903126200E-03);
+    helene.vy = auPerDayToMPerSecond(1.508400428757107E-04);
+    helene.vz = auPerDayToMPerSecond(2.440316148942578E-03);
+    helene.isMoon = true;
+    let sycorax = generateBasicPlanet();
+    sycorax.name = 'sycorax'
+    sycorax.radius = 60 * 1000;
+    sycorax.mass = 2.5 * Math.pow(10, 18)
+    sycorax.x = 1.210249906437523E+01 * config.AU;
+    sycorax.y = 1.555176592155493E+01 * config.AU;
+    sycorax.z = -1.274650112589694E-01 * config.AU;
 
-
-    const puck = generateBasicPlanet();
-    puck.name = 'puck';
-    puck.radius = 77 * 1000;
-    puck.mass = 2.89 * Math.pow(10, 18);
-    puck.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    puck.x = 1.808889362787234E+01 * config.AU;
-    puck.y = 8.362296493929728E+00 * config.AU;
-    puck.z = -2.027217985017210E-01 * config.AU;
-    puck.vx = auPerDayToMPerSecond(2.932221092639868E-03);
-    puck.vy = auPerDayToMPerSecond(2.425000072226604E-03);
-    puck.vz = auPerDayToMPerSecond(5.828152995737249E-04);
-    puck.labelPosition = -5;
-    puck.isMoon = true;
-
-    const sycorax = generateBasicPlanet();
-    sycorax.name = 'sycorax';
-    sycorax.radius = 75 * 1000;
-    sycorax.mass = 5.4 * Math.pow(10, 18);
-    sycorax.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    sycorax.x = 1.817163460993754E+01 * config.AU;
-    sycorax.y = 8.423724557379055E+00 * config.AU;
-    sycorax.z = -2.378397729538305E-01 * config.AU;
-    sycorax.vx = auPerDayToMPerSecond(-1.632185549719217E-03);
-    sycorax.vy = auPerDayToMPerSecond(3.112812345066134E-03);
-    sycorax.vz = auPerDayToMPerSecond(-1.513934846397857E-05);
-    sycorax.labelPosition = -3;
+    sycorax.vx = auPerDayToMPerSecond(-3.013172891015943E-03);
+    sycorax.vy = auPerDayToMPerSecond(2.021975135357511E-03);
+    sycorax.vz = auPerDayToMPerSecond(-2.646409883723349E-05);
     sycorax.isMoon = true;
+    let epimetheus = generateBasicPlanet();
+    epimetheus.name = 'epimetheus'
+    epimetheus.radius = 64.9 * 1000;
+    epimetheus.mass = 5.25607 * Math.pow(10, 17);
+    epimetheus.x = 9.118051645906791E+00 * config.AU;
+    epimetheus.y = -3.325664511727341E+00 * config.AU;
+    epimetheus.z = -3.047535243492993E-01 * config.AU;
 
+    epimetheus.vx = auPerDayToMPerSecond(1.072261188820617E-02);
+    epimetheus.vy = auPerDayToMPerSecond(4.014653407130849E-03);
+    epimetheus.vz = auPerDayToMPerSecond(-3.436436804558274E-04);
+    epimetheus.isMoon = true;
+    let cressida = generateBasicPlanet();
+    cressida.name = 'cressida'
+    cressida.radius = 33 * 1000;
+    cressida.mass = 1.839 * Math.pow(10, 17);
+    cressida.x = 1.202662010865638E+01 * config.AU;
+    cressida.y = 1.546859640942281E+01 * config.AU;
+    cressida.z = -9.830764112812003E-02 * config.AU;
 
-    const triton = generateBasicPlanet();
-    triton.name = 'triton';
-    triton.radius = 1353.4 * 1000;
-    triton.mass = 2.14 * Math.pow(10, 22);
-    triton.color = {
-        r: 0xaf, g: 0xab, b: 0xe3
-    };
-    triton.x = 2.849129239336669E+01 * config.AU;
-    triton.y = -9.220048242622250E+00 * config.AU;
-    triton.z = -4.653178012067880E-01 * config.AU;
-    triton.vx = auPerDayToMPerSecond(3.083992998882498E-03);
-    triton.vy = auPerDayToMPerSecond(3.426928820254996E-03);
-    triton.vz = auPerDayToMPerSecond(-1.378249499923859E-03);
-    triton.labelPosition = -1;
-    triton.isMoon = true;
+    cressida.vx = auPerDayToMPerSecond(-2.717683447922231E-03);
+    cressida.vy = auPerDayToMPerSecond(1.374142142866634E-03);
+    cressida.vz = auPerDayToMPerSecond(-5.466772386327647E-03);
+    cressida.isMoon = true;
+    let ophelia = generateBasicPlanet();
+    ophelia.name = 'ophelia'
+    ophelia.radius = 16 * 1000;
+    ophelia.mass = 3.57 * Math.pow(10, 16);
+    ophelia.x = 1.202603975356832E+01 * config.AU;
+    ophelia.y = 1.546876026303609E+01 * config.AU;
+    ophelia.z = -9.804550196835013E-02 * config.AU;
 
-    const nereid = generateBasicPlanet();
-    nereid.name = 'nereid';
-    nereid.radius = 340 * 1000;
-    nereid.mass = 3.1 * Math.pow(10, 19);
-    nereid.color = {
-        r: 0x9e, g: 0x9e, b: 0x9e
-    };
-    nereid.x = 2.852086320067444E+01 * config.AU;
-    nereid.y = -9.176009765312331E+00 * config.AU;
-    nereid.z = -4.618798644280574E-01 * config.AU;
-    nereid.vx = auPerDayToMPerSecond(8.366386632931686E-04);
-    nereid.vy = auPerDayToMPerSecond(3.362641681679426E-03);
-    nereid.vz = auPerDayToMPerSecond(-6.593772982006257E-05);
-    nereid.labelPosition = 1;
-    nereid.isMoon = true;
+    ophelia.vx = auPerDayToMPerSecond(1.879668057513447E-03);
+    ophelia.vy = auPerDayToMPerSecond(1.565224735158004E-03);
+    ophelia.vz = auPerDayToMPerSecond(3.210655173342504E-03);
+    ophelia.isMoon = true;
+    let rosalind = generateBasicPlanet();
+    rosalind.name = 'rosalind'
+    rosalind.radius = 29 * 1000;
+    rosalind.mass = 3.57 * Math.pow(10, 16);
+    rosalind.x = 1.202578444052900E+01 * config.AU;
+    rosalind.y = 1.546879251101753E+01 * config.AU;
+    rosalind.z = -9.821703935233636E-02 * config.AU;
 
-    const proteus = generateBasicPlanet();
-    proteus.name = 'proteus';
-    proteus.radius = 240 * 1000;
-    proteus.mass = 5.0 * Math.pow(10, 19);
-    proteus.color = {
-        r: 0x9e, g: 0x9e, b: 0x9e
-    };
-    proteus.x = 2.849018707166290E+01 * config.AU;
-    proteus.y = -9.222363533798239E+00 * config.AU;
-    proteus.z = -4.665845482348466E-01 * config.AU;
-    proteus.vx = auPerDayToMPerSecond(2.902002136722940E-03);
-    proteus.vy = auPerDayToMPerSecond(-3.672610457205283E-04);
-    proteus.vz = auPerDayToMPerSecond(-2.132453046264509E-03);
-    proteus.labelPosition = 2;
+    rosalind.vx = auPerDayToMPerSecond(-1.508074075975188E-03);
+    rosalind.vy = auPerDayToMPerSecond(2.563294993476808E-03);
+    rosalind.vz = auPerDayToMPerSecond(5.039623729870354E-03);
+    rosalind.isMoon = true;
+    let thalassa = generateBasicPlanet();
+    thalassa.name = 'thalassa';
+    thalassa.radius = 40 * 1000;
+    thalassa.mass = 3.54 * Math.pow(10, 17);
+    thalassa.x = 2.984710908428911E+01 * config.AU;
+    thalassa.y = -1.554189140525946E+00 * config.AU;
+    thalassa.z = -6.559686031788007E-01 * config.AU;
+
+    thalassa.vx = auPerDayToMPerSecond(7.753101274291644E-04);
+    thalassa.vy = auPerDayToMPerSecond(9.570229190871334E-03);
+    thalassa.vz = auPerDayToMPerSecond(1.941842126570872E-03);
+    thalassa.isMoon = true;
+    let proteus = generateBasicPlanet();
+    proteus.name = 'proteus'
+    proteus.radius = 208 * 1000;
+    proteus.mass = 1.2 * Math.pow(10, 19);
+    proteus.x = 2.984672491202255E+01 * config.AU;
+    proteus.y = -1.554942183144947E+00 * config.AU;
+    proteus.z = -6.560860409319601E-01 * config.AU;
+
+    proteus.vx = auPerDayToMPerSecond(4.220494466993234E-03);
+    proteus.vy = auPerDayToMPerSecond(3.290330417872553E-03);
+    proteus.vz = auPerDayToMPerSecond(-1.722064545672136E-03);
     proteus.isMoon = true;
+    let nereid = generateBasicPlanet();
+    nereid.name = 'nereid'
+    nereid.radius = 170 * 1000;
+    nereid.mass = 3.57 * Math.pow(10, 19);
+    nereid.x = 2.987809479864142E+01 * config.AU;
+    nereid.y = -1.528809991020147E+00 * config.AU;
+    nereid.z = -6.523441376676499E-01 * config.AU;
 
-    const despina = generateBasicPlanet();
-    despina.name = 'despina';
-    despina.radius = 74 * 1000;
-    despina.mass = 2.1 * Math.pow(10, 18);
-    despina.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    despina.x = 2.849051826897423E+01 * config.AU;
-    despina.y = -9.221864195276225E+00 * config.AU;
-    despina.z = -4.665430551804957E-01 * config.AU;
-    despina.vx = auPerDayToMPerSecond(-9.313272061117672E-04);
-    despina.vy = auPerDayToMPerSecond(-3.151554422448465E-03);
-    despina.vz = auPerDayToMPerSecond(-1.512013981530722E-03);
-    despina.labelPosition = -2;
-    despina.isMoon = true;
+    nereid.vx = auPerDayToMPerSecond(2.310655617242043E-04);
+    nereid.vy = auPerDayToMPerSecond(3.728312106743516E-03);
+    nereid.vz = auPerDayToMPerSecond(-2.458956524212706E-05);
+    nereid.isMoon = true;
+    let portia = generateBasicPlanet();
+    portia.name = 'portia'
+    portia.radius = 55 * 1000;
+    portia.mass = 1.1671 * Math.pow(10, 18);
+    portia.x = 1.202617129102754E+01 * config.AU;
+    portia.y = 1.546874907597843E+01 * config.AU;
+    portia.z = -9.791695668101712E-02 * config.AU;
 
+    portia.vx = auPerDayToMPerSecond(2.122606621761457E-03);
+    portia.vy = auPerDayToMPerSecond(1.184193485732152E-03);
+    portia.vz = auPerDayToMPerSecond(7.839371058933997E-04);
+    portia.isMoon = true;
+    let belinda = generateBasicPlanet();
+    belinda.name = 'belinda'
+    belinda.radius = 34 * 1000;
+    belinda.mass = 1.7 * Math.pow(10, 17);
+    belinda.x = 1.202576121423072E+01 * config.AU;
+    belinda.y = 1.546875137213733E+01 * config.AU;
+    belinda.z = -9.854916531260241E-02 * config.AU;
 
-    const galatea = generateBasicPlanet();
-    galatea.name = 'galatea';
-    galatea.radius = 79 * 1000;
-    galatea.mass = 2.12 * Math.pow(10, 18);
-    galatea.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    galatea.x = 2.849108387897671E+01 * config.AU;
-    galatea.y = -9.221597436980554E+00 * config.AU;
-    galatea.z = -4.666798836162322E-01 * config.AU;
-    galatea.vx = auPerDayToMPerSecond(-3.323050699691327E-03);
-    galatea.vy = auPerDayToMPerSecond(6.204830067197430E-03);
-    galatea.vz = auPerDayToMPerSecond(2.809777100289867E-03);
-    galatea.labelPosition = -3;
-    galatea.isMoon = true;
-
-    const larissa = generateBasicPlanet();
+    belinda.vx = auPerDayToMPerSecond(-4.972483575608170E-03);
+    belinda.vy = auPerDayToMPerSecond(3.271653481497950E-03);
+    belinda.vz = auPerDayToMPerSecond(4.656389925108991E-03);
+    belinda.isMoon = true;
+    let larissa = generateBasicPlanet();
     larissa.name = 'larissa';
-    larissa.radius = 104 * 1000;
-    larissa.mass = 4.2 * Math.pow(10, 18);
-    larissa.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    larissa.x = 2.849046269263223E+01 * config.AU;
-    larissa.y = -9.222248388731462E+00 * config.AU;
-    larissa.z = -4.666582953137307E-01 * config.AU;
-    larissa.vx = auPerDayToMPerSecond(4.045531340065713E-03);
-    larissa.vy = auPerDayToMPerSecond(-7.971376445715124E-04);
-    larissa.vz = auPerDayToMPerSecond(-2.734583790774436E-03);
-    larissa.labelPosition = -4;
+    larissa.radius = 96 * 1000;
+    larissa.mass = 0.5 * Math.pow(10, 18);
+    larissa.x = 2.984653544921244E+01 * config.AU;
+    larissa.y = -1.554611704730008E+00 * config.AU;
+    larissa.z = -6.558817806318490E-01 * config.AU;
+
+    larissa.vx = auPerDayToMPerSecond(4.382094034839831E-03);
+    larissa.vy = auPerDayToMPerSecond(6.967477769164574E-04);
+    larissa.vz = auPerDayToMPerSecond(-2.703295937616484E-03);
     larissa.isMoon = true;
 
 
-    const charon = generateBasicPlanet();
-    charon.name = 'charon';
-    charon.radius = 604 * 1000;
-    charon.mass = 1.586 * Math.pow(10, 21);
-    charon.color = {
-        r: 0xc2, g: 0xb3, b: 0xbb
-    };
-    charon.x = 1.014132655226556E+01 * config.AU;
-    charon.y = -3.175473606652909E+01 * config.AU;
-    charon.z = 4.645172733977511E-01 * config.AU;
-    charon.vx = auPerDayToMPerSecond(3.093514414021587E-03);
-    charon.vy = auPerDayToMPerSecond(2.751871734440477E-04);
-    charon.vz = auPerDayToMPerSecond(-1.021966349205112E-03);
-    charon.labelPosition = -1;
-    charon.isMoon = true;
 
     spheres.push(sun);
-    spheres.push(merkur);
+    spheres.push(mercury);
     spheres.push(venus);
     spheres.push(earth);
-    spheres.push(moon);
+    spheres.push(luna);
     spheres.push(mars);
 
     spheres.push(jupiter);
-    spheres.push(callisto);
-    spheres.push(ganymede);
     spheres.push(io);
     spheres.push(europa);
+    spheres.push(ganymede);
+    spheres.push(callisto);
     // works, but might be irrelevant
     spheres.push(amalthea);
     spheres.push(himalia);
     spheres.push(elara);
+    spheres.push(pasiphae)
+    spheres.push(sinope)
+    spheres.push(lysithea)
+    spheres.push(carme)
+    spheres.push(nemausa)
+    spheres.push(ananke)
+    //spheres.push(thebe)
+    spheres.push(adrastea)
 
     spheres.push(saturn);
-    spheres.push(titan);
-    spheres.push(rhea);
-    spheres.push(dione);
-    spheres.push(tethys);
-    spheres.push(iapetus);
-    spheres.push(enceladus);
     spheres.push(mimas);
+    spheres.push(enceladus);
+    spheres.push(tethys);
+    spheres.push(dione);
+    spheres.push(rhea);
+    spheres.push(titan);
     spheres.push(hyperion);
+    spheres.push(iapetus);
     spheres.push(phoebe);
     spheres.push(janus);
     spheres.push(epimetheus);
+    spheres.push(helene);
+    spheres.push(telesto);
+    spheres.push(calypso);
+    spheres.push(atlas);
     spheres.push(prometheus);
 
     spheres.push(uranus);
@@ -815,33 +931,54 @@ function createSpheres() {
     spheres.push(titania);
     spheres.push(oberon);
     spheres.push(miranda);
+    spheres.push(cordelia);
+    spheres.push(bianca);
+    spheres.push(cressida);
+    spheres.push(desdemona);
+    spheres.push(juliet);
     spheres.push(portia);
+    spheres.push(rosalind);
+    spheres.push(belinda);
     spheres.push(puck);
+    spheres.push(caliban);
     spheres.push(sycorax);
 
     spheres.push(neptune);
     spheres.push(triton);
     spheres.push(nereid);
-    spheres.push(proteus);
-    spheres.push(despina);
+    //spheres.push(naiad); flys away
+    //spheres.push(thalassa); flys away
+    //spheres.push(despina); flys away
     spheres.push(galatea);
     spheres.push(larissa);
+    spheres.push(proteus);
+    spheres.push(halimede);
+    spheres.push(psamathe);
 
 
     spheres.push(pluto);
     spheres.push(charon);
     //
-    spheres.push(halley);
+    //spheres.push(halley);
     // hale-bopp moves inwards...
-    spheres.push(hale);
+    // spheres.push(hale);
 
-    /*
-    spheres.forEach(pl => {
-        pl.x = pl.x / config.AU * 100;
-        pl.y = pl.y / config.AU * 100;
-        pl.z = pl.z / config.AU * 100;
-    })
-    */
+    spheres = spheres.filter(sphere => sphere.mass > 0)
+    const colorCount = spheres.length;
+    const dh = 1 / colorCount;
+    let colors = [];
+    for(let i=0;i< colorCount;i++) {
+        let rgb = HSVtoRGB(dh*i,1,1);
+        colors.push(rgb);
+    }
+    shuffleArray(colors)
+    for (let i = 0; i < spheres.length; i++) {
+        spheres[i].color = {
+            r: colors[i].r,
+            g: colors[i].g,
+            b: colors[i].b
+        }
+    }
 
     return {
         spheres: spheres,
@@ -849,6 +986,39 @@ function createSpheres() {
             sun: sun,
             earth: earth
         }
+    };
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+// https://stackoverflow.com/questions/70420753/getting-multiple-distinct-colors
+function HSVtoRGB(h, s, v) {
+    var r, g, b, i, f, p, q, t;
+    if (arguments.length === 1) {
+        s = h.s, v = h.v, h = h.h;
+    }
+    i = Math.floor(h * 6);
+    f = h * 6 - i;
+    p = v * (1 - s);
+    q = v * (1 - f * s);
+    t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+    }
+    return {
+        r: Math.round(r * 255),
+        g: Math.round(g * 255),
+        b: Math.round(b * 255)
     };
 }
 

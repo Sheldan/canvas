@@ -11,12 +11,30 @@
         .container {
             height: 100%;
         }
+        .timeContainer {
+            position: absolute;
+            color: yellow;
+            top: 50px
+        }
+        .help {
+            position: absolute;
+            color: yellow;
+            top: 65px
+        }
     </style>
 </head>
 <body>
 <script type="module" src="js/main.js"></script>
 <div class="container" id="container">
-
+    <div class="timeContainer">
+        Current time
+        <span id="currentTime"></span>
+    </div>
+    <span class="help">
+        R -> reset to 2024-03-17 <br>
+        F -> reset camera <br>
+        P -> toggle pause
+    </span>
 </div>
 </body>
 </html>
