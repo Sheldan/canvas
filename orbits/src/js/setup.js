@@ -931,7 +931,7 @@ function createSpheres() {
     spheres.push(titania);
     spheres.push(oberon);
     spheres.push(miranda);
-    spheres.push(cordelia);
+    // spheres.push(cordelia); flys away
     spheres.push(bianca);
     spheres.push(cressida);
     spheres.push(desdemona);
