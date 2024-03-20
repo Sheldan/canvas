@@ -29,10 +29,12 @@ jobs:
         with:
           node-version: 21
           cache: 'npm'
-      - name: Install dependencies
+      - name: Orbits Install dependencies
         run: npm install
+        working-directory: orbits
       - name: Build
         run: npx vite build
+        working-directory: orbits
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
