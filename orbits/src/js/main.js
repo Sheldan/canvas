@@ -52,13 +52,25 @@ function animate() {
     render();
 }
 
+function resetTrail(sphereConfig) {
+    const textMesh = sphereConfig.text;
+    sphereConfig.line.material.dispose();
+    sphereConfig.line.geometry.dispose();
+    sphereConfig.group.remove(sphereConfig.line)
+    scene.remove(sphereConfig.line)
+    const labelLine = [];
+    labelLine.push(new THREE.Vector3(textMesh.position.x, textMesh.position.y, textMesh.position.z));
+    labelLine.push(new THREE.Vector3(0, 0, 0));
+    const lineMaterial = new THREE.LineBasicMaterial({color: sphereConfig.sphereColor});
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints(labelLine);
+    sphereConfig.line = new THREE.Line(lineGeometry, lineMaterial);
+    ;
+    sphereConfig.group.add(sphereConfig.line);
+}
+
 function reset() {
     config.currentTime = 1710633600;
     spheres.spheres.forEach(sphereConfig => {
-        sphereConfig.line.material.dispose();
-        sphereConfig.line.geometry.dispose();
-        sphereConfig.group.remove(sphereConfig.line)
-        scene.remove(sphereConfig.line)
         const oldSphere = initialSpheres.spheres.find((sphere => sphere.name === sphereConfig.name))
         sphereConfig.x = oldSphere.x;
         sphereConfig.y = oldSphere.y;
@@ -69,16 +81,9 @@ function reset() {
         sphereConfig.group.position.x = sphereConfig.x;
         sphereConfig.group.position.y = sphereConfig.y;
         sphereConfig.group.position.z = sphereConfig.z;
-        const textMesh = sphereConfig.text;
-        const labelLine = [];
-        labelLine.push(new THREE.Vector3(textMesh.position.x, textMesh.position.y, textMesh.position.z));
-        labelLine.push(new THREE.Vector3(0, 0, 0 ));
-        const lineMaterial = new THREE.LineBasicMaterial({color: sphereConfig.sphereColor});
-        const lineGeometry = new THREE.BufferGeometry().setFromPoints(labelLine);
-        sphereConfig.line = new THREE.Line( lineGeometry, lineMaterial);;
-        sphereConfig.group.add(sphereConfig.line);
-        lines = {}
+        resetTrail(sphereConfig);
     })
+    lines = {}
 
 }
 
@@ -213,17 +218,34 @@ function initScene(font) {
     scene.add(axesHelper)
 }
 
+function setTrailToNow() {
+    spheres.spheres.forEach(sphereConfig => {
+        resetTrail(sphereConfig);
+    })
+    lines = {}
+}
+
 function keyPress(event) {
     let keyCode = event.which;
-    if(keyCode === 82) {
+    if(keyCode === 82) { // R
         reset()
-    } else if(keyCode === 70) {
+    } else if(keyCode === 70) { // F
         resetControls()
-    } else if(keyCode === 80) {
+    } else if(keyCode === 80) { // P
         config.pause = !config.pause;
+    } else if(keyCode === 84) { // T
+        setTrailToNow()
     }
 }
 
 document.addEventListener("keydown", keyPress, false);
 
+
+window.addEventListener("resize", onWindowResize, false);
+
+function onWindowResize(){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+}
 
