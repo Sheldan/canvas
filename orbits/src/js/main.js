@@ -183,13 +183,18 @@ function initScene(font) {
         });
 
         let textDistance = 2;
-        if (sphereConfig.isMoon) {
+        let isMoon = sphereConfig.isMoon;
+        if (isMoon) {
            textDistance = 5;
         }
         const textMesh = new THREE.Mesh(label, material);
         textMesh.scale.set( scale, scale, scale );
         textMesh.position.x = textDistance * objectRadius * (Math.random() * textDistance -  textDistance) + Math.random() * config.AU / 10;
         textMesh.position.y = textDistance * objectRadius * (Math.random() * textDistance -  textDistance) + Math.random() * config.AU / 10;
+        if(!isMoon) {
+            textMesh.renderOrder = 999;
+            textMesh.material.depthTest = false
+        }
         texts.push(textMesh)
         group.add(textMesh);
         sphereConfig.text = textMesh;
