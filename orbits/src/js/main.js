@@ -14,6 +14,7 @@ const config = {
     timeStep: 1 * 3600,
     AU: 149_597_870_700,
     pause: false,
+    displayNames: true,
     lines: true,
     currentTime: 1710633600 // Sun Mar 17 2024 00:00:00 GMT+0000
 }
@@ -201,7 +202,7 @@ function initScene(font) {
         const lineMaterial = new THREE.LineBasicMaterial({color: sphereColor});
         const lineGeometry = new THREE.BufferGeometry().setFromPoints(labelLine);
         const line = new THREE.Line( lineGeometry, lineMaterial);
-        sphereConfig.line = line;
+        sphereConfig.labelLine = line;
         group.add(line);
         scene.add(group);
     })
@@ -225,6 +226,14 @@ function setTrailToNow() {
     lines = {}
 }
 
+function toggleNames() {
+    config.displayNames = !config.displayNames;
+    spheres.spheres.forEach(sphereConfig => {
+        sphereConfig.text.visible = config.displayNames;
+        sphereConfig.labelLine.visible = config.displayNames;
+    })
+}
+
 function keyPress(event) {
     let keyCode = event.which;
     if(keyCode === 82) { // R
@@ -235,6 +244,8 @@ function keyPress(event) {
         config.pause = !config.pause;
     } else if(keyCode === 84) { // T
         setTrailToNow()
+    } else if(keyCode === 78) { // N
+        toggleNames()
     }
 }
 
