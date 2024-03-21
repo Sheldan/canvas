@@ -192,7 +192,7 @@ function createSpheres() {
     let phobos = generateBasicPlanet();
     phobos.name = 'phobos'
     phobos.radius = 13.1 * 1000;
-    phobos.mass = 1.06 * Math.pow(10, 16);
+    phobos.mass = 1.072 * Math.pow(10, 16);
     phobos.x = 7.587749821255644E-01 * config.AU;
     phobos.y = -1.175213578909629E+00 * config.AU;
     phobos.z = -4.316357393458079E-02 * config.AU;
@@ -522,7 +522,7 @@ function createSpheres() {
     let deimos = generateBasicPlanet();
     deimos.name = 'deimos'
     deimos.radius = 7.8 * 1000;
-    deimos.mass = 1.8 * Math.pow(10, 20);
+    deimos.mass = 1.8 * Math.pow(10, 15);
     deimos.x = 7.586813695853714E-01 * config.AU;
     deimos.y = -1.175024557892905E+00 * config.AU;
     deimos.z = -4.310652081868782E-02 * config.AU;
@@ -883,18 +883,23 @@ function createSpheres() {
 
 
     spheres.push(sun);
+
     spheres.push(mercury);
+
     spheres.push(venus);
+
     spheres.push(earth);
     spheres.push(luna);
+
     spheres.push(mars);
+    // spheres.push(phobos); flys away
+    spheres.push(deimos);
 
     spheres.push(jupiter);
     spheres.push(io);
     spheres.push(europa);
     spheres.push(ganymede);
     spheres.push(callisto);
-    // works, but might be irrelevant
     spheres.push(amalthea);
     spheres.push(himalia);
     spheres.push(elara);
@@ -955,12 +960,10 @@ function createSpheres() {
     spheres.push(halimede);
     spheres.push(psamathe);
 
-
     spheres.push(pluto);
     spheres.push(charon);
     //
     //spheres.push(halley);
-    // hale-bopp moves inwards...
     // spheres.push(hale);
 
     spheres = spheres.filter(sphere => sphere.mass > 0)
