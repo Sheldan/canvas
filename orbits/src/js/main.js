@@ -54,19 +54,10 @@ function animate() {
 }
 
 function resetTrail(sphereConfig) {
-    const textMesh = sphereConfig.text;
     sphereConfig.line.material.dispose();
     sphereConfig.line.geometry.dispose();
     sphereConfig.group.remove(sphereConfig.line)
     scene.remove(sphereConfig.line)
-    const labelLine = [];
-    labelLine.push(new THREE.Vector3(textMesh.position.x, textMesh.position.y, textMesh.position.z));
-    labelLine.push(new THREE.Vector3(0, 0, 0));
-    const lineMaterial = new THREE.LineBasicMaterial({color: sphereConfig.sphereColor});
-    const lineGeometry = new THREE.BufferGeometry().setFromPoints(labelLine);
-    sphereConfig.line = new THREE.Line(lineGeometry, lineMaterial);
-    ;
-    sphereConfig.group.add(sphereConfig.line);
 }
 
 function reset() {
@@ -85,7 +76,6 @@ function reset() {
         resetTrail(sphereConfig);
     })
     lines = {}
-
 }
 
 function render() {
@@ -94,9 +84,9 @@ function render() {
 }
 
 function formatDateTime(input) {
-    var epoch = new Date(0);
+    let epoch = new Date(0);
     epoch.setSeconds(parseInt(input));
-    var date = epoch.toISOString();
+    let date = epoch.toISOString();
     date = date.replace('T', ' ');
     return date.split('.')[0].split(' ')[0];
 }
