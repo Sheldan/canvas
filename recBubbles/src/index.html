@@ -1,0 +1,47 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>recBubbles</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html, body, div, canvas {
+            margin: 0;
+            padding: 0;
+        }
+        .controls {
+            position: absolute;
+            top: 0px;
+            right: 10px
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" style="display: block"></canvas>
+
+<div class="controls">
+    <button onclick="toggleControls()" id="hideControlsBtn">Show controls</button>
+    <div id="controls" style="display: none">
+        <label for="maxTries">Maximum amount of tries</label>
+        <input type="number" id="maxTries"> <br>
+        <label for="splitMinSize"><span title="Needs to be more than the minimum circle size">ⓘ</span>Minimum size for circles to get sub circles</label>
+        <input type="number" id="splitMinSize"> <br>
+        <label for="minSize"><span title="Needs to be less than the minimum size for sub circles">ⓘ</span>Minimum size for circles</label>
+        <input type="number" id="minSize"> <br>
+        <label for="funkyMode">Dont clear on restart (behaves very weird)</label>
+        <input type="checkbox" id="funkyMode"> <br>
+        <label for="widthInput">Width</label>
+        <input type="number" id="widthInput">
+        <label for="heightInput">Height</label>
+        <input type="number" id="heightInput">
+        <button onclick="restartBubbles()">Restart</button>
+        <a id="download" onclick="exportCanvas()">Download</a>
+    </div>
+</div>
+<script type="module" src="js/main.js"></script>
+
+
+</body>
+</html>

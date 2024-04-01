@@ -34,6 +34,12 @@ jobs:
       - name: Orbits Build
         run: npx vite build
         working-directory: orbits
+      - name: recBubbles Install dependencies
+        run: npm install
+        working-directory: recBubbles
+      - name: recBubbles Build
+        run: npx vite build
+        working-directory: recBubbles
       - name: Move index
         run: cp index.html dist/
       - name: Setup Pages
