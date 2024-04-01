@@ -73,3 +73,54 @@ export function downloadCanvas(name, canvas_obj, downloadBtn) {
     let blob = dataURLtoBlob(imageData);
     downloadBtn.href = URL.createObjectURL(blob);
 }
+
+export function convertColorToRgbaWithAlphaPlaceholderStyle(color) {
+    color.styleRGBA = 'rgba(%red, %green, %blue, %alpha)'
+        .replace('%red', color.r)
+        .replace('%blue', color.b)
+        .replace('%green', color.g);
+}
+
+export function getMousePos(canvas, evt) {
+    let rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+    };
+}
+
+export function vectorLength(vect) {
+    return Math.sqrt(vect.x * vect.x + vect.y * vect.y);
+}
+
+export function normalizeVector(vect) {
+    let length = vectorLength(vect);
+    vect.x /= length;
+    vect.y /= length;
+    return vect;
+}
+
+export function createVector(tip, shaft) {
+    return {
+        x: tip.x - shaft.x,
+        y: tip.y - shaft.y
+    };
+}
+
+
+export function randomElement(array) {
+    return array[~~(Math.random() * array.length)];
+}
+
+export function roundedRandom(amount) {
+    return ~~(Math.random() * amount);
+}
+
+export function randomNumberButAtLeast(range, min) {
+    let rand = roundedRandom(range);
+    return (rand < min) ? min : rand;
+}
+
+export function getIndexForCoordinate(config, x, y) {
+    return (y * config.size.width + x) * 4;
+}

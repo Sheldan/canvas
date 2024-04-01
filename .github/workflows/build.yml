@@ -40,6 +40,12 @@ jobs:
       - name: recBubbles Build
         run: npx vite build
         working-directory: recBubbles
+      - name: fireWorks Install dependencies
+        run: npm install
+        working-directory: fireWorks
+      - name: fireWorks Build
+        run: npx vite build
+        working-directory: fireWorks
       - name: Move index
         run: cp index.html dist/
       - name: Move overview images
