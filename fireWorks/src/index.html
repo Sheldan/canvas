@@ -11,12 +11,27 @@
             margin: 0;
             padding: 0;
         }
+        html, body { width:100%; height:100%; }
+        canvas { display:block; }
+        /*.controls {
+            position: absolute;
+            top: 0px;
+            right: 10px
+        }*/
     </style>
 </head>
 <body>
-<div id="content">
-    <canvas id="canvas" onmousedown="setPoint(event)"></canvas>
-</div>
+<canvas id="canvas" onmousedown="setPoint(event)"></canvas>
+<!--<div class="controls">
+    <button onclick="toggleControls()" id="hideControlsBtn">Show controls</button>
+    <div id="controls" style="display: none">
+        <label for="maxTries">Flare distance</label>
+        <label for="maxTries">Falling speed</label>
+        <label for="maxTries">First explosion flare count</label>
+        <label for="maxTries">First explosion flare count</label>
+        <label for="maxTries">Second explosion flare count</label>
+    </div>
+</div>-->
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

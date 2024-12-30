@@ -62,6 +62,36 @@ config.fireWorks = {
     rainBowChance: 0.1
 };
 
+let rocketSlopeParameter = {
+    firstPhase: {
+        ageLimit: config.size.height / 5,
+        ageChange: 1
+    },
+    secondPhase: {
+        velocityFactor: 0.99,
+        yVectorChange: config.size.height / 200
+    },
+    thirdPhase: {
+        yVectorChange: config.size.height / 200,
+        xVectorFactor: 1
+    }
+};
+
+let firstFlareParameter = {
+    firstPhase: {
+        ageLimit: config.size.width / 150,
+        ageChange: 1
+    },
+    secondPhase: {
+        velocityFactor: 0.95,
+        yVectorChange: config.size.height / 50
+    },
+    thirdPhase: {
+        yVectorChange: config.size.height / 200,
+        xVectorFactor: 0.95
+    }
+};
+
 let mouseStart;
 let mouseStop;
 
@@ -228,7 +258,9 @@ function startRocket() {
 }
 
 function renderFlareTrailItem(trailItem, flare) {
-    if (trailItem.alpha < config.fireWorks.minAlpha)  return;
+    if (trailItem.alpha < config.fireWorks.minAlpha) {
+        return;
+    }
     let color = randomElement(flare.colorScheme);
     if(flare.isRainbow){
         color = normalFlare(trailItem, flare)
@@ -259,17 +291,19 @@ function setCoordinateToColor(x, y, color) {
 }
 
 function drawRocket(rocket) {
-    for(let rocketTailI = 0; rocketTailI < rocket.trail.length; rocketTailI++){
-        let tailItem = rocket.trail[rocketTailI];
-        if (tailItem.alpha < config.fireWorks.minAlpha)  continue;
+    for(let tailIndex = 0; tailIndex < rocket.trail.length; tailIndex++){
+        let tailItem = rocket.trail[tailIndex];
+        if (tailItem.alpha < config.fireWorks.minAlpha) {
+            continue;
+        }
         rocket.color.alpha = tailItem.alpha;
         setCoordinateToColor(tailItem.x << 0, tailItem.y << 0, rocket.color);
     }
-    for(let mainFlareI = 0; mainFlareI < rocket.flares.length; mainFlareI++){
-        let mainFlare = rocket.flares[mainFlareI];
+    for(let flareIndex = 0; flareIndex < rocket.flares.length; flareIndex++){
+        let mainFlare = rocket.flares[flareIndex];
         mainFlare.colorIndex++;
-        for(let mainFlareTrailI = 0; mainFlareTrailI < mainFlare.trail.length; mainFlareTrailI++){
-            renderFlareTrailItem(mainFlare.trail[mainFlareTrailI], mainFlare)
+        for(let mainFlareTrailIndex = 0; mainFlareTrailIndex < mainFlare.trail.length; mainFlareTrailIndex++){
+            renderFlareTrailItem(mainFlare.trail[mainFlareTrailIndex], mainFlare)
         }
         for(let subFlareI = 0; subFlareI < mainFlare.flares.length; subFlareI++){
             let subFlare = mainFlare.flares[subFlareI];
@@ -291,11 +325,11 @@ function drawRocket(rocket) {
 }
 
 function slopeAct(object, parentObj) {
-    if (object.age < object.parameter.firstPhase.ageLimit) {
+    if (object.age < object.parameter.firstPhase.ageLimit) { // going up fast
         object.x -= object.nVec.x * object.vel;
         object.y -= object.nVec.y * object.vel;
         object.age += object.parameter.firstPhase.ageChange;
-    } else if (object.nVec && object.nVec.y > 0) {
+    } else if (object.nVec && object.nVec.y > 0) { // it seems like the slower going up, after the age has been reached
         object.vel *= object.parameter.secondPhase.velocityFactor;
         object.x -= object.nVec.x * object.vel;
         object.y -= object.nVec.y * object.vel;
@@ -303,7 +337,7 @@ function slopeAct(object, parentObj) {
         // pass by reference
         object.nVec = normalizeVector({x: object.movVec.x, y: object.movVec.y});
         object.age += 2;
-    } else if (object.age < object.maxAge) {
+    } else if (object.age < object.maxAge) { // this and 'slow going up' are alternating at the explosion
         object.vel *= 1.01;
         object.x -= object.nVec.x * object.vel;
         object.y -= object.nVec.y * object.vel;
@@ -313,7 +347,7 @@ function slopeAct(object, parentObj) {
         object.nVec = normalizeVector({x: object.movVec.x, y: object.movVec.y});
         object.age += 2;
     } else if (!object.dead) {
-        if (object.eventFun != undefined) {
+        if (object.eventFun !== undefined) {
             object.eventFun(object, parentObj);
         } else {
             object.dead = true;
@@ -347,7 +381,7 @@ function explodedRocketAct(rocket) {
     let secondFlare = Math.random() < config.fireWorks.secondaryFlare.chance;
     for (let i = 0; i < rocket.flares.length; i++) {
         let flare = rocket.flares[i];
-        if (flare.eventFun == 1) {
+        if (flare.eventFun === 1) {
             if (secondFlare && !rocket.longerFlare) {
                 flare.eventFun = secondaryFlareEvent;
             } else {
@@ -358,18 +392,18 @@ function explodedRocketAct(rocket) {
         for (let subFlareI = 0; subFlareI < flare.flares.length; subFlareI++) {
             let subFlare = flare.flares[subFlareI];
             slopeAct(subFlare, flare);
-            if (subFlare.trail.length == 0) {
+            if (subFlare.trail.length === 0) {
                 flare.flares.splice(subFlareI--, 1);
             }
         }
-        if (flare.trail.length == 0 && flare.flares.length == 0) {
+        if (flare.trail.length === 0 && flare.flares.length === 0) {
             rocket.flares.splice(i--, 1)
         }
     }
 }
 
 function schemesChangeFromTo(choosen, baseScheme, scheme1, scheme2) {
-    return choosen[0] == scheme1[0] && baseScheme[0] == scheme2[0] || choosen[0] == scheme2[0] && baseScheme[0] == scheme1[0]
+    return choosen[0] === scheme1[0] && baseScheme[0] === scheme2[0] || choosen[0] === scheme2[0] && baseScheme[0] === scheme1[0]
 }
 
 function isIllegalColorTransition(chosenScheme, baseScheme) {
@@ -393,36 +427,6 @@ function rocketAct(rocket) {
     slopeAct(rocket, undefined);
     explodedRocketAct(rocket);
 }
-
-let rocketSlopeParameter = {
-    firstPhase: {
-        ageLimit: config.size.height / 5,
-        ageChange: 1
-    },
-    secondPhase: {
-        velocityFactor: 0.99,
-        yVectorChange: config.size.height / 200
-    },
-    thirdPhase: {
-        yVectorChange: config.size.height / 200,
-        xVectorFactor: 1
-    }
-};
-
-let firstFlareParameter = {
-    firstPhase: {
-        ageLimit: config.size.width / 150,
-        ageChange: 1
-    },
-    secondPhase: {
-        velocityFactor: 0.95,
-        yVectorChange: config.size.height / 50
-    },
-    thirdPhase: {
-        yVectorChange: config.size.height / 200,
-        xVectorFactor: 0.95
-    }
-};
 
 function createFlare(object, baseFlare, flareAmount, colorScheme, parameter) {
     for (let i = 0; i < 2 * Math.PI; i += 2 * Math.PI / flareAmount) {
@@ -472,7 +476,7 @@ function updateCanvas() {
         let rocket = rockets[i];
         drawRocket(rocket);
         rocketAct(rocket);
-        if (rocket.flares.length == 0 && rocket.trail.length == 0) {
+        if (rocket.flares.length === 0 && rocket.trail.length === 0) {
             rockets.splice(i--, 1);
         }
     }
@@ -509,10 +513,15 @@ function setTip(event) {
 
 let rainbowColors = [];
 
+function loadControls() {
+
+}
+
 docReady(function() {
     canvas = document.getElementById('canvas')
     canvas.width = config.size.width;
     canvas.height = config.size.height;
+    loadControls();
     ctx = canvas.getContext("2d");
     canvas.style.backgroundColor = 'rgba(0, 0, 0, 1)';
     imageData_default = ctx.getImageData(0, 0, config.size.width, config.size.height);
