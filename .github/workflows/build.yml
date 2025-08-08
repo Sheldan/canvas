@@ -76,6 +76,12 @@ jobs:
       - name: collatzConjecture Build
         run: npx vite build
         working-directory: collatzConjecture
+      - name: dotLines Install dependencies
+        run: npm install
+        working-directory: dotLines
+      - name: dotLines Build
+        run: npx vite build
+        working-directory: dotLines
       - name: Move index
         run: cp index.html dist/
       - name: Move overview images

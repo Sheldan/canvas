@@ -1,0 +1,40 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>dotLines</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html, body, div, canvas {
+            margin: 0;
+            padding: 0;
+        }
+        html, body { width:100%; height:100%; }
+        canvas { display:block; }
+        #pauseBtn {
+            left: 0px;
+        }
+
+        #showAllBtn {
+            left: 60px;
+        }
+
+        #download {
+            left: 150px;
+            top: 3px;
+        }
+    </style>
+</head>
+<body>
+<div id="content">
+    <canvas id="canvas" ></canvas>
+    <input type="button" class="top" id="pauseBtn" value="pause" onclick="pause()" />
+    <input type="button" class="top" id="showAllBtn" value="show all" onclick="showAll()" />
+    <a id="download" class="top" onclick="downloadCanvasCommon('dotLines', canvas)">Download</a> <br>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
