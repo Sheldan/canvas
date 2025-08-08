@@ -25,14 +25,21 @@
             left: 150px;
             top: 3px;
         }
+        .controls {
+            position: absolute;
+            top: 0px;
+            right: 10px
+        }
     </style>
 </head>
 <body>
 <div id="content">
     <canvas id="canvas" ></canvas>
-    <input type="button" class="top" id="pauseBtn" value="pause" onclick="pause()" />
-    <input type="button" class="top" id="showAllBtn" value="show all" onclick="showAll()" />
-    <a id="download" class="top" onclick="downloadCanvasCommon('dotLines', canvas)">Download</a> <br>
+    <div class="controls">
+        <input type="button" class="top" id="pauseBtn" value="pause" onclick="pause()" />
+        <input type="button" class="top" id="showAllBtn" value="show all" onclick="showAll()" />
+        <a id="download" class="top" onclick="downloadCanvasCommon()">Download</a> <br>
+    </div>
 </div>
 
 <script type="module" src="js/main.js"></script>

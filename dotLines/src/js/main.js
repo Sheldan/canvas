@@ -1,5 +1,5 @@
 import {
-    docReady, getMousePos, pointDistance, roundedRandom
+    docReady, downloadCanvasWithoutButton, getMousePos, pointDistance, roundedRandom
 } from "canvas-common";
 
 
@@ -166,4 +166,11 @@ docReady(function () {
 });
 
 
+function downloadCanvasDotlines() {
+    downloadCanvasWithoutButton('dotLines', canvas);
+}
 
+
+window.downloadCanvasCommon = downloadCanvasDotlines;
+window.pause = pause;
+window.showAll = showAll;
