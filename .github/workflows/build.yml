@@ -70,6 +70,12 @@ jobs:
       - name: clusterFilter Build
         run: npx vite build
         working-directory: clusterFilter
+      - name: collatzConjecture Install dependencies
+        run: npm install
+        working-directory: collatzConjecture
+      - name: collatzConjecture Build
+        run: npx vite build
+        working-directory: collatzConjecture
       - name: Move index
         run: cp index.html dist/
       - name: Move overview images

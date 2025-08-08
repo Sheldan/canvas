@@ -4,6 +4,6 @@ export default defineConfig({
     base: './',
     root: 'src',
     build: {
-        outDir: '../../dist/clusterFilter'
+        outDir: '../../dist/collatzConjecture'
     }
 })
