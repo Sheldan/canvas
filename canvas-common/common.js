@@ -142,3 +142,7 @@ export function angleBetweenTwoVectors(vectorA, vectorB){
 export function dotProduct(vector1, vector2) {
     return vector1.x * vector2.x + vector1.y * vector2.y;
 }
+
+export function randomInteger(n){
+    return (Math.random() * n) << 0
+}
