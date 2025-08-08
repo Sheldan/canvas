@@ -360,20 +360,7 @@ function rectsAct(){
     config.balls.balls++;
     toSpawn = config.balls.balls;
     spawnStuff();
-    updateCookieStorage();
     spawning = false;
-}
-
-function updateCookieStorage(){
-    var objectToStore = {
-        rects: rects,
-        balls: config.balls.balls,
-        buffs: buffs,
-        portals: portals
-    };
-
-    Cookies.remove('balls');
-    Cookies.set('balls', objectToStore);
 }
 
 function paintBalls(){
@@ -817,35 +804,7 @@ docReady(function () {
             y: touchEvent.touches[0].clientY - rect.top
         };
     }
-    var possibleBalls = Cookies.getJSON('balls');
-    if(possibleBalls == undefined){
-        spawnStuff();
-    } else {
-        buffs = possibleBalls.buffs;
-        portals = possibleBalls.portals;
-        rects = possibleBalls.rects;
-
-        // it doesnt store functions
-        buffs.forEach(function(buff){
-            buff.effect = function(ball) {
-                reboundBalls += buff.duration;
-            }
-        });
-
-        portals.forEach(function(portal){
-            portal.source.effect = function(ball) {
-                collisionWithPortal(ball, portal.source, portal.target);
-            };
-
-            //blue
-            portal.target.effect = function(ball) {
-                collisionWithPortal(ball, portal.target, portal.source);
-            };
-        });
-
-
-        config.balls.balls = possibleBalls.balls;
-    }
+    spawnStuff();
     requestAnimationFrame(updateCanvas);
 
     setInterval(function(){
