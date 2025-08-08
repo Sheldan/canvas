@@ -74,6 +74,19 @@ export function downloadCanvas(name, canvas_obj, downloadBtn) {
     downloadBtn.href = URL.createObjectURL(blob);
 }
 
+export function downloadCanvasWithoutButton(name, canvas_obj) {
+    var downloadBtn = document.getElementById('download');
+    downloadBtn.download = name + '_' + new Date().toISOString() + '.png';
+
+    var imageData = canvas_obj.toDataURL({
+        format: 'png',
+        multiplier: 4
+    });
+    var blob = dataURLtoBlob(imageData);
+    downloadBtn.href = URL.createObjectURL(blob);
+
+}
+
 export function convertColorToRgbaWithAlphaPlaceholderStyle(color) {
     color.styleRGBA = 'rgba(%red, %green, %blue, %alpha)'
         .replace('%red', color.r)
@@ -152,4 +165,12 @@ export function dotProduct(vector1, vector2) {
 
 export function randomInteger(n){
     return (Math.random() * n) << 0
+}
+
+export function getCoordinates(config, index) {
+    return {x: index / 4 % config.size.width, y: Math.floor((index / 4 / config.size.width))}
+}
+
+export function formatInterval(date1, date2, message) {
+    console.log(message + ((date2 - date1) / 1000));
 }

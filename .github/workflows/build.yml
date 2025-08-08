@@ -64,6 +64,12 @@ jobs:
       - name: circleBs Build
         run: npx vite build
         working-directory: circleBs
+      - name: clusterFilter Install dependencies
+        run: npm install
+        working-directory: clusterFilter
+      - name: clusterFilter Build
+        run: npx vite build
+        working-directory: clusterFilter
       - name: Move index
         run: cp index.html dist/
       - name: Move overview images

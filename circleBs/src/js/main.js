@@ -49,6 +49,8 @@ function update(obj) {
     }
 }
 
+window.reset = reset;
+
 function reset() {
     objects.forEach(function (obj) {
         obj.age = config.circleBs.maxAge;

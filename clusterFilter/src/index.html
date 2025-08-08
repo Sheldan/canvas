@@ -1,0 +1,54 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>clusterFilter</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html, body, div, canvas {
+            margin: 0;
+            padding: 0;
+        }
+        html, body { width:100%; height:100%; }
+        canvas { display:block; }
+        #clearBtn { left: 0px; }
+        #download { left: 60px; top: 3px; }
+        .controls {
+            position: absolute;
+            top: 0px;
+            right: 10px
+        }
+    </style>
+</head>
+<body>
+<div class="controls">
+    A cluster is a point of color in which the pixels might be concentrated in. <br>
+    <label for="equidistant_cluster">Equally distributed colors (random colors if unchecked)</label>
+    <input type="checkbox" checked="checked" id="equidistant_cluster" onchange="setNewClusterFunction()">
+    <input type="button" onclick="generateClusters()" value="Regenerate image">
+    <br>
+    <select id="fun_select" onchange="setNewFunction()">
+        <option value="1">Every pixel moves to half the distance between it and the cluster</option>
+        <option value="2">Sets the pixels to exactly the cluster color (only the cluster colors)</option>
+        <option value="3">Move the pixels in the direction to the cluster (and maybe over it)</option>
+    </select>
+    <span id="dist_wrapper">
+        <label for="dist_in">Distance to move the pixels</label>
+        <input type="number" id="dist_in" onblur="updateConfig()" min="0">
+    </span>
+    <label for="cluster_in">Amount of clusters (essentially amount of colors, bigger number might crash)</label>
+    <input type="number" id="cluster_in" onblur="updateConfig()" min="0">
+    <br>
+    <label for=img_upload>Change image: (bigger images cause slowdown)</label>
+    <input type="file" onchange="previewFile()" id="img_upload"> <a id="download" onclick="downloadCanvas()">Download</a>
+    <br>
+</div>
+<img src="example.jpg" id="src_image">
+<canvas id="src_canvas" style="display: none"></canvas>
+<canvas id="final_canvas"></canvas>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
+

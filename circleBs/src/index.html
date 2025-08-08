@@ -15,13 +15,20 @@
         canvas { display:block; }
         #clearBtn { left: 0px; }
         #download { left: 60px; top: 3px; }
+        .controls {
+            position: absolute;
+            top: 0px;
+            right: 10px
+        }
     </style>
 </head>
 <body>
 <div id="content">
     <canvas id="canvas" ></canvas>
-    <input class="top" id="clearBtn" type="button" onclick="reset()" value="clear" />
-    <a id="download" class="top" onclick="downloadCanvasCommon('circleBs', canvas)">Download</a>
+    <div class="controls">
+        <input class="top" id="clearBtn" type="button" onclick="reset()" value="clear" />
+        <a id="download" class="top" onclick="downloadCanvasCommon('circleBs', canvas)">Download</a>
+    </div>
 </div>
 <script type="module" src="js/main.js"></script>
 </body>
