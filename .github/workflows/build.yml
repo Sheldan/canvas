@@ -58,6 +58,12 @@ jobs:
       - name: bubbles Build
         run: npx vite build
         working-directory: bubbles
+      - name: circleBs Install dependencies
+        run: npm install
+        working-directory: circleBs
+      - name: circleBs Build
+        run: npx vite build
+        working-directory: circleBs
       - name: Move index
         run: cp index.html dist/
       - name: Move overview images

@@ -1,0 +1,29 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>circleBs</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html, body, div, canvas {
+            margin: 0;
+            padding: 0;
+        }
+        html, body { width:100%; height:100%; }
+        canvas { display:block; }
+        #clearBtn { left: 0px; }
+        #download { left: 60px; top: 3px; }
+    </style>
+</head>
+<body>
+<div id="content">
+    <canvas id="canvas" ></canvas>
+    <input class="top" id="clearBtn" type="button" onclick="reset()" value="clear" />
+    <a id="download" class="top" onclick="downloadCanvasCommon('circleBs', canvas)">Download</a>
+</div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
+

@@ -121,6 +121,13 @@ export function randomNumberButAtLeast(range, min) {
     return (rand < min) ? min : rand;
 }
 
+export function randomNumber(n, cur) {
+    var rand = (Math.random() * n) - n / 2;
+    if (cur + rand < 0) return 0;
+    return rand;
+}
+
+
 export function getIndexForCoordinate(config, x, y) {
     return (y * config.size.width + x) * 4;
 }
