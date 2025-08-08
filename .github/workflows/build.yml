@@ -40,6 +40,9 @@ jobs:
       - name: recBubbles Build
         run: npx vite build
         working-directory: recBubbles
+      - name: balls Install dependencies
+        run: npm install
+        working-directory: balls
       - name: balls Build
         run: npx vite build
         working-directory: balls
