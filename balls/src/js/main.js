@@ -28,7 +28,7 @@ var config = {
         resetTapsDecreaseInterval: 2
     },
     general: {
-        fps: 30
+        fps: 60
     }
 };
 
