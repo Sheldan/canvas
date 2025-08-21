@@ -62,6 +62,10 @@ export class World {
         return this._size;
     }
 
+    outside(position: Vector): boolean {
+        return position.x > this.size.x || position.y > this.size.y || position.x < 0 || position.y < 0
+    }
+
     addEnemy(enemy: Enemy) {
         this._enemies.push(enemy)
     }

@@ -1,8 +1,8 @@
 import type {Acting, Placeable, Healthy} from "./interfaces.ts";
 import type {Vector} from "./base.ts";
 import {World} from "./World.ts";
-import {Cooldown, Vector} from "./base.ts";
-import {drawDot, moveInDirectionOf, straightMove} from "./utils.ts";
+import {Cooldown, Point, Vector} from "./base.ts";
+import {drawDot, moveInDirectionOf, straightMove, toRad} from "./utils.ts";
 import {InstanceOfUtils} from "./instance.ts";
 
 export abstract class Projectile implements Acting, Placeable {
@@ -48,7 +48,13 @@ export abstract class Projectile implements Acting, Placeable {
             }
         }
         this.status.collisionCooldown.decreaseCooldown();
+        this.checkWorldBorder()
+    }
 
+    checkWorldBorder() {
+        if(this.world.outside(this.position)) {
+            this.world.removeProjectile(this)
+        }
     }
 
     impactPlayer() {
@@ -97,7 +103,6 @@ export class HomingProjectile extends Projectile {
 
     private target: Placeable;
 
-
     constructor(position: Vector, speedVec: Vector, stats: ProjectileStats, world: World, parent: any, target: Placeable) {
         super(position, speedVec, stats, world, parent);
         this.target = target;
@@ -112,12 +117,22 @@ export class HomingProjectile extends Projectile {
                     return;
                 }
                 let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position)
+
                 if (closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
-                    this.target = closestTargetTo[1]!;
+                    let dir = Vector.createVector(this.target.getPosition(), this.position).normalize()
+                    let newTargetPosition = closestTargetTo[1]!.getPosition();
+                    let newDir = Vector.createVector(newTargetPosition, this.position).normalize()
+                    let newDirAngle = newDir.angleTo(dir);
+                    if(Math.abs(newDirAngle) < toRad(60)) {
+                        this.target = closestTargetTo[1]!;
+                    } else {
+                        this.target = new Point(this.target.getPosition().add(dir.normalize().multiply(Math.max(this.world.size.x, this.world.size.y))))
+                    }
                 }
             }
         }
         this.position = moveInDirectionOf(this.position, this.target.getPosition(), this.speedVec.vecLength())
+        this.checkWorldBorder()
     }
 
     static createHomingProjectile(world: World, start: Vector, parent: any,  target: Placeable, stats: ProjectileStats, color?: string) {

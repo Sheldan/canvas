@@ -16,3 +16,11 @@ export function moveInDirectionOf(position: Vector, target: Vector, speedFactor:
 export function straightMove(position: Vector, speed: Vector): Vector {
     return position.add(speed)
 }
+
+export function toRad(angle) {
+    return angle / 180 * Math.PI;
+}
+
+export function toDegrees(angle) {
+    return angle * 180 / Math.PI
+}

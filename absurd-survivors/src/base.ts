@@ -1,3 +1,5 @@
+import type {Placeable} from "./interfaces.ts";
+
 export class Vector {
 
     constructor(private _x: number, private _y: number) {
@@ -44,6 +46,13 @@ export class Vector {
         return this.multiply(-1)
     }
 
+    dotProduct(vector: Vector): number {
+        return this._x * vector._x + this._y * vector._y;
+    }
+
+    angleTo(vector: Vector): number {
+        return Math.acos(this.dotProduct(vector))
+    }
 
     get x(): number {
         return this._x;
@@ -87,4 +96,25 @@ export class Cooldown {
     resetCooldown() {
         this._currentValue = this._totalValue;
     }
+}
+
+export class Point implements Placeable {
+
+    private position: Vector;
+
+
+    constructor(position: Vector) {
+        this.position = position;
+    }
+
+    getPosition(): Vector {
+        return this.position;
+    }
+
+    getSize() {
+    }
+
+    move(any?: any) {
+    }
+
 }
