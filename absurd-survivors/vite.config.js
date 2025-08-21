@@ -2,6 +2,6 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
     build: {
-        outDir: '../../dist/survivors'
+        outDir: '../dist/survivors'
     },
 })
