@@ -7,10 +7,10 @@ import {Vector} from "./base.ts";
 
 export class Pistol implements Weapon {
 
-    private player: Player
+    private readonly player: Player
     private shootInterval: number;
     private shootCooldown: number = 0;
-    private world: World;
+    private readonly world: World;
     private offset: Vector;
     private projectiles: [Projectile] = []
     private color: string;
@@ -37,7 +37,7 @@ export class Pistol implements Weapon {
     private createProjectile(): boolean {
         let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position);
         if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
-            let stats = new ProjectileStats(0, 1, 5)
+            let stats = new ProjectileStats(2, 1, 5, 1)
             let projectile = HomingProjectile.createHomingProjectile(this.world, this.getPosition(), this.player, closestTargetTo[1]!, stats, 'yellow')
             this.projectiles.push(projectile)
             return true

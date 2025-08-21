@@ -12,8 +12,10 @@ export abstract class Projectile implements Acting, Placeable {
     protected world: World;
     protected parent: any;
     protected color: string
-    private stats: ProjectileStats;
-    private status: ProjectileStatus;
+    protected stats: ProjectileStats;
+    protected status: ProjectileStatus;
+    protected lastPosition: Vector;
+    protected lastColliding?: Placeable;
 
     constructor(position: Vector, speedVec: Vector, stats: ProjectileStats, world: World, parent: any) {
         this.position = position.clone();
@@ -26,20 +28,20 @@ export abstract class Projectile implements Acting, Placeable {
 
     act() {
         this.move()
-        if(this.status.collisionCooldown.cooledDown()) {
-            if(this.parent !== this.world.player) {
-                if(this.position.distanceTo(this.world.player.position) < (this.stats.size + this.world.player.stats.size)) {
-                    this.impactPlayer()
-                    this.status.collisionCooldown.resetCooldown()
-                }
-            } else if(this.parent === this.world.player) {
-                let closestTargetTo = this.world.getClosestTargetTo(this.position);
-                if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined && closestTargetTo[1]?.getPosition().distanceTo(this.position) < (this.stats.size + closestTargetTo[1]?.getSize())) {
-                    let target: Placeable = closestTargetTo[1]!;
+        if(this.parent !== this.world.player) {
+            if(this.position.distanceTo(this.world.player.position) < (this.stats.size + this.world.player.stats.size) && this.status.collisionCooldown.cooledDown()) {
+                this.impactPlayer()
+                this.status.collisionCooldown.resetCooldown()
+            }
+        } else if(this.parent === this.world.player) {
+            let closestTargetTo = this.world.getClosestTargetToButNot(this.position, this.lastColliding);
+            if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined && closestTargetTo[1]?.getPosition().distanceTo(this.position) < (this.stats.size + closestTargetTo[1]?.getSize())) {
+                let target: Placeable = closestTargetTo[1]!;
+                if(target !== this.lastColliding) {
                     if(InstanceOfUtils.instanceOfHealthy(target)) {
                         let healthy = target as Healthy;
                         healthy.takeDamage(this.stats.damage)
-                        if(this.status.piercingsLeft <= 0) {
+                        if(!this.status.hasPiercingLeft()) {
                             this.world.removeProjectile(this)
                         }
                         this.status.decreasePiercings()
@@ -47,9 +49,12 @@ export abstract class Projectile implements Acting, Placeable {
                         this.world.removeProjectile(this)
                     }
                 }
+                this.lastColliding = target;
+            } else {
+                this.lastColliding = undefined;
             }
         }
-        this.status.collisionCooldown.decreaseCooldown();
+        this.status.collisionCooldown.decreaseCooldown()
         this.checkWorldBorder()
     }
 
@@ -61,7 +66,9 @@ export abstract class Projectile implements Acting, Placeable {
 
     impactPlayer() {
         this.world.player.takeDamage(this.stats.damage)
-        this.world.removeProjectile(this)
+        if(!this.status.hasPiercingLeft()) {
+            this.world.removeProjectile(this)
+        }
     };
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -69,6 +76,7 @@ export abstract class Projectile implements Acting, Placeable {
     }
 
     move() {
+        this.lastPosition = this.position.clone()
     }
 
     getPosition(): Vector {
@@ -89,6 +97,7 @@ export class StraightProjectile extends Projectile {
     }
 
     move() {
+        super.move()
         this.position = straightMove(this.position, this.speedVec)
     }
 
@@ -111,35 +120,35 @@ export class HomingProjectile extends Projectile {
     }
 
     move() {
+        super.move()
+        this.position = moveInDirectionOf(this.position, this.target.getPosition(), this.speedVec.vecLength())
         if(InstanceOfUtils.instanceOfHealthy(this.target)) {
             let target = this.target as Healthy
             if(target.dead()) {
-                if(this.position.distanceTo(this.target.getPosition()) < (this.target.getSize() + this.getSize())) {
-                    this.world.removeProjectile(this)
-                    return;
-                }
-                let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position)
+                let closestTargetTo = this.world.getClosestTargetTo(this.position)
 
+                let dir = Vector.createVector(this.target.getPosition(), this.position).normalize()
+                let oldDir = Vector.createVector(this.position, this.lastPosition).normalize()
                 if (closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
-                    let dir = Vector.createVector(this.target.getPosition(), this.position).normalize()
                     let newTargetPosition = closestTargetTo[1]!.getPosition();
                     let newDir = Vector.createVector(newTargetPosition, this.position).normalize()
                     let newDirAngle = newDir.angleTo(dir);
-                    if(Math.abs(newDirAngle) < toRad(60)) {
+                    if(Math.abs(newDirAngle) >= toRad(150)) {
                         this.target = closestTargetTo[1]!;
                     } else {
-                        this.target = new Point(this.target.getPosition().add(dir.normalize().multiply(Math.max(this.world.size.x, this.world.size.y))))
+                        this.target = new Point(this.position.add(oldDir.multiply(Math.max(this.world.size.x, this.world.size.y))))
                     }
+                } else {
+                    this.target = new Point(this.position.add(oldDir.multiply(Math.max(this.world.size.x, this.world.size.y))))
                 }
             }
         }
-        this.position = moveInDirectionOf(this.position, this.target.getPosition(), this.speedVec.vecLength())
         this.checkWorldBorder()
     }
 
     static createHomingProjectile(world: World, start: Vector, parent: any,  target: Placeable, stats: ProjectileStats, color?: string) {
 
-        let projectile = new HomingProjectile(start, new Vector(5, 1), stats, world, parent, target)
+        let projectile = new HomingProjectile(start, new Vector(0, stats.speed), stats, world, parent, target)
         projectile.color = color === undefined ? 'red' : color!;
         world.addProjectile(projectile)
         return projectile;
@@ -160,6 +169,10 @@ export class ProjectileStatus {
         return this._piercingsLeft;
     }
 
+    hasPiercingLeft(): boolean {
+        return this.piercingsLeft >= 0;
+    }
+
 
     get collisionCooldown(): Cooldown {
         return this._collisionCooldown;
@@ -175,11 +188,13 @@ export class ProjectileStats {
     private _piercings: number;
     private _size: number;
     private _damage: number;
+    private _speed: number;
 
-    constructor(piercings: number, size: number, damage: number) {
+    constructor(piercings: number, size: number, damage: number, _speed: number) {
         this._piercings = piercings;
         this._size = size;
         this._damage = damage
+        this._speed = _speed;
     }
 
     get piercings(): number {
@@ -190,6 +205,10 @@ export class ProjectileStats {
         return this._size;
     }
 
+
+    get speed(): number {
+        return this._speed;
+    }
 
     get damage(): number {
         return this._damage;

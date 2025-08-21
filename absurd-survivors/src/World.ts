@@ -1,5 +1,4 @@
 import {Enemy} from "./Enemies.ts";
-import type {Player} from "./Player.ts";
 import {Player} from "./Player.ts";
 import {Projectile} from "./projectile.ts";
 import {Vector} from "./base.ts";
@@ -40,6 +39,15 @@ export class World {
         this._drops.push(drop)
     }
 
+    movePlayer(vector: Vector) {
+        this._player.position.x += vector.x;
+        this._player.position.y += vector.y;
+        this._player.position.x = Math.min(this.size.x - this._player.getSize(), this._player.position.x)
+        this._player.position.x = Math.max(this._player.getSize(), this._player.position.x)
+        this._player.position.y = Math.min(this.size.y -this._player.getSize(), this._player.position.y)
+        this._player.position.y = Math.max(this._player.getSize(), this._player.position.y)
+    }
+
     removeDrop(drop: Drop) {
         this._drops = this._drops.filter(item => item !== drop)
     }
@@ -75,9 +83,16 @@ export class World {
     }
 
     getClosestTargetTo(point: Vector): [number, Placeable | undefined] | undefined {
+        return this.getClosestTargetToButNot(point, undefined)
+    }
+
+    getClosestTargetToButNot(point: Vector, placeAble?: Placeable): [number, Placeable | undefined] | undefined {
         let currentTarget;
         let currentDistance = Number.MAX_SAFE_INTEGER;
         this._enemies.forEach(enemy => {
+            if(placeAble && enemy === placeAble) {
+                return;
+            }
             let distance = point.distanceTo(enemy.getPosition());
             if(distance < currentDistance) {
                 currentDistance = distance;

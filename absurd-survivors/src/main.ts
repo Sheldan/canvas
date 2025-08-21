@@ -65,16 +65,16 @@ function makeKey(char, fun) {
 
 let keys = {};
 makeKey('w', function () {
-    world.player.position.y += -world.player.stats.speed
+    world.movePlayer(new Vector(0, -world.player.stats.speed))
 })
 makeKey('s', function () {
-    world.player.position.y += world.player.stats.speed
+    world.movePlayer(new Vector(0, world.player.stats.speed))
 })
 makeKey('a', function () {
-    world.player.position.x += -world.player.stats.speed
+    world.movePlayer(new Vector(-world.player.stats.speed, 0))
 })
 makeKey('d', function () {
-    world.player.position.x += world.player.stats.speed
+    world.movePlayer(new Vector(world.player.stats.speed, 0))
 })
 
 

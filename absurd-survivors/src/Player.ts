@@ -6,7 +6,7 @@ export class Player implements Drawable, Acting, Healthy {
     private _position: Vector;
     private _stats: Stats;
     private _color: string;
-    private _status: Status;
+    private _status: PlayerStatus;
     private _weapons: [Weapon] = []
 
     // temp
@@ -27,7 +27,7 @@ export class Player implements Drawable, Acting, Healthy {
         player._color = 'blue';
         player._stats = Stats.defaultPlayerStats();
         player._speed = new Vector(0, 0)
-        player._status = new Status(10, 0);
+        player._status = new PlayerStatus(10, 0);
         return player;
     }
 
@@ -64,7 +64,7 @@ export class Player implements Drawable, Acting, Healthy {
         return this._stats;
     }
 
-    get status(): Status {
+    get status(): PlayerStatus {
         return this._status;
     }
 
@@ -92,7 +92,7 @@ export class Player implements Drawable, Acting, Healthy {
     }
 }
 
-export class Status {
+export class PlayerStatus {
     constructor(private _health: number, private _wealth: number) {
     }
 

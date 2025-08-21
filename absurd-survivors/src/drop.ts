@@ -63,7 +63,7 @@ export class MoneyDrop extends BasicDrop {
         let drop = new MoneyDrop(world, position)
         drop.worth = 1;
         drop._size = 1;
-        drop._color = 'yellow';
+        drop._color = 'orange';
         world.addDrop(drop)
         return drop;
     }
