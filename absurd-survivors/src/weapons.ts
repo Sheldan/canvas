@@ -1,7 +1,7 @@
 import type {Weapon} from "./interfaces.ts";
 import {drawDot} from "./utils.ts";
 import {Player} from "./Player.ts";
-import {Projectile, StraightProjectile} from "./projectile.ts";
+import {HomingProjectile, Projectile, ProjectileStats} from "./projectile.ts";
 import {World} from "./World.ts";
 import {Vector} from "./base.ts";
 
@@ -22,7 +22,7 @@ export class Pistol implements Weapon {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this.player.position.add(this.offset), this.size, this.color, ctx)
+        drawDot(this.getPosition(), this.size, this.color, ctx)
     }
 
     act() {
@@ -37,7 +37,8 @@ export class Pistol implements Weapon {
     private createProjectile(): boolean {
         let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position);
         if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
-            let projectile = StraightProjectile.createStraightProjectile(this.world, this.player.position.add(this.offset), closestTargetTo[1]!.getPosition(), this.player)
+            let stats = new ProjectileStats(0, 1, 5)
+            let projectile = HomingProjectile.createHomingProjectile(this.world, this.getPosition(), this.player, closestTargetTo[1]!, stats, 'yellow')
             this.projectiles.push(projectile)
             return true
         } else {
@@ -53,7 +54,18 @@ export class Pistol implements Weapon {
         pistol.offset = offset;
         pistol.size = 1;
         pistol.color = 'yellow';
-        pistol.shootInterval = 10;
+        pistol.shootInterval = 50;
         return pistol;
+    }
+
+    getPosition(): Vector {
+        return this.player.position.add(this.offset);
+    }
+
+    move(any?: any) {
+    }
+
+    getSize() {
+        return this.size;
     }
 }

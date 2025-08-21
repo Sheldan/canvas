@@ -1,18 +1,19 @@
-import type {Acting, Drawable, Healthy, Moving, Shooting} from "./interfaces.ts";
+import type {Acting, Drawable, Healthy, Placeable, Shooting} from "./interfaces.ts";
 import {drawDot, moveInDirectionOf} from "./utils.ts";
 import {Vector} from "./base.ts";
 import {World} from "./World.ts";
 import type {Projectile} from "./projectile.ts";
-import {HomingProjectile, StraightProjectile} from "./projectile.ts";
+import {HomingProjectile, ProjectileStats, StraightProjectile} from "./projectile.ts";
+import {MoneyDrop} from "./drop.ts";
 
-export abstract class Enemy implements Moving, Drawable, Acting, Healthy {
+export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
     protected _position: Vector;
     protected speed: number;
     protected world: World;
     protected status: EnemyStatus = new EnemyStatus(10);
 
     constructor(position: Vector) {
-        this._position = position;
+        this._position = position.clone();
     }
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -33,9 +34,22 @@ export abstract class Enemy implements Moving, Drawable, Acting, Healthy {
     takeDamage(damage: number) {
         this.status.health -= damage;
         if(this.status.dead) {
+            this.die()
             this.world.removeEnemy(this)
         }
     }
+
+    die() {
+        MoneyDrop.createMoneyDrop(this.world, this._position);
+    }
+
+    getSize() {
+    }
+
+    dead() {
+        return this.status.dead
+    }
+
 }
 
 export class BasicEnemy extends Enemy {
@@ -80,6 +94,10 @@ export class BasicEnemy extends Enemy {
         basicEnemy.impactDamage = 2;
         return basicEnemy;
     }
+
+    getSize() {
+        return this.size
+    }
 }
 
 export class ShootingEnemy extends BasicEnemy implements Shooting {
@@ -105,7 +123,8 @@ export class ShootingEnemy extends BasicEnemy implements Shooting {
     }
 
     createProjectile() {
-        let projectile = StraightProjectile.createStraightProjectile(this.world, this._position, this.world.player.position, this)
+        let stats = new ProjectileStats(0, 1, 5)
+        let projectile = StraightProjectile.createStraightProjectile(this.world, this._position, this.world.player.position, this, stats)
         this.projectiles.push(projectile)
         return projectile
     }

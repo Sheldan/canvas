@@ -16,6 +16,10 @@ export class Vector {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
+    clone() {
+        return new Vector(this.x, this.y)
+    }
+
     distanceTo(point: Vector): number {
         return Math.sqrt(Math.pow(this.x - point.x, 2) + Math.pow(this.y - point.y, 2));
     }
@@ -55,5 +59,32 @@ export class Vector {
 
     set y(value: number) {
         this._y = value;
+    }
+}
+
+export class Cooldown {
+    private _currentValue;
+    private _totalValue;
+
+
+    constructor(totalValue) {
+        this._totalValue = totalValue;
+        this._currentValue = 0
+    }
+
+    cooledDown(): boolean {
+        return this.currentValue <= 0;
+    }
+
+    get currentValue(): number {
+        return this._currentValue;
+    }
+
+    decreaseCooldown() {
+        this._currentValue -= 1;
+    }
+
+    resetCooldown() {
+        this._currentValue = this._totalValue;
     }
 }

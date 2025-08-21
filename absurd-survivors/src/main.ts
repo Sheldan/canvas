@@ -17,13 +17,7 @@ let ctx: CanvasRenderingContext2D;
 let canvas;
 
 export class Config {
-    private _size: Vector = new Vector(window.innerWidth,  window.innerHeight)
     private _fps: number = 60;
-
-
-    get size(): Vector {
-        return this._size;
-    }
 
     get fps(): number {
         return this._fps;
@@ -41,7 +35,7 @@ export class WorldState {
 
 
 function updateCanvas() {
-    ctx.clearRect(0, 0, config.size.x, config.size.y);
+    ctx.clearRect(0, 0, world.size.x, world.size.y);
     hud.draw(ctx)
     if(!state.ended) {
         world.enemiesAct()
@@ -101,23 +95,22 @@ document.onkeydown = keyDown;
 docReady(function () {
     canvas = document.getElementById('canvas');
 
-    config = new Config();
-    canvas.width = config.size.x;
+    canvas.width = window.innerWidth;
 
-    canvas.height = config.size.y;
+    canvas.height =  window.innerHeight;
 
 
     ctx = canvas.getContext("2d");
-
+    config = new Config();
     let player = Player.generatePlayer();
 
-    world = new World(player, ctx);
+    world = new World(player, ctx, new Vector(window.innerWidth,  window.innerHeight));
     state = new WorldState();
 
     world.addEnemy(BasicEnemy.generateBasicEnemy(world))
     world.addEnemy(ShootingEnemy.generateShootingEnemy(world, new Vector(350, 350)))
     setInterval(() => {
-        world.addEnemy(ShootingEnemy.generateShootingEnemy(world, new Vector(Math.random() * config.size.x, Math.random() * config.size.y)))
+        world.addEnemy(ShootingEnemy.generateShootingEnemy(world, new Vector(Math.random() * world.size.x, Math.random() * world.size.y)))
     }, 1000)
     player.addWeapon(Pistol.spawnPistol(world))
     let secondPistol = Pistol.spawnPistol(world, new Vector(-5, -5));

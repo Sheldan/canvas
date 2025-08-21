@@ -27,7 +27,7 @@ export class Player implements Drawable, Acting, Healthy {
         player._color = 'blue';
         player._stats = Stats.defaultPlayerStats();
         player._speed = new Vector(0, 0)
-        player._status = new Status(10);
+        player._status = new Status(10, 0);
         return player;
     }
 
@@ -59,6 +59,10 @@ export class Player implements Drawable, Acting, Healthy {
         return this._stats;
     }
 
+    get status(): Status {
+        return this._status;
+    }
+
     get speed(): Vector {
         return this._speed;
     }
@@ -66,27 +70,53 @@ export class Player implements Drawable, Acting, Healthy {
     act() {
         this._weapons.forEach(weapon => weapon.act())
     }
+
+    die() {
+    }
+
+    getPosition(): Vector {
+        return this._position;
+    }
+
+    getSize() {
+        return this.stats.size
+    }
+
+    dead() {
+        return this.status.dead
+    }
 }
 
 export class Status {
-    constructor(private _health: number) {
+    constructor(private _health: number, private _wealth: number) {
     }
-
 
     get health(): number {
         return this._health;
     }
 
-
     set health(value: number) {
         this._health = value;
+    }
+
+    get dead(): boolean {
+        return this._health <= 0
+    }
+
+    get wealth(): number {
+        return this._wealth;
+    }
+
+    set wealth(value: number) {
+        this._wealth = value;
     }
 }
 
 export class Stats {
     constructor(private _speed: number,
                 private _size: number,
-                private _health: number) {
+                private _health: number,
+                private _pullRange: number) {
     }
 
     get speed(): number {
@@ -105,12 +135,15 @@ export class Stats {
         this._size = value;
     }
 
+    get pullRange(): number {
+        return this._pullRange;
+    }
 
     get health(): number {
         return this._health;
     }
 
     public static defaultPlayerStats(): Stats {
-        return new Stats(2, 5, 10);
+        return new Stats(3, 5, 10, 150);
     }
 }

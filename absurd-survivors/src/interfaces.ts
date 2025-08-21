@@ -6,10 +6,17 @@ export interface Acting {
 
 export interface Healthy {
     takeDamage(damage: number);
+    die();
+    dead();
 }
 
-export interface Moving {
-    move()
+export interface Drop extends Drawable, Acting {
+    pickup()
+}
+
+export interface Placeable {
+    move(any?: any)
+    getSize();
     getPosition(): Vector;
 }
 
@@ -26,6 +33,10 @@ export interface Shooting {
     removeProjectile(projectile: Projectile)
 }
 
-export interface Drawable {
+export interface Drawable extends Placeable {
+    draw(ctx: CanvasRenderingContext2D);
+}
+
+export interface DrawContainer {
     draw(ctx: CanvasRenderingContext2D);
 }
