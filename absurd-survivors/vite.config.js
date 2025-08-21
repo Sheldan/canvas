@@ -1,9 +1,8 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
+    base: './',
     build: {
-        base: './',
-        root: 'src',
         outDir: '../dist/survivors'
     },
 })
