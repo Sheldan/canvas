@@ -24,7 +24,12 @@ export interface Projectile extends Drawable {
 
 }
 
-export interface Weapon extends Drawable{
+export interface Equipment {
+    getOffset(): Vector;
+    setOffset(vec: Vector);
+}
+
+export interface Weapon extends Drawable, Equipment {
     act()
 }
 

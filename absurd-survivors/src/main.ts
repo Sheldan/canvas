@@ -118,8 +118,7 @@ docReady(function () {
     }, 15_000)
 
     player.addWeapon(Pistol.spawnPistol(world))
-    let secondPistol = Pistol.spawnPistol(world, new Vector(-5, -5));
-    player.addWeapon(secondPistol)
+    player.addWeapon(Pistol.spawnPistol(world))
     hud = new HUD(world);
 
 

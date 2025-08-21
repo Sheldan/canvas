@@ -5,24 +5,53 @@ import {HomingProjectile, Projectile, ProjectileStats} from "./projectile.ts";
 import {World} from "./World.ts";
 import {Vector} from "./base.ts";
 
-export class Pistol implements Weapon {
-
-    private readonly player: Player
-    private shootInterval: number;
-    private shootCooldown: number = 0;
-    private readonly world: World;
-    private offset: Vector;
-    private projectiles: [Projectile] = []
-    private color: string;
-    private size: number;
+export abstract class BasicWeapon implements Weapon {
+    protected offset: Vector;
+    protected readonly player: Player
+    protected readonly world: World;
+    protected color: string;
+    protected size: number;
 
     constructor(world: World) {
         this.player = world.player;
         this.world = world;
     }
 
+    act() {
+    }
+
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this.getPosition(), this.size, this.color, ctx)
+    }
+
+    getPosition(): Vector {
+        return this.player.position.add(this.offset);
+    }
+
+    move(any?: any) {
+    }
+
+    getSize() {
+        return this.size;
+    }
+
+    getOffset(): Vector {
+        return this.offset;
+    }
+
+    setOffset(vec: Vector) {
+        this.offset = vec;
+    }
+}
+
+export class Pistol extends BasicWeapon{
+
+    private shootInterval: number;
+    private shootCooldown: number = 0;
+
+    private projectiles: [Projectile] = []
+
+    draw(ctx: CanvasRenderingContext2D) {
+        drawDot(this.getPosition(), 1, this.color, ctx)
     }
 
     act() {
@@ -37,7 +66,7 @@ export class Pistol implements Weapon {
     private createProjectile(): boolean {
         let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position);
         if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
-            let stats = new ProjectileStats(2, 1, 5, 1)
+            let stats = new ProjectileStats(2, 1, 5, 5)
             let projectile = HomingProjectile.createHomingProjectile(this.world, this.getPosition(), this.player, closestTargetTo[1]!, stats, 'yellow')
             this.projectiles.push(projectile)
             return true
@@ -52,20 +81,10 @@ export class Pistol implements Weapon {
         }
         let pistol = new Pistol(world)
         pistol.offset = offset;
-        pistol.size = 1;
+        pistol.size = 5;
         pistol.color = 'yellow';
         pistol.shootInterval = 50;
         return pistol;
     }
 
-    getPosition(): Vector {
-        return this.player.position.add(this.offset);
-    }
-
-    move(any?: any) {
-    }
-
-    getSize() {
-        return this.size;
-    }
 }

@@ -32,6 +32,19 @@ export class Player implements Drawable, Acting, Healthy {
     }
 
     addWeapon(weapon: Weapon) {
+        let weaponCount = this._weapons.length + 1;
+        let angle = 2 * Math.PI / weaponCount;
+        for (let i = 0; i < this._weapons.length; i++) {
+            let affectedWeapon = this._weapons[i];
+            let x = Math.cos(angle * i)
+            let y = Math.sin(angle * i)
+            console.log(x + ' ' + y)
+            affectedWeapon.setOffset(new Vector(x, y).multiply(affectedWeapon.getSize()))
+        }
+        let newPosition = new Vector(Math.cos(angle * (weaponCount - 1)), Math.sin(angle * (weaponCount - 1)));
+        newPosition = newPosition.multiply(weapon.getSize())
+        console.log(newPosition.x + ' ' + newPosition.y)
+        weapon.setOffset(newPosition)
         this._weapons.push(weapon)
     }
 
