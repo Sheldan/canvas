@@ -24,3 +24,36 @@ export function toRad(angle) {
 export function toDegrees(angle) {
     return angle * 180 / Math.PI
 }
+
+export function pointInsideCircle(circleCenter: Vector, radius: number, point: Vector) {
+    return circleCenter.distanceTo(point) < radius;
+}
+
+export function linePointCollision(point: Vector, lineStart: Vector, lineEnd: Vector) {
+    let lineLength = Vector.createVector(lineEnd, lineStart).vecLength();
+    let distanceStart = Vector.createVector(lineStart, point).vecLength()
+    let distanceEnd = Vector.createVector(lineEnd, point).vecLength();
+    let buffer = 0.001
+    if((distanceStart + distanceEnd) >= (lineLength - buffer) && (distanceEnd + distanceStart) <= (lineLength + buffer)) {
+        return true;
+    }
+    return false;
+}
+
+export function circleLineCollision(circleCenter: Vector, radius: number, lineStart: Vector, lineEnd: Vector) {
+    if(pointInsideCircle(circleCenter, radius, lineStart) || pointInsideCircle(circleCenter, radius, lineEnd)) {
+        return true;
+    }
+    let lineVector = Vector.createVector(lineEnd, lineStart)
+    let vectorCenterLine = Vector.createVector(circleCenter, lineStart)
+    let dot = vectorCenterLine.dotProduct(lineVector)
+    let closestX = lineStart.x + (dot * (lineVector.x))
+    let closestY = lineStart.y + (dot * (lineVector.y))
+    let closestPoint = new Vector(closestX, closestY);
+    let onSegment = linePointCollision(closestPoint, lineStart, lineEnd)
+    if(!onSegment) {
+        return false;
+    }
+
+    return pointInsideCircle(circleCenter, radius, closestPoint);
+}

@@ -6,7 +6,7 @@ import {Player} from "./Player.ts";
 import {Vector} from "./base.ts";
 import {BasicEnemy, Enemy, HealthEnemy, ShootingEnemy} from "./Enemies.ts";
 import {HUD} from "./ui.ts";
-import {Pistol} from "./weapons.ts";
+import {HomingPistol, Pistol} from "./weapons.ts";
 
 
 let hud: HUD;
@@ -118,7 +118,7 @@ docReady(function () {
     }, 15_000)
 
     player.addWeapon(Pistol.spawnPistol(world))
-    player.addWeapon(Pistol.spawnPistol(world))
+    player.addWeapon(HomingPistol.spawnPistol(world))
     hud = new HUD(world);
 
 

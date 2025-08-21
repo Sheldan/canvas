@@ -9,6 +9,10 @@ export class Vector {
         return new Vector(tip.x - shaft.x, tip.y - shaft.y);
     }
 
+    static zero() {
+        return new Vector(0, 0)
+    }
+
     normalize(): Vector {
         let length = this.vecLength();
         return new Vector(this.x / length, this.y / length)
@@ -47,7 +51,7 @@ export class Vector {
     }
 
     dotProduct(vector: Vector): number {
-        return this._x * vector._x + this._y * vector._y;
+        return (this._x * vector._x + this._y * vector._y) / Math.pow(vector.vecLength(), 2);
     }
 
     angleTo(vector: Vector): number {

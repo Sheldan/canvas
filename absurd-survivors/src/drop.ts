@@ -5,9 +5,9 @@ import {Vector} from "./base.ts";
 
 export abstract class BasicDrop implements Drop {
     protected world: World;
-    protected  _position: Vector;
-    protected  _color: string;
-    protected  _size: number;
+    protected _position: Vector;
+    protected _color: string;
+    protected _size: number;
 
     constructor(world: World, position: Vector) {
         this.world = world;

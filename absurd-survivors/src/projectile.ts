@@ -2,7 +2,7 @@ import type {Acting, Placeable, Healthy} from "./interfaces.ts";
 import type {Vector} from "./base.ts";
 import {World} from "./World.ts";
 import {Cooldown, Point, Vector} from "./base.ts";
-import {drawDot, moveInDirectionOf, straightMove, toRad} from "./utils.ts";
+import {circleLineCollision, drawDot, moveInDirectionOf, straightMove, toRad} from "./utils.ts";
 import {InstanceOfUtils} from "./instance.ts";
 
 export abstract class Projectile implements Acting, Placeable {
@@ -35,18 +35,21 @@ export abstract class Projectile implements Acting, Placeable {
             }
         } else if(this.parent === this.world.player) {
             let closestTargetTo = this.world.getClosestTargetToButNot(this.position, this.lastColliding);
-            if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined && closestTargetTo[1]?.getPosition().distanceTo(this.position) < (this.stats.size + closestTargetTo[1]?.getSize())) {
+            if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
                 let target: Placeable = closestTargetTo[1]!;
-                if(target !== this.lastColliding) {
-                    if(InstanceOfUtils.instanceOfHealthy(target)) {
-                        let healthy = target as Healthy;
-                        healthy.takeDamage(this.stats.damage)
-                        if(!this.status.hasPiercingLeft()) {
+                if(target.getPosition().distanceTo(this.position) < (this.stats.size + target.getSize())
+                    || circleLineCollision(target.getPosition(), target.getSize(), this.position, this.lastPosition)) {
+                    if(target !== this.lastColliding) {
+                        if(InstanceOfUtils.instanceOfHealthy(target)) {
+                            let healthy = target as Healthy;
+                            healthy.takeDamage(this.stats.damage)
+                            if(!this.status.hasPiercingLeft()) {
+                                this.world.removeProjectile(this)
+                            }
+                            this.status.decreasePiercings()
+                        } else {
                             this.world.removeProjectile(this)
                         }
-                        this.status.decreasePiercings()
-                    } else {
-                        this.world.removeProjectile(this)
                     }
                 }
                 this.lastColliding = target;
@@ -102,7 +105,7 @@ export class StraightProjectile extends Projectile {
     }
 
     static createStraightProjectile(world: World, start: Vector, targetPosition: Vector, parent: any, stats: ProjectileStats, color?: string) {
-        let dirVector = Vector.createVector(targetPosition, start).normalize().multiply(2);
+        let dirVector = Vector.createVector(targetPosition, start).normalize().multiply(stats.speed);
         let projectile = new StraightProjectile(start, dirVector, stats, world, parent)
         projectile.color = color === undefined ? 'red' : color!;
         world.addProjectile(projectile)
@@ -127,11 +130,11 @@ export class HomingProjectile extends Projectile {
             if(target.dead()) {
                 let closestTargetTo = this.world.getClosestTargetTo(this.position)
 
-                let dir = Vector.createVector(this.target.getPosition(), this.position).normalize()
+                let dir = Vector.createVector(this.target.getPosition(), this.position)
                 let oldDir = Vector.createVector(this.position, this.lastPosition).normalize()
                 if (closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
                     let newTargetPosition = closestTargetTo[1]!.getPosition();
-                    let newDir = Vector.createVector(newTargetPosition, this.position).normalize()
+                    let newDir = Vector.createVector(newTargetPosition, this.position)
                     let newDirAngle = newDir.angleTo(dir);
                     if(Math.abs(newDirAngle) >= toRad(150)) {
                         this.target = closestTargetTo[1]!;

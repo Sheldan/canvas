@@ -22,8 +22,11 @@ export class Player implements Drawable, Acting, Healthy {
         this._weapons.forEach(weapon => weapon.draw(ctx))
     }
 
-    public static generatePlayer(): Player {
-        let player = new Player(new Vector(500, 500));
+    public static generatePlayer(position?: Vector): Player {
+        if(position === undefined) {
+            position = new Vector(500, 500)
+        }
+        let player = new Player(position);
         player._color = 'blue';
         player._stats = Stats.defaultPlayerStats();
         player._speed = new Vector(0, 0)
