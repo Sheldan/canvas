@@ -51,8 +51,10 @@ export abstract class Projectile implements Acting, Placeable {
                             this.world.removeProjectile(this)
                         }
                     }
+                    this.lastColliding = target;
+                } else {
+                    this.lastColliding = undefined;
                 }
-                this.lastColliding = target;
             } else {
                 this.lastColliding = undefined;
             }
