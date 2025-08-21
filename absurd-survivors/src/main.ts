@@ -4,7 +4,7 @@ import {docReady} from "canvas-common";
 import {World} from "./World.ts";
 import {Player} from "./Player.ts";
 import {Vector} from "./base.ts";
-import {BasicEnemy, Enemy, ShootingEnemy} from "./Enemies.ts";
+import {BasicEnemy, Enemy, HealthEnemy, ShootingEnemy} from "./Enemies.ts";
 import {HUD} from "./ui.ts";
 import {Pistol} from "./weapons.ts";
 
@@ -110,8 +110,13 @@ docReady(function () {
     world.addEnemy(BasicEnemy.generateBasicEnemy(world))
     world.addEnemy(ShootingEnemy.generateShootingEnemy(world, new Vector(350, 350)))
     setInterval(() => {
-        world.addEnemy(ShootingEnemy.generateShootingEnemy(world, new Vector(Math.random() * world.size.x, Math.random() * world.size.y)))
-    }, 1000)
+        world.addEnemy(ShootingEnemy.generateShootingEnemy(world))
+    }, 1_000)
+
+    setInterval(() => {
+        world.addEnemy(HealthEnemy.createHealthEnemy(world))
+    }, 15_000)
+
     player.addWeapon(Pistol.spawnPistol(world))
     let secondPistol = Pistol.spawnPistol(world, new Vector(-5, -5));
     player.addWeapon(secondPistol)

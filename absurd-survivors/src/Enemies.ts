@@ -4,7 +4,7 @@ import {Vector} from "./base.ts";
 import {World} from "./World.ts";
 import type {Projectile} from "./projectile.ts";
 import {HomingProjectile, ProjectileStats, StraightProjectile} from "./projectile.ts";
-import {MoneyDrop} from "./drop.ts";
+import {HealthPack, MoneyDrop} from "./drop.ts";
 
 export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
     protected _position: Vector;
@@ -131,7 +131,7 @@ export class ShootingEnemy extends BasicEnemy implements Shooting {
 
     static generateShootingEnemy(world: World, position?: Vector) {
         if(position === undefined) {
-            position = new Vector(250, 250)
+            position = world.randomPlace()
         }
         let basicEnemy = new ShootingEnemy(position);
         basicEnemy.size = 5;
@@ -159,5 +159,48 @@ export class EnemyStatus {
 
     set health(value: number) {
         this._health = value;
+    }
+}
+
+export class HealthEnemy extends Enemy {
+
+    constructor(position: Vector) {
+        super(position);
+    }
+
+    protected size: number;
+    protected color: string;
+
+    draw(ctx: CanvasRenderingContext2D) {
+        drawDot(this._position, this.size, this.color, ctx)
+    }
+
+
+    move() {
+    }
+
+    act() {
+        super.act();
+    }
+
+    die() {
+        HealthPack.createHealthPack(this.world, this._position)
+    }
+
+    static createHealthEnemy(world: World, position?: Vector) {
+        if(position === undefined) {
+            position = world.randomPlace()
+        }
+        let basicEnemy = new HealthEnemy(position);
+        basicEnemy.size = 5;
+        basicEnemy.world = world;
+        basicEnemy.speed = 0;
+        basicEnemy.color = 'purple'
+        return basicEnemy;
+    }
+
+
+    getSize() {
+        return this.size
     }
 }

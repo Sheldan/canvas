@@ -43,6 +43,8 @@ export abstract class Projectile implements Acting, Placeable {
                             this.world.removeProjectile(this)
                         }
                         this.status.decreasePiercings()
+                    } else {
+                        this.world.removeProjectile(this)
                     }
                 }
             }

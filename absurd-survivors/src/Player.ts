@@ -43,6 +43,11 @@ export class Player implements Drawable, Acting, Healthy {
         this._status.health -= damage;
     }
 
+    heal(amount: number) {
+        this._status.health +=  amount;
+        this._status.health = Math.min(this._status.health, this._stats.health)
+    }
+
     get health(): number {
         return this._status.health;
     }
