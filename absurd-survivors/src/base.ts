@@ -1,0 +1,59 @@
+export class Vector {
+
+    constructor(private _x: number, private _y: number) {
+    }
+
+    static createVector(tip: Vector, shaft: Vector): Vector {
+        return new Vector(tip.x - shaft.x, tip.y - shaft.y);
+    }
+
+    normalize(): Vector {
+        let length = this.vecLength();
+        return new Vector(this.x / length, this.y / length)
+    }
+
+    vecLength(): number {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    }
+
+    distanceTo(point: Vector): number {
+        return Math.sqrt(Math.pow(this.x - point.x, 2) + Math.pow(this.y - point.y, 2));
+    }
+
+    add(vec: Vector): Vector {
+        return new Vector(this._x + vec._x, this._y + vec._y)
+    }
+
+    minus(vec: Vector): Vector {
+        return new Vector(this.x - vec._x, this.y - vec.y)
+    }
+
+    multiply(number: number): Vector {
+        return new Vector(this.x * number, this.y * number)
+    }
+
+    multiplyVec(vec: Vector): Vector {
+        return new Vector(this.x * vec._x, this.y * vec.y)
+    }
+
+    negate(): Vector {
+        return this.multiply(-1)
+    }
+
+
+    get x(): number {
+        return this._x;
+    }
+
+    set x(value: number) {
+        this._x = value;
+    }
+
+    get y(): number {
+        return this._y;
+    }
+
+    set y(value: number) {
+        this._y = value;
+    }
+}

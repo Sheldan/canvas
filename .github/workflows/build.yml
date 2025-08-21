@@ -29,59 +29,65 @@ jobs:
         with:
           node-version: 21
       - name: Orbits Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: orbits
       - name: Orbits Build
         run: npx vite build
         working-directory: orbits
       - name: recBubbles Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: recBubbles
       - name: recBubbles Build
         run: npx vite build
         working-directory: recBubbles
       - name: balls Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: balls
       - name: balls Build
         run: npx vite build
         working-directory: balls
       - name: fireWorks Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: fireWorks
       - name: fireWorks Build
         run: npx vite build
         working-directory: fireWorks
       - name: bubbles Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: bubbles
       - name: bubbles Build
         run: npx vite build
         working-directory: bubbles
       - name: circleBs Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: circleBs
       - name: circleBs Build
         run: npx vite build
         working-directory: circleBs
       - name: clusterFilter Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: clusterFilter
       - name: clusterFilter Build
         run: npx vite build
         working-directory: clusterFilter
       - name: collatzConjecture Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: collatzConjecture
       - name: collatzConjecture Build
         run: npx vite build
         working-directory: collatzConjecture
       - name: dotLines Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: dotLines
       - name: dotLines Build
         run: npx vite build
         working-directory: dotLines
+      - name: survivors install dependencies
+        run: npm ci
+        working-directory: absurd-survivors
+      - name: survivors build
+        run: npx vite build
+        working-directory: absurd-survivors
       - name: Move index
         run: cp index.html dist/
       - name: Move overview images
