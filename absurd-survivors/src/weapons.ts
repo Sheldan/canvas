@@ -48,7 +48,6 @@ export abstract class BasicWeapon implements Weapon {
 export abstract class RangeWeapon extends BasicWeapon {
 
     protected projectiles: [Projectile] = []
-    protected shootInterval: number;
     protected shootCooldown: number = 0;
 
     abstract createProjectile(): boolean;
@@ -56,7 +55,7 @@ export abstract class RangeWeapon extends BasicWeapon {
     act() {
         if(this.shootCooldown <= 0) {
             if(this.createProjectile()) {
-                this.shootCooldown = this.shootInterval;
+                this.shootCooldown = this.stats.shootInterval;
             }
         }
         this.shootCooldown -= 1;
@@ -95,13 +94,13 @@ export class HomingPistol extends RangeWeapon {
             offset = new Vector(5, 5)
         }
         let stats = new WeaponStats()
-                                    .withProjectileSpeed(3)
-                                    .withDamage(5)
+                                    .withProjectileSpeed(1)
+                                    .withDamage(3)
+                                    .withShootInterval(50)
         let pistol = new HomingPistol(world, stats)
         pistol.offset = offset;
         pistol.size = 5;
         pistol.color = 'yellow';
-        pistol.shootInterval = 50;
         return pistol;
     }
 }
@@ -134,13 +133,13 @@ export class Pistol extends RangeWeapon {
             offset = new Vector(5, 5)
         }
         let stats = new WeaponStats()
-            .withProjectileSpeed(5)
-            .withDamage(5)
+            .withProjectileSpeed(2)
+            .withDamage(4)
+            .withShootInterval(25)
         let pistol = new Pistol(world, stats)
         pistol.offset = offset;
         pistol.size = 5;
         pistol.color = 'brown';
-        pistol.shootInterval = 50;
         return pistol;
     }
 }
@@ -153,6 +152,7 @@ export class WeaponStats {
     private _projectileSpeed: number;
     private _projectilePiercings: number;
     private _damage: number;
+    private _shootInterval: number;
 
     constructor() {
         this._weaponRangeFactor = 1
@@ -173,12 +173,15 @@ export class WeaponStats {
         return this;
     }
 
+    withShootInterval(value: number) {
+        this._shootInterval = value;
+        return this;
+    }
 
     withProjectilePiercings(value: number) {
         this._projectilePiercings = value;
         return this;
     }
-
 
     withDamage(value: number) {
         this._damage = value;
@@ -204,6 +207,10 @@ export class WeaponStats {
 
     get projectileSpeed(): number {
         return this._projectileSpeed;
+    }
+
+    get shootInterval(): number {
+        return this._shootInterval;
     }
 
     get effectiveWeaponRange(): number {
