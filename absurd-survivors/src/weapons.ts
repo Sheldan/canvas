@@ -45,22 +45,14 @@ export abstract class BasicWeapon implements Weapon {
     }
 }
 
-export class RangeWeapon extends BasicWeapon {
-    calculateRange(): number {
-        return this.world.player.stats.effectiveWeaponRange + this.stats.effectiveWeaponRange;
-    }
-}
+export abstract class RangeWeapon extends BasicWeapon {
 
-export class HomingPistol extends RangeWeapon {
+    protected projectiles: [Projectile] = []
+    protected shootInterval: number;
+    protected shootCooldown: number = 0;
 
-    private shootInterval: number;
-    private shootCooldown: number = 0;
 
-    private projectiles: [Projectile] = []
-
-    draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this.getPosition(), 1, this.color, ctx)
-    }
+    abstract createProjectile(): boolean;
 
     act() {
         if(this.shootCooldown <= 0) {
@@ -71,7 +63,18 @@ export class HomingPistol extends RangeWeapon {
         this.shootCooldown -= 1;
     }
 
-    private createProjectile(): boolean {
+    calculateRange(): number {
+        return this.world.player.stats.effectiveWeaponRange + this.stats.effectiveWeaponRange;
+    }
+}
+
+export class HomingPistol extends RangeWeapon {
+
+    draw(ctx: CanvasRenderingContext2D) {
+        drawDot(this.getPosition(), 1, this.color, ctx)
+    }
+
+    createProjectile(): boolean {
         let range = this.calculateRange()
         let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position, range);
         if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
@@ -107,15 +110,6 @@ export class Pistol extends RangeWeapon {
 
     draw(ctx: CanvasRenderingContext2D) {
         drawDot(this.getPosition(), 1, this.color, ctx)
-    }
-
-    act() {
-        if(this.shootCooldown <= 0) {
-            if(this.createProjectile()) {
-                this.shootCooldown = this.shootInterval;
-            }
-        }
-        this.shootCooldown -= 1;
     }
 
     private createProjectile(): boolean {
