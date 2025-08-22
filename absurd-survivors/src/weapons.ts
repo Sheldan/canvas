@@ -75,7 +75,7 @@ export class HomingPistol extends RangeWeapon {
         let range = this.calculateRange()
         let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position, range);
         if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
-            let stats = new ProjectileStats(5, 1, 5, 5)
+            let stats = new ProjectileStats(5, 1, 5, this.stats.projectileSpeed)
             let projectile = HomingProjectile.createHomingProjectile(this.world, this.getPosition(), this.player, closestTargetTo[1]!, stats, 'yellow')
             this.projectiles.push(projectile)
             return true
@@ -88,7 +88,7 @@ export class HomingPistol extends RangeWeapon {
         if(!offset) {
             offset = new Vector(5, 5)
         }
-        let stats = new WeaponStats(0, 1)
+        let stats = new WeaponStats(0, 1, 3)
         let pistol = new HomingPistol(world, stats)
         pistol.offset = offset;
         pistol.size = 5;
@@ -122,7 +122,7 @@ export class Pistol extends RangeWeapon {
         let range = this.calculateRange()
         let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position, range);
         if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
-            let stats = new ProjectileStats(2, 1, 5, 5)
+            let stats = new ProjectileStats(2, 1, 5, this.stats.projectileSpeed)
             let projectile = StraightProjectile.createStraightProjectile(this.world, this.getPosition(), closestTargetTo[1]!.getPosition(), this.player, stats, 'pink')
             this.projectiles.push(projectile)
             return true
@@ -135,7 +135,7 @@ export class Pistol extends RangeWeapon {
         if(!offset) {
             offset = new Vector(5, 5)
         }
-        let stats = new WeaponStats(0, 1)
+        let stats = new WeaponStats(0, 1, 5)
         let pistol = new Pistol(world, stats)
         pistol.offset = offset;
         pistol.size = 5;
@@ -148,7 +148,8 @@ export class Pistol extends RangeWeapon {
 
 export class WeaponStats {
     constructor(private _weaponRange: number,
-                private _weaponRangeFactor: number) {
+                private _weaponRangeFactor: number,
+                private _projectileSpeed: number) {
     }
 
 
@@ -158,6 +159,11 @@ export class WeaponStats {
 
     get weaponRangeFactor(): number {
         return this._weaponRangeFactor
+    }
+
+
+    get projectileSpeed(): number {
+        return this._projectileSpeed;
     }
 
     get effectiveWeaponRange(): number {
