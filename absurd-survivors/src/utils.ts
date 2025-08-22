@@ -40,6 +40,16 @@ export function linePointCollision(point: Vector, lineStart: Vector, lineEnd: Ve
     return false;
 }
 
+export function pointOnLineWithinLine(circleCenter: Vector, lineStart: Vector, lineEnd: Vector) {
+    let lineVector = Vector.createVector(lineEnd, lineStart)
+    let vectorCenterLine = Vector.createVector(circleCenter, lineStart)
+    let dot = vectorCenterLine.dotProduct(lineVector)
+    let closestX = lineStart.x + (dot * (lineVector.x))
+    let closestY = lineStart.y + (dot * (lineVector.y))
+    let closestPoint = new Vector(closestX, closestY);
+    return linePointCollision(closestPoint, lineStart, lineEnd);
+}
+
 export function circleLineCollision(circleCenter: Vector, radius: number, lineStart: Vector, lineEnd: Vector) {
     if(pointInsideCircle(circleCenter, radius, lineStart) || pointInsideCircle(circleCenter, radius, lineEnd)) {
         return true;

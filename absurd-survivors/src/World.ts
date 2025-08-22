@@ -83,14 +83,18 @@ export class World {
     }
 
     getClosestTargetTo(point: Vector): [number, Placeable | undefined] | undefined {
-        return this.getClosestTargetToButNot(point, undefined)
+        return this.getClosestTargetToButNot(point)
     }
 
-    getClosestTargetToButNot(point: Vector, placeAble?: Placeable): [number, Placeable | undefined] | undefined {
+    getClosestTargetToButNot(point: Vector, placeable?: Placeable): [number, Placeable | undefined] | undefined {
+        return this.getClosestTargetToButNotArray(point, [placeable])
+    }
+
+    getClosestTargetToButNotArray(point: Vector, placeAbles?: [Placeable | undefined]): [number, Placeable | undefined] | undefined {
         let currentTarget;
         let currentDistance = Number.MAX_SAFE_INTEGER;
         this._enemies.forEach(enemy => {
-            if(placeAble && enemy === placeAble) {
+            if(placeAbles && placeAbles.indexOf(enemy) !== -1) {
                 return;
             }
             let distance = point.distanceTo(enemy.getPosition());

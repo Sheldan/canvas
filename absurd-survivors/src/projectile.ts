@@ -2,7 +2,7 @@ import type {Acting, Placeable, Healthy} from "./interfaces.ts";
 import type {Vector} from "./base.ts";
 import {World} from "./World.ts";
 import {Cooldown, Point, Vector} from "./base.ts";
-import {circleLineCollision, drawDot, moveInDirectionOf, straightMove, toRad} from "./utils.ts";
+import {circleLineCollision, drawDot, moveInDirectionOf, pointOnLineWithinLine, straightMove, toRad} from "./utils.ts";
 import {InstanceOfUtils} from "./instance.ts";
 
 export abstract class Projectile implements Acting, Placeable {
@@ -15,6 +15,7 @@ export abstract class Projectile implements Acting, Placeable {
     protected stats: ProjectileStats;
     protected status: ProjectileStatus;
     protected lastPosition: Vector;
+    protected secondToLastPosition?: Vector
     protected lastColliding?: Placeable;
 
     constructor(position: Vector, speedVec: Vector, stats: ProjectileStats, world: World, parent: any) {
@@ -81,6 +82,7 @@ export abstract class Projectile implements Acting, Placeable {
     }
 
     move() {
+        this.secondToLastPosition = this.lastPosition;
         this.lastPosition = this.position.clone()
     }
 
@@ -132,19 +134,31 @@ export class HomingProjectile extends Projectile {
             if(target.dead()) {
                 let closestTargetTo = this.world.getClosestTargetTo(this.position)
 
-                let dir = Vector.createVector(this.target.getPosition(), this.position)
-                let oldDir = Vector.createVector(this.position, this.lastPosition).normalize()
+                let newTargetDirection = Vector.createVector(this.target.getPosition(), this.position)
+                let justMovedDirection = Vector.createVector(this.position, this.lastPosition).normalize()
+                let olderMovedDirection: Vector;
+                if(this.secondToLastPosition !== undefined) {
+                    olderMovedDirection = Vector.createVector(this.lastPosition, this.secondToLastPosition).normalize();
+                } else {
+                    olderMovedDirection = new Vector(0, 1)
+                }
                 if (closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
                     let newTargetPosition = closestTargetTo[1]!.getPosition();
                     let newDir = Vector.createVector(newTargetPosition, this.position)
-                    let newDirAngle = newDir.angleTo(dir);
+                    let newDirAngle = newDir.angleTo(newTargetDirection);
                     if(Math.abs(newDirAngle) >= toRad(150)) {
                         this.target = closestTargetTo[1]!;
                     } else {
-                        this.target = new Point(this.position.add(oldDir.multiply(Math.max(this.world.size.x, this.world.size.y))))
+                        if(pointOnLineWithinLine(this.target.getPosition(), this.lastPosition, this.position)) {
+                            justMovedDirection = olderMovedDirection
+                        }
+                        this.target = new Point(this.position.add(justMovedDirection.multiply(Math.max(this.world.size.x, this.world.size.y))))
                     }
                 } else {
-                    this.target = new Point(this.position.add(oldDir.multiply(Math.max(this.world.size.x, this.world.size.y))))
+                    if(pointOnLineWithinLine(this.target.getPosition(), this.lastPosition, this.position)) {
+                        justMovedDirection = olderMovedDirection
+                    }
+                    this.target = new Point(this.position.add(justMovedDirection.multiply(Math.max(this.world.size.x, this.world.size.y))))
                 }
             }
         }
