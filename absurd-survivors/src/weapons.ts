@@ -51,7 +51,6 @@ export abstract class RangeWeapon extends BasicWeapon {
     protected shootInterval: number;
     protected shootCooldown: number = 0;
 
-
     abstract createProjectile(): boolean;
 
     act() {
@@ -78,7 +77,7 @@ export class HomingPistol extends RangeWeapon {
         let range = this.calculateRange()
         let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position, range);
         if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
-            let stats = new ProjectileStats(5, 1, 5, this.stats.projectileSpeed)
+            let stats = new ProjectileStats(this.stats.projectilePiercings, 1, this.stats.damage, this.stats.projectileSpeed)
             let projectile = HomingProjectile.createHomingProjectile(this.world, this.getPosition(), this.player, closestTargetTo[1]!, stats, 'yellow')
             this.projectiles.push(projectile)
             return true
@@ -91,7 +90,7 @@ export class HomingPistol extends RangeWeapon {
         if(!offset) {
             offset = new Vector(5, 5)
         }
-        let stats = new WeaponStats(0, 1, 3)
+        let stats = new WeaponStats(0, 1, 3, 5, 5)
         let pistol = new HomingPistol(world, stats)
         pistol.offset = offset;
         pistol.size = 5;
@@ -103,11 +102,6 @@ export class HomingPistol extends RangeWeapon {
 
 export class Pistol extends RangeWeapon {
 
-    private shootInterval: number;
-    private shootCooldown: number = 0;
-
-    private projectiles: [Projectile] = []
-
     draw(ctx: CanvasRenderingContext2D) {
         drawDot(this.getPosition(), 1, this.color, ctx)
     }
@@ -116,7 +110,7 @@ export class Pistol extends RangeWeapon {
         let range = this.calculateRange()
         let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position, range);
         if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
-            let stats = new ProjectileStats(2, 1, 5, this.stats.projectileSpeed)
+            let stats = new ProjectileStats(this.stats.projectilePiercings, 1, this.stats.damage, this.stats.projectileSpeed)
             let projectile = StraightProjectile.createStraightProjectile(this.world, this.getPosition(), closestTargetTo[1]!.getPosition(), this.player, stats, 'pink')
             this.projectiles.push(projectile)
             return true
@@ -129,7 +123,11 @@ export class Pistol extends RangeWeapon {
         if(!offset) {
             offset = new Vector(5, 5)
         }
-        let stats = new WeaponStats(0, 1, 5)
+        let stats = new WeaponStats(0,
+            1,
+            5,
+            2,
+            5)
         let pistol = new Pistol(world, stats)
         pistol.offset = offset;
         pistol.size = 5;
@@ -143,7 +141,9 @@ export class Pistol extends RangeWeapon {
 export class WeaponStats {
     constructor(private _weaponRange: number,
                 private _weaponRangeFactor: number,
-                private _projectileSpeed: number) {
+                private _projectileSpeed: number,
+                private _projectilePiercings: number,
+                private _damage: number) {
     }
 
 
@@ -155,6 +155,14 @@ export class WeaponStats {
         return this._weaponRangeFactor
     }
 
+
+    get projectilePiercings(): number {
+        return this._projectilePiercings;
+    }
+
+    get damage(): number {
+        return this._damage;
+    }
 
     get projectileSpeed(): number {
         return this._projectileSpeed;
