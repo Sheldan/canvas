@@ -60,6 +60,9 @@ export class World {
         this._enemies = this._enemies.filter(item => item !== enemy)
     }
 
+    maxValue() {
+        return Math.max(this.size.x, this.size.y)
+    }
 
     get enemies(): [Enemy] {
         return this._enemies;

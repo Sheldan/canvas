@@ -67,3 +67,14 @@ export function circleLineCollision(circleCenter: Vector, radius: number, lineSt
 
     return pointInsideCircle(circleCenter, radius, closestPoint);
 }
+
+export function getCoordinatesSplit(amount: number) {
+    let angle = 2 * Math.PI / amount;
+    let points: Vector[] = [];
+    for (let i = 0; i < amount; i++) {
+        let x = Math.cos(angle * i)
+        let y = Math.sin(angle * i)
+        points.push(new Vector(x, y))
+    }
+    return points;
+}

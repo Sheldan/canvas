@@ -1,6 +1,6 @@
 import type {Acting, Drawable, Healthy, Weapon} from "./interfaces.ts";
 import {Vector} from "./base.ts";
-import {drawDot} from "./utils.ts";
+import {drawDot, getCoordinatesSplit} from "./utils.ts";
 
 export class Player implements Drawable, Acting, Healthy {
     private _position: Vector;
@@ -37,17 +37,13 @@ export class Player implements Drawable, Acting, Healthy {
     addWeapon(weapon: Weapon) {
         let weaponCount = this._weapons.length + 1;
         let angle = 2 * Math.PI / weaponCount;
-        for (let i = 0; i < this._weapons.length; i++) {
+        let points = getCoordinatesSplit(weaponCount)
+        for (let i = 0; i < points.length - 1; i++){
+            const value = points[i];
             let affectedWeapon = this._weapons[i];
-            let x = Math.cos(angle * i)
-            let y = Math.sin(angle * i)
-            console.log(x + ' ' + y)
-            affectedWeapon.setOffset(new Vector(x, y).multiply(affectedWeapon.getSize()))
+            affectedWeapon.setOffset(value.multiply(affectedWeapon.getSize()))
         }
-        let newPosition = new Vector(Math.cos(angle * (weaponCount - 1)), Math.sin(angle * (weaponCount - 1)));
-        newPosition = newPosition.multiply(weapon.getSize())
-        console.log(newPosition.x + ' ' + newPosition.y)
-        weapon.setOffset(newPosition)
+        weapon.setOffset(points[points.length - 1].multiply(weapon.getSize()))
         this._weapons.push(weapon)
     }
 

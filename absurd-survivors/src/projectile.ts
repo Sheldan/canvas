@@ -2,7 +2,15 @@ import type {Acting, Placeable, Healthy} from "./interfaces.ts";
 import type {Vector} from "./base.ts";
 import {World} from "./World.ts";
 import {Cooldown, Point, Vector} from "./base.ts";
-import {circleLineCollision, drawDot, moveInDirectionOf, pointOnLineWithinLine, straightMove, toRad} from "./utils.ts";
+import {
+    circleLineCollision,
+    drawDot,
+    getCoordinatesSplit,
+    moveInDirectionOf,
+    pointOnLineWithinLine,
+    straightMove,
+    toRad
+} from "./utils.ts";
 import {InstanceOfUtils} from "./instance.ts";
 
 export abstract class Projectile implements Acting, Placeable {
@@ -27,6 +35,10 @@ export abstract class Projectile implements Acting, Placeable {
         this.status = new ProjectileStatus(stats.piercings)
     }
 
+    die() {
+        this.world.removeProjectile(this)
+    }
+
     act() {
         this.move()
         if(this.parent !== this.world.player) {
@@ -45,11 +57,11 @@ export abstract class Projectile implements Acting, Placeable {
                             let healthy = target as Healthy;
                             healthy.takeDamage(this.stats.damage)
                             if(!this.status.hasPiercingLeft()) {
-                                this.world.removeProjectile(this)
+                               this.die()
                             }
                             this.status.decreasePiercings()
                         } else {
-                            this.world.removeProjectile(this)
+                            this.die()
                         }
                     }
                     this.lastColliding = target;
@@ -66,15 +78,13 @@ export abstract class Projectile implements Acting, Placeable {
 
     checkWorldBorder() {
         if(this.world.outside(this.position)) {
-            this.world.removeProjectile(this)
+            this.die()
         }
     }
 
     impactPlayer() {
         this.world.player.takeDamage(this.stats.damage)
-        if(!this.status.hasPiercingLeft()) {
-            this.world.removeProjectile(this)
-        }
+        this.die()
     };
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -152,7 +162,7 @@ export class HomingProjectile extends Projectile {
                         if(pointOnLineWithinLine(this.target.getPosition(), this.lastPosition, this.position)) {
                             justMovedDirection = olderMovedDirection
                         }
-                        this.target = new Point(this.position.add(justMovedDirection.multiply(Math.max(this.world.size.x, this.world.size.y))))
+                        this.target = new Point(this.position.add(justMovedDirection.multiply(this.world.maxValue())))
                     }
                 } else {
                     if(pointOnLineWithinLine(this.target.getPosition(), this.lastPosition, this.position)) {
@@ -173,6 +183,22 @@ export class HomingProjectile extends Projectile {
         return projectile;
     }
 
+
+    die() {
+        if(this.stats.deathSplit && this.stats.deathSplit > 0 && Math.random() > this.stats.deathSplitChance) {
+            let splits = this.stats.deathSplit;
+            let directionalVectors = getCoordinatesSplit(splits);
+            let stats = new ProjectileStats()
+                .withSize(this.stats.size / 2)
+                .withDamage(this.stats.damage / 2)
+                .withSpeed(this.stats.speed / 2)
+            directionalVectors.forEach(value => {
+                let target = this.position.add(value.multiply(this.world.maxValue()))
+                StraightProjectile.createStraightProjectile(this.world, this.position, target, this.parent, stats, 'white')
+            })
+        }
+        super.die();
+    }
 }
 
 export class ProjectileStatus {
@@ -204,16 +230,46 @@ export class ProjectileStatus {
 }
 
 export class ProjectileStats {
+
     private _piercings: number;
     private _size: number;
     private _damage: number;
     private _speed: number;
+    private _deathSplit: number;
+    private _deathSplitChance: number;
 
-    constructor(piercings: number, size: number, damage: number, _speed: number) {
-        this._piercings = piercings;
-        this._size = size;
-        this._damage = damage
-        this._speed = _speed;
+    constructor() {
+        this._size = 1
+    }
+
+    withPiercings(value: number) {
+        this._piercings = value;
+        return this;
+    }
+
+    withSize(value: number) {
+        this._size = Math.max(value, 1);
+        return this;
+    }
+
+    withDamage(value: number) {
+        this._damage = value;
+        return this;
+    }
+
+    withSpeed(value: number) {
+        this._speed = value;
+        return this;
+    }
+
+    withDeathSplit(value: number) {
+        this._deathSplit = value;
+        return this;
+    }
+
+    withDeathSplitChance(value: number) {
+        this._deathSplitChance = value;
+        return this;
     }
 
     get piercings(): number {
@@ -231,5 +287,14 @@ export class ProjectileStats {
 
     get damage(): number {
         return this._damage;
+    }
+
+
+    get deathSplitChance(): number {
+        return this._deathSplitChance;
+    }
+
+    get deathSplit(): number {
+        return this._deathSplit;
     }
 }

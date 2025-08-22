@@ -123,7 +123,11 @@ export class ShootingEnemy extends BasicEnemy implements Shooting {
     }
 
     createProjectile() {
-        let stats = new ProjectileStats(0, 1, 5, 2)
+        let stats = new ProjectileStats()
+            .withPiercings(0)
+            .withSize(1)
+            .withDamage(5)
+            .withSpeed(2)
         let projectile = StraightProjectile.createStraightProjectile(this.world, this._position, this.world.player.position, this, stats)
         this.projectiles.push(projectile)
         return projectile
