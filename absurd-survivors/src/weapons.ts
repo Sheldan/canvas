@@ -11,10 +11,12 @@ export abstract class BasicWeapon implements Weapon {
     protected readonly world: World;
     protected color: string;
     protected size: number;
+    protected stats: WeaponStats;
 
-    constructor(world: World) {
+    constructor(world: World, stats: WeaponStats) {
         this.player = world.player;
         this.world = world;
+        this.stats = stats;
     }
 
     act() {
@@ -43,7 +45,13 @@ export abstract class BasicWeapon implements Weapon {
     }
 }
 
-export class HomingPistol extends BasicWeapon {
+export class RangeWeapon extends BasicWeapon {
+    calculateRange(): number {
+        return this.world.player.stats.effectiveWeaponRange + this.stats.effectiveWeaponRange;
+    }
+}
+
+export class HomingPistol extends RangeWeapon {
 
     private shootInterval: number;
     private shootCooldown: number = 0;
@@ -64,7 +72,8 @@ export class HomingPistol extends BasicWeapon {
     }
 
     private createProjectile(): boolean {
-        let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position);
+        let range = this.calculateRange()
+        let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position, range);
         if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
             let stats = new ProjectileStats(5, 1, 5, 5)
             let projectile = HomingProjectile.createHomingProjectile(this.world, this.getPosition(), this.player, closestTargetTo[1]!, stats, 'yellow')
@@ -79,7 +88,8 @@ export class HomingPistol extends BasicWeapon {
         if(!offset) {
             offset = new Vector(5, 5)
         }
-        let pistol = new HomingPistol(world)
+        let stats = new WeaponStats(0, 1)
+        let pistol = new HomingPistol(world, stats)
         pistol.offset = offset;
         pistol.size = 5;
         pistol.color = 'yellow';
@@ -88,7 +98,7 @@ export class HomingPistol extends BasicWeapon {
     }
 }
 
-export class Pistol extends BasicWeapon {
+export class Pistol extends RangeWeapon {
 
     private shootInterval: number;
     private shootCooldown: number = 0;
@@ -109,7 +119,8 @@ export class Pistol extends BasicWeapon {
     }
 
     private createProjectile(): boolean {
-        let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position);
+        let range = this.calculateRange()
+        let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position, range);
         if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
             let stats = new ProjectileStats(2, 1, 5, 5)
             let projectile = StraightProjectile.createStraightProjectile(this.world, this.getPosition(), closestTargetTo[1]!.getPosition(), this.player, stats, 'pink')
@@ -124,7 +135,8 @@ export class Pistol extends BasicWeapon {
         if(!offset) {
             offset = new Vector(5, 5)
         }
-        let pistol = new Pistol(world)
+        let stats = new WeaponStats(0, 1)
+        let pistol = new Pistol(world, stats)
         pistol.offset = offset;
         pistol.size = 5;
         pistol.color = 'brown';
@@ -133,3 +145,22 @@ export class Pistol extends BasicWeapon {
     }
 }
 
+
+export class WeaponStats {
+    constructor(private _weaponRange: number,
+                private _weaponRangeFactor: number) {
+    }
+
+
+    get weaponRange(): number {
+        return this._weaponRange;
+    }
+
+    get weaponRangeFactor(): number {
+        return this._weaponRangeFactor
+    }
+
+    get effectiveWeaponRange(): number {
+        return this._weaponRange * this._weaponRangeFactor
+    }
+}

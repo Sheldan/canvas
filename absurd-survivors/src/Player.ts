@@ -4,7 +4,7 @@ import {drawDot} from "./utils.ts";
 
 export class Player implements Drawable, Acting, Healthy {
     private _position: Vector;
-    private _stats: Stats;
+    private _stats: PlayerStats;
     private _color: string;
     private _status: PlayerStatus;
     private _weapons: [Weapon] = []
@@ -28,7 +28,7 @@ export class Player implements Drawable, Acting, Healthy {
         }
         let player = new Player(position);
         player._color = 'blue';
-        player._stats = Stats.defaultPlayerStats();
+        player._stats = PlayerStats.defaultPlayerStats();
         player._speed = new Vector(0, 0)
         player._status = new PlayerStatus(10, 0);
         return player;
@@ -76,7 +76,7 @@ export class Player implements Drawable, Acting, Healthy {
         return this._color;
     }
 
-    get stats(): Stats {
+    get stats(): PlayerStats {
         return this._stats;
     }
 
@@ -133,27 +133,21 @@ export class PlayerStatus {
     }
 }
 
-export class Stats {
+export class PlayerStats {
     constructor(private _speed: number,
                 private _size: number,
                 private _health: number,
-                private _pullRange: number) {
+                private _pullRange: number,
+                private _weaponRange: number,
+                private _weaponRangeFactor: number) {
     }
 
     get speed(): number {
         return this._speed;
     }
 
-    set speed(value: number) {
-        this._speed = value;
-    }
-
     get size(): number {
         return this._size;
-    }
-
-    set size(value: number) {
-        this._size = value;
     }
 
     get pullRange(): number {
@@ -164,7 +158,15 @@ export class Stats {
         return this._health;
     }
 
-    public static defaultPlayerStats(): Stats {
-        return new Stats(3, 5, 10, 150);
+    get weaponRange(): number  {
+        return this._weaponRange
+    }
+
+    get effectiveWeaponRange(): number {
+        return this._weaponRange * this._weaponRangeFactor;
+    }
+
+    public static defaultPlayerStats(): PlayerStats {
+        return new PlayerStats(3, 5, 10, 150, 250, 1);
     }
 }
