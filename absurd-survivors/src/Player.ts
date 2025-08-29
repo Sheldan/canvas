@@ -1,11 +1,12 @@
-import type {Acting, Drawable, Healthy, Weapon} from "./interfaces.ts";
+import type {Acting, Drawable, Healthy, Leveling, Weapon} from "./interfaces.ts";
 import {Vector} from "./base.ts";
 import {drawDot, getCoordinatesSplit} from "./utils.ts";
 
-export class Player implements Drawable, Acting, Healthy {
+export class Player implements Drawable, Acting, Healthy  {
     private _position: Vector;
     private _stats: PlayerStats;
     private _color: string;
+
     private _status: PlayerStatus;
     private _weapons: [Weapon] = []
 
@@ -30,13 +31,12 @@ export class Player implements Drawable, Acting, Healthy {
         player._color = 'blue';
         player._stats = PlayerStats.defaultPlayerStats();
         player._speed = new Vector(0, 0)
-        player._status = new PlayerStatus(10, 0);
+        player._status = new PlayerStatus(10, 0, 0);
         return player;
     }
 
     addWeapon(weapon: Weapon) {
         let weaponCount = this._weapons.length + 1;
-        let angle = 2 * Math.PI / weaponCount;
         let points = getCoordinatesSplit(weaponCount)
         for (let i = 0; i < points.length - 1; i++){
             const value = points[i];
@@ -102,10 +102,33 @@ export class Player implements Drawable, Acting, Healthy {
     dead() {
         return this.status.dead
     }
+
+    increaseLevel() {
+        this.status.increaseLevel()
+        this.stats.increaseLevel()
+        this._weapons.forEach(weapon => {
+            weapon.increaseLevel()
+        })
+    }
+
+    level() {
+        return this.status.level
+    }
 }
 
 export class PlayerStatus {
-    constructor(private _health: number, private _wealth: number) {
+    constructor(private _health: number,
+                private _wealth: number,
+                private _level: number) {
+    }
+
+
+    get level(): number {
+        return this._level;
+    }
+
+    set level(value: number) {
+        this._level = value;
     }
 
     get health(): number {
@@ -127,6 +150,10 @@ export class PlayerStatus {
     set wealth(value: number) {
         this._wealth = value;
     }
+
+    increaseLevel() {
+        this._level += 1
+    }
 }
 
 export class PlayerStats {
@@ -136,6 +163,14 @@ export class PlayerStats {
                 private _pullRange: number,
                 private _weaponRange: number,
                 private _weaponRangeFactor: number) {
+    }
+
+    increaseLevel() {
+        this._speed *= 1.1;
+        this._health += 1
+        this._pullRange *= 1.1;
+        this._weaponRange *= 1.25
+        this._weaponRangeFactor += 0.1
     }
 
     get speed(): number {

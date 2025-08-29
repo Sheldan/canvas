@@ -10,6 +10,11 @@ export interface Healthy {
     dead();
 }
 
+export interface Leveling {
+    increaseLevel();
+    level()
+}
+
 export interface Drop extends Drawable, Acting {
     pickup()
 }
@@ -29,7 +34,7 @@ export interface Equipment {
     setOffset(vec: Vector);
 }
 
-export interface Weapon extends Drawable, Equipment {
+export interface Weapon extends Drawable, Equipment, Leveling {
     act()
 }
 

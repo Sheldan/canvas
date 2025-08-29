@@ -12,14 +12,21 @@ export abstract class BasicWeapon implements Weapon {
     protected color: string;
     protected size: number;
     protected stats: WeaponStats;
+    protected _level: number;
 
     constructor(world: World, stats: WeaponStats) {
         this.player = world.player;
         this.world = world;
         this.stats = stats;
+        this._level = 1;
     }
 
     act() {
+    }
+
+    increaseLevel() {
+        this._level += 1;
+        this.stats.increase()
     }
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -42,6 +49,10 @@ export abstract class BasicWeapon implements Weapon {
 
     setOffset(vec: Vector) {
         this.offset = vec;
+    }
+
+    level() {
+        return this._level
     }
 }
 
@@ -89,7 +100,7 @@ export class HomingPistol extends RangeWeapon {
         }
     }
 
-    static spawnPistol(world: World, offset?: Vector) {
+    static generatePistol(world: World, offset?: Vector) {
         if(!offset) {
             offset = new Vector(5, 5)
         }
@@ -128,7 +139,7 @@ export class Pistol extends RangeWeapon {
         }
     }
 
-    static spawnPistol(world: World, offset?: Vector) {
+    static generatePistol(world: World, offset?: Vector) {
         if(!offset) {
             offset = new Vector(5, 5)
         }
@@ -156,6 +167,13 @@ export class WeaponStats {
 
     constructor() {
         this._weaponRangeFactor = 1
+    }
+
+    increase() {
+        this._weaponRange *= 1.1;
+        this._weaponRangeFactor += 0.05;
+        this._damage *= 1.25;
+        this._shootInterval *= 0.9
     }
 
     withWeaponRange(value: number) {

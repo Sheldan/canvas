@@ -3,13 +3,12 @@ import {World} from "./World.ts";
 import {Vector} from "./base.ts";
 
 export class HUD implements DrawContainer {
-    private health: HealthInfo;
+    private health: PlayerInfo;
     private world: World;
-
 
     constructor(world: World) {
         this.world = world;
-        this.health = new HealthInfo(world);
+        this.health = new PlayerInfo(world);
     }
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -18,16 +17,17 @@ export class HUD implements DrawContainer {
 
 }
 
-export class HealthInfo implements DrawContainer {
+export class PlayerInfo implements DrawContainer {
     private bar: InfoBar;
-    private statLabels: [StatLabel] = []
+    private statLabels: StatLabel[] = []
     private world: World;
 
     constructor(world: World) {
         this.world = world;
         this.bar = new InfoBar(new Vector(0, 50), 50, 150, () => 'Health', () => this.world.player.status.health, () => this.world.player.stats.health)
         this.statLabels = [
-            new StatLabel(new Vector(0, 150), () => 'Money', () => this.world.player.status.wealth)
+            new StatLabel(new Vector(0, 150), () => 'Money', () => this.world.player.status.wealth),
+            new StatLabel(new Vector(0, 160), () => 'Level', () => this.world.player.status.level)
         ]
     }
 
@@ -55,7 +55,8 @@ export class StatLabel implements Drawable {
         ctx.beginPath();
         ctx.strokeStyle = this.borderColor
         let value = this.valueLambda();
-        ctx.fillText(`${value}`, this.position.x, this.position.y)
+        let text = this.textLambda();
+        ctx.fillText(`${text}: ${value}`, this.position.x, this.position.y)
         ctx.fill()
     }
 

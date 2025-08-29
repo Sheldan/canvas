@@ -7,7 +7,7 @@ export abstract class BasicDrop implements Drop {
     protected world: World;
     protected _position: Vector;
     protected _color: string;
-    protected _size: number;
+    protected size: number;
 
     constructor(world: World, position: Vector) {
         this.world = world;
@@ -26,7 +26,7 @@ export abstract class BasicDrop implements Drop {
 
     act() {
         let distanceToPlayer = this._position.distanceTo(this.world.player.position);
-        if(distanceToPlayer < (this.world.player.stats.size + this._size)) {
+        if(distanceToPlayer < (this.world.player.stats.size + this.size)) {
             this.pickup()
             this.world.removeDrop(this)
         } else if(distanceToPlayer < this.world.player.stats.pullRange) {
@@ -35,12 +35,11 @@ export abstract class BasicDrop implements Drop {
         }
     }
 
+    abstract draw(ctx: CanvasRenderingContext2D);
 
     getSize() {
-        return this._size
+        return this.size
     }
-
-    abstract draw(ctx: CanvasRenderingContext2D);
 
 }
 
@@ -49,11 +48,15 @@ export class MoneyDrop extends BasicDrop {
     private worth: number;
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this._position, this.getSize(), this._color, ctx)
+        drawDot(this._position, this.size, this._color, ctx)
     }
 
     pickup() {
         this.world.player.status.wealth += this.worth
+    }
+
+    static spawnMoneyDrop(world: World, position?: Vector) {
+        world.addDrop(this.createMoneyDrop(world, position))
     }
 
     static createMoneyDrop(world: World, position?: Vector): MoneyDrop {
@@ -62,35 +65,60 @@ export class MoneyDrop extends BasicDrop {
         }
         let drop = new MoneyDrop(world, position)
         drop.worth = 1;
-        drop._size = 1;
+        drop.size = 1;
         drop._color = 'orange';
         world.addDrop(drop)
         return drop;
     }
-
-
 }
 
 export class HealthPack extends BasicDrop {
     private healAmount: number;
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this._position, this.getSize(), this._color, ctx)
+        drawDot(this._position, this.size, this._color, ctx)
     }
 
     pickup() {
         this.world.player.heal(this.healAmount)
     }
 
-    static createHealthPack(world: World, position?: Vector): HealthPack {
+    static spawnHealthPack(world: World, position?: Vector) {
+        world.addDrop(this.createHealthPack(world, position))
+    }
+
+    static createHealthPack(world: World, position?: Vector) {
         if(!position) {
             position = world.randomPlace()
         }
         let drop = new HealthPack(world, position)
         drop.healAmount = 5;
-        drop._size = 2;
+        drop.size = 2;
         drop._color = 'green';
-        world.addDrop(drop)
         return drop;
     }
+}
+
+export class LevelDrop extends BasicDrop {
+    draw(ctx: CanvasRenderingContext2D) {
+        drawDot(this._position, this.size, this._color, ctx)
+    }
+
+    pickup() {
+        this.world.player.increaseLevel()
+    }
+
+    static spawnLevelDrop(world: World, position?: Vector) {
+        world.addDrop(this.createLevelDrop(world, position))
+    }
+    static createLevelDrop(world: World, position?: Vector): LevelDrop {
+        if(!position) {
+            position = world.randomPlace()
+        }
+        let drop = new LevelDrop(world, position)
+        drop.size = 5;
+        drop._color = 'blue';
+        return drop;
+    }
+
 }

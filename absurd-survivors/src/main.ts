@@ -4,7 +4,7 @@ import {docReady} from "canvas-common";
 import {World} from "./World.ts";
 import {Player} from "./Player.ts";
 import {Vector} from "./base.ts";
-import {BasicEnemy, Enemy, HealthEnemy, ShootingEnemy} from "./Enemies.ts";
+import {BasicEnemy, ContainerEnemy, Enemy, HealthEnemy, ShootingEnemy} from "./Enemies.ts";
 import {HUD} from "./ui.ts";
 import {HomingPistol, Pistol} from "./weapons.ts";
 
@@ -107,18 +107,22 @@ docReady(function () {
     world = new World(player, ctx, new Vector(window.innerWidth,  window.innerHeight));
     state = new WorldState();
 
-    world.addEnemy(BasicEnemy.generateBasicEnemy(world))
-    world.addEnemy(ShootingEnemy.generateShootingEnemy(world, new Vector(350, 350)))
+    BasicEnemy.spawnBasicEnemy(world)
+    ShootingEnemy.spawnShootingEnemy(world, new Vector(350, 350))
     setInterval(() => {
-        world.addEnemy(ShootingEnemy.generateShootingEnemy(world))
+        ShootingEnemy.spawnShootingEnemy(world)
     }, 1_000)
 
     setInterval(() => {
-        world.addEnemy(HealthEnemy.createHealthEnemy(world))
+        HealthEnemy.spawnHealthEnemy(world)
     }, 15_000)
 
-    player.addWeapon(Pistol.spawnPistol(world))
-    player.addWeapon(HomingPistol.spawnPistol(world))
+    setInterval(() => {
+        ContainerEnemy.spawnContainerEnemy(world)
+    }, 10_000)
+
+    player.addWeapon(Pistol.generatePistol(world))
+    player.addWeapon(HomingPistol.generatePistol(world))
     hud = new HUD(world);
 
 

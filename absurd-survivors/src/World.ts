@@ -1,13 +1,13 @@
 import {Enemy} from "./Enemies.ts";
 import {Player} from "./Player.ts";
-import {Projectile} from "./projectile.ts";
+import {Projectile, ProjectileStats} from "./projectile.ts";
 import {Vector} from "./base.ts";
 import type {Drop, Placeable} from "./interfaces.ts";
 
 export class World {
-    private _enemies: [Enemy] = [];
-    private _projectiles: [Projectile] = [];
-    private _drops: [Drop] = [];
+    private _enemies: Enemy[] = [];
+    private _projectiles: Projectile[] = [];
+    private _drops: Drop[] = [];
     private _player: Player;
     private _ctx: CanvasRenderingContext2D;
     private _size: Vector

@@ -3,13 +3,14 @@ import {drawDot, moveInDirectionOf} from "./utils.ts";
 import {Vector} from "./base.ts";
 import {World} from "./World.ts";
 import type {Projectile} from "./projectile.ts";
-import {HomingProjectile, ProjectileStats, StraightProjectile} from "./projectile.ts";
-import {HealthPack, MoneyDrop} from "./drop.ts";
+import {ProjectileStats, StraightProjectile} from "./projectile.ts";
+import {HealthPack, LevelDrop, MoneyDrop} from "./drop.ts";
 
 export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
     protected _position: Vector;
     protected speed: number;
     protected world: World;
+    protected size: number
     protected status: EnemyStatus = new EnemyStatus(10);
 
     constructor(position: Vector) {
@@ -40,10 +41,11 @@ export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
     }
 
     die() {
-        MoneyDrop.createMoneyDrop(this.world, this._position);
+        MoneyDrop.spawnMoneyDrop(this.world, this._position);
     }
 
     getSize() {
+        return this.size;
     }
 
     dead() {
@@ -58,14 +60,13 @@ export class BasicEnemy extends Enemy {
         super(position);
     }
 
-    protected size: number;
     protected color: string;
     protected impactDamage: number;
     protected impactCooldown: number = 0;
     protected impactInterval: number = 60;
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this._position, this.size, this.color, ctx)
+        drawDot(this._position, this.getSize(), this.color, ctx)
     }
 
 
@@ -75,11 +76,15 @@ export class BasicEnemy extends Enemy {
 
     act() {
         super.act();
-        if(this._position.distanceTo(this.world.player.position) < this.size && this.impactCooldown <= 0) {
+        if(this._position.distanceTo(this.world.player.position) < this.getSize() && this.impactCooldown <= 0) {
             this.world.player.takeDamage(this.impactDamage)
             this.impactCooldown = this.impactInterval;
         }
         this.impactCooldown -= 1;
+    }
+
+    static spawnBasicEnemy(world: World, position?: Vector) {
+        world.addEnemy(this.generateBasicEnemy(world, position))
     }
 
     static generateBasicEnemy(world: World, position?: Vector): BasicEnemy {
@@ -95,9 +100,6 @@ export class BasicEnemy extends Enemy {
         return basicEnemy;
     }
 
-    getSize() {
-        return this.size
-    }
 }
 
 export class ShootingEnemy extends BasicEnemy implements Shooting {
@@ -133,18 +135,22 @@ export class ShootingEnemy extends BasicEnemy implements Shooting {
         return projectile
     }
 
+    static spawnShootingEnemy(world: World, position?: Vector) {
+        world.addEnemy(this.generateShootingEnemy(world, position))
+    }
+
     static generateShootingEnemy(world: World, position?: Vector) {
         if(position === undefined) {
             position = world.randomPlace()
         }
-        let basicEnemy = new ShootingEnemy(position);
-        basicEnemy.size = 5;
-        basicEnemy.world = world;
-        basicEnemy.speed = 0.5;
-        basicEnemy.color = 'green'
-        basicEnemy.impactDamage = 2;
-        basicEnemy.shootInterval = 100
-        return basicEnemy;
+        let shootingEnemy = new ShootingEnemy(position);
+        shootingEnemy.size = 5;
+        shootingEnemy.world = world;
+        shootingEnemy.speed = 0.5;
+        shootingEnemy.color = 'green'
+        shootingEnemy.impactDamage = 2;
+        shootingEnemy.shootInterval = 100
+        return shootingEnemy
     }
 }
 
@@ -172,7 +178,6 @@ export class HealthEnemy extends Enemy {
         super(position);
     }
 
-    protected size: number;
     protected color: string;
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -188,7 +193,11 @@ export class HealthEnemy extends Enemy {
     }
 
     die() {
-        HealthPack.createHealthPack(this.world, this._position)
+        HealthPack.spawnHealthPack(this.world, this._position)
+    }
+
+    static spawnHealthEnemy(world: World, position?: Vector) {
+        world.addEnemy(this.createHealthEnemy(world, position))
     }
 
     static createHealthEnemy(world: World, position?: Vector) {
@@ -206,5 +215,98 @@ export class HealthEnemy extends Enemy {
 
     getSize() {
         return this.size
+    }
+}
+
+export class ContainerEnemy extends Enemy {
+
+    private drops: KillChanceTable;
+    constructor(position: Vector) {
+        super(position);
+        this.status.health = 5;
+        this.drops = new KillChanceTable();
+        this.drops.addDrop( {chance: 50, creationMethod: this.spawnHealthPack})
+        this.drops.addDrop( {chance: 50, creationMethod: this.spawnLevelUp})
+        this.drops.addDrop( {chance: 10, creationMethod: this.spawnEnemy})
+        this.drops.calculateProbs()
+    }
+
+    protected color: string;
+
+    draw(ctx: CanvasRenderingContext2D) {
+        drawDot(this._position, this.size, this.color, ctx)
+    }
+
+    move() {
+    }
+
+    act() {
+        super.act();
+    }
+
+    die() {
+        this.drops.draw().creationMethod(this)
+    }
+
+    spawnHealthPack(enemy: ContainerEnemy) {
+        HealthPack.spawnHealthPack(enemy.world, enemy._position)
+    }
+
+    spawnLevelUp(enemy: ContainerEnemy) {
+        LevelDrop.spawnLevelDrop(enemy.world, enemy._position)
+    }
+
+    spawnEnemy(enemy: ContainerEnemy) {
+        ShootingEnemy.spawnShootingEnemy(enemy.world, enemy._position)
+    }
+
+    static spawnContainerEnemy(world: World, position?: Vector) {
+        world.addEnemy(this.createContainerEnemy(world, position))
+    }
+
+    static createContainerEnemy(world: World, position?: Vector) {
+        if(position === undefined) {
+            position = world.randomPlace()
+        }
+        let basicEnemy = new ContainerEnemy(position);
+        basicEnemy.size = 5;
+        basicEnemy.world = world;
+        basicEnemy.speed = 0;
+        basicEnemy.color = 'brown'
+        return basicEnemy;
+    }
+
+
+    getSize() {
+        return this.size
+    }
+}
+
+export interface ChanceEntry {
+    chance: number;
+    creationMethod: (any: any) => void;
+}
+
+export class KillChanceTable {
+    private chances: ChanceEntry[] = []
+
+    addDrop(entry: ChanceEntry) {
+        this.chances.push(entry)
+    }
+
+    calculateProbs() {
+        let sum = this.chances.reduce((sum, entry) => sum + entry.chance, 0)
+        this.chances.forEach(value => value.chance /= sum)
+    }
+
+    draw() {
+        let change = Math.random();
+        for (const value of this.chances) {
+            change -= value.chance;
+            if(change <= 0) {
+                return value;
+            }
+        }
+        return this.chances[this.chances.length - 1]
     }
 }
