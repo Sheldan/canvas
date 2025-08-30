@@ -89,7 +89,7 @@ export class BasicEnemy extends Enemy {
 
     static generateBasicEnemy(world: World, position?: Vector): BasicEnemy {
         if(position === undefined) {
-            position = new Vector(250, 250)
+            position = world.randomPlace()
         }
         let basicEnemy = new BasicEnemy(position);
         basicEnemy.size = 5;

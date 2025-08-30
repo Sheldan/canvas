@@ -21,19 +21,31 @@ export class PlayerInfo implements DrawContainer {
     private bar: InfoBar;
     private statLabels: StatLabel[] = []
     private world: World;
+    private statLabelBase: Vector;
+    private static readonly STAT_LABEL_HEIGHT_OFFSET: number = 4;
 
     constructor(world: World) {
         this.world = world;
         this.bar = new InfoBar(new Vector(0, 50), 50, 150, () => 'Health', () => this.world.player.status.health, () => this.world.player.stats.health)
+        this.statLabelBase = new Vector(0, 150)
         this.statLabels = [
-            new StatLabel(new Vector(0, 150), () => 'Money', () => this.world.player.status.wealth),
-            new StatLabel(new Vector(0, 160), () => 'Level', () => this.world.player.status.level)
+            new StatLabel(() => 'Money', () => this.world.player.status.wealth),
+            new StatLabel(() => 'Level', () => this.world.player.status.level),
+            new StatLabel(() => 'Speed', () => this.world.player.stats.speed),
+            new StatLabel(() => 'Pull range', () => this.world.player.stats.pullRange),
+            new StatLabel(() => 'Weapon range', () => this.world.player.stats.effectiveWeaponRange)
         ]
     }
 
     draw(ctx: CanvasRenderingContext2D) {
         this.bar.draw(ctx)
-        this.statLabels.forEach(label => label.draw(ctx))
+        let metrics = ctx.measureText('I')
+        let upperCaseCharacterSize = new Vector(0, metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent).add(new Vector(0, PlayerInfo.STAT_LABEL_HEIGHT_OFFSET))
+        for (let i = 0; i < this.statLabels.length; i++){
+            const label = this.statLabels[i];
+            label.move(this.statLabelBase.add(upperCaseCharacterSize.multiply(i)))
+            label.draw(ctx);
+        }
     }
 
 }
@@ -45,11 +57,16 @@ export class StatLabel implements Drawable {
     private valueLambda: () => number;
 
 
-    constructor(position: Vector, textLambda: () => string, valueLambda: () => number) {
+    constructor(textLambda: () => string, valueLambda: () => number);
+    constructor(textLambda: () => string, valueLambda: () => number, position?: Vector) {
+        if(!position) {
+            position = new Vector(0, 0)
+        }
         this.position = position;
         this.textLambda = textLambda;
         this.valueLambda = valueLambda;
     }
+
 
     draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
@@ -64,7 +81,8 @@ export class StatLabel implements Drawable {
         return this.position;
     }
 
-    move(any?: any) {
+    move(position: Vector) {
+        this.position = position
     }
 
     getSize() {

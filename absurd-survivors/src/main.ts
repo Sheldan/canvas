@@ -107,9 +107,9 @@ docReady(function () {
     world = new World(player, ctx, new Vector(window.innerWidth,  window.innerHeight));
     state = new WorldState();
 
-    BasicEnemy.spawnBasicEnemy(world)
     ShootingEnemy.spawnShootingEnemy(world, new Vector(350, 350))
     setInterval(() => {
+        BasicEnemy.spawnBasicEnemy(world)
         ShootingEnemy.spawnShootingEnemy(world)
     }, 1_000)
 
