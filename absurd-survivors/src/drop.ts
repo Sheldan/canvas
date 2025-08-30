@@ -67,7 +67,6 @@ export class MoneyDrop extends BasicDrop {
         drop.worth = 1;
         drop.size = 1;
         drop._color = 'orange';
-        world.addDrop(drop)
         return drop;
     }
 }

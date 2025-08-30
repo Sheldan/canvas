@@ -1,16 +1,16 @@
 import {Enemy} from "./Enemies.ts";
 import {Player} from "./Player.ts";
-import {Projectile, ProjectileStats} from "./projectile.ts";
+import {Projectile } from "./projectile.ts";
 import {Vector} from "./base.ts";
 import type {Drop, Placeable} from "./interfaces.ts";
 
 export class World {
-    private _enemies: Enemy[] = [];
-    private _projectiles: Projectile[] = [];
-    private _drops: Drop[] = [];
+    private _enemies: ObjectContainer<Enemy> = new ObjectContainer<Enemy>()
+    private _projectiles: ObjectContainer<Projectile> = new ObjectContainer<Projectile>();
+    private _drops: ObjectContainer<Drop> = new ObjectContainer<Drop>();
     private _player: Player;
-    private _ctx: CanvasRenderingContext2D;
-    private _size: Vector
+    private readonly _ctx: CanvasRenderingContext2D;
+    private _size: Vector;
 
     constructor(player: Player, ctx: CanvasRenderingContext2D, size: Vector) {
         this._player = player;
@@ -19,25 +19,41 @@ export class World {
     }
 
     enemiesAct() {
-        this._enemies.forEach(enemy => enemy.act())
-        this._projectiles.forEach(projectile => projectile.act())
-        this._drops.forEach(drop => drop.act())
+        this._enemies.items.forEach(enemy => enemy.act())
+        this._enemies.clean()
+        this._projectiles.items.forEach(projectile => projectile.act())
+        this._projectiles.clean()
+        this._drops.items.forEach(drop => drop.act())
+        this._drops.clean()
     }
 
     draw() {
-        this._enemies.forEach(enemy => enemy.draw(this._ctx))
-        this._drops.forEach(drop => drop.draw(this._ctx))
-        this._projectiles.forEach(projectile => projectile.draw(this._ctx))
+        this._enemies.items.forEach(enemy => enemy.draw(this._ctx))
+        this._drops.items.forEach(drop => drop.draw(this._ctx))
+        this._projectiles.items.forEach(projectile => projectile.draw(this._ctx))
         this._player.draw(this._ctx);
     }
 
     addProjectile(projectile: Projectile) {
-        this._projectiles.push(projectile)
+        this._projectiles.add(projectile)
     }
 
     addDrop(drop: Drop)  {
-        this._drops.push(drop)
+        this._drops.add(drop)
     }
+
+    removeDrop(drop: Drop) {
+        this._drops.scheduleRemoval(drop)
+    }
+
+    removeEnemy(enemy: Enemy) {
+        this._enemies.scheduleRemoval(enemy)
+    }
+
+    removeProjectile(projectile: Projectile) {
+        this._projectiles.scheduleRemoval(projectile)
+    }
+
 
     movePlayer(vector: Vector) {
         this._player.position.x += vector.x;
@@ -48,24 +64,9 @@ export class World {
         this._player.position.y = Math.max(this._player.getSize(), this._player.position.y)
     }
 
-    removeDrop(drop: Drop) {
-        this._drops = this._drops.filter(item => item !== drop)
-    }
-
-    removeProjectile(projectile: Projectile) {
-        this._projectiles = this._projectiles.filter(item => item !== projectile)
-    }
-
-    removeEnemy(enemy: Enemy) {
-        this._enemies = this._enemies.filter(item => item !== enemy)
-    }
 
     maxValue() {
         return Math.max(this.size.x, this.size.y)
-    }
-
-    get enemies(): [Enemy] {
-        return this._enemies;
     }
 
 
@@ -78,7 +79,7 @@ export class World {
     }
 
     addEnemy(enemy: Enemy) {
-        this._enemies.push(enemy)
+        this._enemies.add(enemy)
     }
 
     randomPlace(): Vector {
@@ -96,7 +97,7 @@ export class World {
     getClosestTargetToButNotArray(point: Vector, placeAbles?: [Placeable | undefined], range?: number): [number, Placeable | undefined] | undefined {
         let currentTarget;
         let currentDistance = Number.MAX_SAFE_INTEGER;
-        this._enemies.forEach(enemy => {
+        this._enemies.items.forEach(enemy => {
             if(placeAbles && placeAbles.indexOf(enemy) !== -1) {
                 return;
             }
@@ -116,5 +117,37 @@ export class World {
 
     get player(): Player {
         return this._player;
+    }
+}
+
+class ObjectContainer<T> {
+    private _items: T[] = [];
+    private _itemsToRemove: T[] = [];
+
+    constructor() {
+        this._items = []
+        this._itemsToRemove = []
+    }
+
+    scheduleRemoval(item: T) {
+        this._itemsToRemove.push(item)
+    }
+
+    clean() {
+        this._itemsToRemove.forEach(value => this.remove(value))
+        this._itemsToRemove = []
+    }
+
+    private remove(itemToRemove: T) {
+        this._items = this._items.filter(item => item !== itemToRemove)
+    }
+
+    add(item: T) {
+        this._items.push(item)
+    }
+
+
+    get items(): T[] {
+        return this._items;
     }
 }

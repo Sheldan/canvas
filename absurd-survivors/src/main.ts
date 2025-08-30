@@ -7,6 +7,7 @@ import {Vector} from "./base.ts";
 import {BasicEnemy, ContainerEnemy, Enemy, HealthEnemy, ShootingEnemy} from "./Enemies.ts";
 import {HUD} from "./ui.ts";
 import {HomingPistol, Pistol} from "./weapons.ts";
+import {MoneyDrop} from "./drop.ts";
 
 
 let hud: HUD;
@@ -107,7 +108,6 @@ docReady(function () {
     world = new World(player, ctx, new Vector(window.innerWidth,  window.innerHeight));
     state = new WorldState();
 
-    ShootingEnemy.spawnShootingEnemy(world, new Vector(350, 350))
     setInterval(() => {
         BasicEnemy.spawnBasicEnemy(world)
         ShootingEnemy.spawnShootingEnemy(world)
