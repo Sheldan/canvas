@@ -1,7 +1,7 @@
 import type {Acting, Placeable, Healthy} from "./interfaces.ts";
 import type {Vector} from "./base.ts";
 import {World} from "./World.ts";
-import {Cooldown, Point, Vector} from "./base.ts";
+import {Cooldown, DeadPoint, Point, Vector} from "./base.ts";
 import {
     circleLineCollision,
     drawDot,
@@ -162,13 +162,13 @@ export class HomingProjectile extends Projectile {
                         if(pointOnLineWithinLine(this.target.getPosition(), this.lastPosition, this.position)) {
                             justMovedDirection = olderMovedDirection
                         }
-                        this.target = new Point(this.position.add(justMovedDirection.multiply(this.world.maxValue())))
+                        this.target = new DeadPoint(this.position.add(justMovedDirection.multiply(this.world.maxValue())))
                     }
                 } else {
                     if(pointOnLineWithinLine(this.target.getPosition(), this.lastPosition, this.position)) {
                         justMovedDirection = olderMovedDirection
                     }
-                    this.target = new Point(this.position.add(justMovedDirection.multiply(Math.max(this.world.size.x, this.world.size.y))))
+                    this.target = new DeadPoint(this.position.add(justMovedDirection.multiply(Math.max(this.world.size.x, this.world.size.y))))
                 }
             }
         }

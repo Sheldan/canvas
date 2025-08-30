@@ -125,10 +125,7 @@ docReady(function () {
     player.addWeapon(HomingPistol.generateHomingPistol(world))
     hud = new HUD(world);
 
-
     requestAnimationFrame(updateCanvas);
-
-
 
 })
 

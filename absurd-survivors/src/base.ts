@@ -1,4 +1,4 @@
-import type {Placeable} from "./interfaces.ts";
+import type {Healthy, Placeable} from "./interfaces.ts";
 
 export class Vector {
 
@@ -123,6 +123,37 @@ export class Point implements Placeable {
     }
 
     move(any?: any) {
+    }
+
+}
+
+export class DeadPoint implements Placeable, Healthy {
+
+    private position: Vector;
+
+
+    constructor(position: Vector) {
+        this.position = position;
+    }
+
+    getPosition(): Vector {
+        return this.position;
+    }
+
+    getSize() {
+    }
+
+    move(any?: any) {
+    }
+
+    dead() {
+        return true;
+    }
+
+    die() {
+    }
+
+    takeDamage(damage: number) {
     }
 
 }
