@@ -122,7 +122,7 @@ docReady(function () {
     }, 10_000)
 
     player.addWeapon(Pistol.generatePistol(world))
-    player.addWeapon(HomingPistol.generatePistol(world))
+    player.addWeapon(HomingPistol.generateHomingPistol(world))
     hud = new HUD(world);
 
 

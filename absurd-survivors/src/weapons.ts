@@ -100,7 +100,7 @@ export class HomingPistol extends RangeWeapon {
         }
     }
 
-    static generatePistol(world: World, offset?: Vector) {
+    static generateHomingPistol(world: World, offset?: Vector) {
         if(!offset) {
             offset = new Vector(5, 5)
         }

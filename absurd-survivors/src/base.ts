@@ -54,8 +54,12 @@ export class Vector {
         return (this._x * vector._x + this._y * vector._y) / Math.pow(vector.vecLength(), 2);
     }
 
+    dotProduct2(vector: Vector): number {
+        return (this._x * vector._x + this._y * vector._y)
+    }
+
     angleTo(vector: Vector): number {
-        return Math.acos(this.dotProduct(vector))
+        return Math.acos(this.dotProduct2(vector) / (this.vecLength() * vector.vecLength()))
     }
 
     get x(): number {

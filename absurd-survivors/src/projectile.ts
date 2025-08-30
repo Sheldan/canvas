@@ -144,7 +144,7 @@ export class HomingProjectile extends Projectile {
             if(target.dead()) {
                 let closestTargetTo = this.world.getClosestTargetTo(this.position)
 
-                let newTargetDirection = Vector.createVector(this.target.getPosition(), this.position)
+                let oldTargetDirection = Vector.createVector(this.target.getPosition(), this.position)
                 let justMovedDirection = Vector.createVector(this.position, this.lastPosition).normalize()
                 let olderMovedDirection: Vector;
                 if(this.secondToLastPosition !== undefined) {
@@ -155,8 +155,8 @@ export class HomingProjectile extends Projectile {
                 if (closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
                     let newTargetPosition = closestTargetTo[1]!.getPosition();
                     let newDir = Vector.createVector(newTargetPosition, this.position)
-                    let newDirAngle = newDir.angleTo(newTargetDirection);
-                    if(Math.abs(newDirAngle) >= toRad(150)) {
+                    let newDirAngle = newDir.angleTo(oldTargetDirection);
+                    if(Math.abs(newDirAngle) <= toRad(30)) {
                         this.target = closestTargetTo[1]!;
                     } else {
                         if(pointOnLineWithinLine(this.target.getPosition(), this.lastPosition, this.position)) {
