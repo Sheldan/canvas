@@ -155,7 +155,7 @@ export class HomingProjectile extends Projectile {
                 if (closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
                     let newTargetPosition = closestTargetTo[1]!.getPosition();
                     let newDir = Vector.createVector(newTargetPosition, this.position)
-                    let newDirAngle = newDir.angleTo(oldTargetDirection);
+                    let newDirAngle = newDir.angleTo(olderMovedDirection);
                     if(Math.abs(newDirAngle) <= toRad(30)) {
                         this.target = closestTargetTo[1]!;
                     } else {
@@ -215,7 +215,7 @@ export class ProjectileStatus {
     }
 
     hasPiercingLeft(): boolean {
-        return this.piercingsLeft >= 0;
+        return this.piercingsLeft > 0;
     }
 
 
