@@ -62,6 +62,14 @@ export class Vector {
         return Math.acos(this.dotProduct2(vector) / (this.vecLength() * vector.vecLength()))
     }
 
+    rotate(angle: number) {
+        let c = Math.cos(angle);
+        let s = Math.sin(angle)
+        let x = this._x * c - this._y * s
+        let y = this._x * s + this._y * c
+        return new Vector(x, y)
+    }
+
     get x(): number {
         return this._x;
     }

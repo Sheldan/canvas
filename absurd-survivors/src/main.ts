@@ -6,7 +6,7 @@ import {Player} from "./Player.ts";
 import {Vector} from "./base.ts";
 import {BasicEnemy, ContainerEnemy, Enemy, HealthEnemy, ShootingEnemy} from "./Enemies.ts";
 import {HUD} from "./ui.ts";
-import {HomingPistol, Pistol} from "./weapons.ts";
+import {HomingPistol, Pistol, SpreadWeapon} from "./weapons.ts";
 import {MoneyDrop} from "./drop.ts";
 
 
@@ -123,6 +123,7 @@ docReady(function () {
 
     player.addWeapon(Pistol.generatePistol(world))
     player.addWeapon(HomingPistol.generateHomingPistol(world))
+    player.addWeapon(SpreadWeapon.generateSpreadWeapon(world))
     hud = new HUD(world);
 
     requestAnimationFrame(updateCanvas);

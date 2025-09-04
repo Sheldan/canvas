@@ -1,5 +1,5 @@
 import type {Weapon} from "./interfaces.ts";
-import {drawDot} from "./utils.ts";
+import {drawDot, toRad} from "./utils.ts";
 import {Player} from "./Player.ts";
 import {HomingProjectile, Projectile, ProjectileStats, StraightProjectile} from "./projectile.ts";
 import {World} from "./World.ts";
@@ -151,6 +151,55 @@ export class Pistol extends RangeWeapon {
         pistol.offset = offset;
         pistol.size = 5;
         pistol.color = 'brown';
+        return pistol;
+    }
+}
+
+export class SpreadWeapon extends RangeWeapon {
+    draw(ctx: CanvasRenderingContext2D) {
+        drawDot(this.getPosition(), 1, this.color, ctx)
+    }
+
+    private createProjectile(): boolean {
+        let range = this.calculateRange()
+        let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position, range);
+        if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
+            let stats = new ProjectileStats()
+                .withPiercings(this.stats.projectilePiercings)
+                .withSize(1)
+                .withDamage(this.stats.damage)
+                .withSpeed(this.stats.projectileSpeed);
+            let targetPosition = closestTargetTo[1]!.getPosition();
+            let weaponPosition = this.getPosition();
+            let mainVector = Vector.createVector(targetPosition, weaponPosition)
+            let mainProjectile = StraightProjectile.createStraightProjectile(this.world, weaponPosition, targetPosition, this.player, stats, 'gray')
+            this.projectiles.push(mainProjectile)
+            let upperVector = mainVector.rotate(toRad(-30))
+            let upperTarget = weaponPosition.add(upperVector.multiply(this.world.maxValue()))
+            let upperProjectile = StraightProjectile.createStraightProjectile(this.world, weaponPosition, upperTarget, this.player, stats, 'gray')
+            this.projectiles.push(upperProjectile)
+            let lowerVector = mainVector.rotate(toRad(30))
+            let lowerTarget = weaponPosition.add(lowerVector.multiply(this.world.maxValue()))
+            let lowerProjectile = StraightProjectile.createStraightProjectile(this.world, weaponPosition, lowerTarget, this.player, stats, 'gray')
+            this.projectiles.push(lowerProjectile)
+            return true
+        } else {
+            return false;
+        }
+    }
+
+    static generateSpreadWeapon(world: World, offset?: Vector) {
+        if(!offset) {
+            offset = new Vector(5, 5)
+        }
+        let stats = new WeaponStats()
+            .withProjectileSpeed(1)
+            .withDamage(3)
+            .withShootInterval(40)
+        let pistol = new SpreadWeapon(world, stats)
+        pistol.offset = offset;
+        pistol.size = 5;
+        pistol.color = 'gray';
         return pistol;
     }
 }
