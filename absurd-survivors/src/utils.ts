@@ -78,3 +78,7 @@ export function getCoordinatesSplit(amount: number) {
     }
     return points;
 }
+
+export function randomItem(items: any[]) {
+    return items[Math.floor(Math.random() * items.length)]
+}

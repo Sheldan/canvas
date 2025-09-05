@@ -1,4 +1,4 @@
-import type {Acting, Drawable, Healthy, Leveling, Weapon} from "./interfaces.ts";
+import type {Acting, Drawable, Healthy, Item, Leveling, Weapon} from "./interfaces.ts";
 import {Vector} from "./base.ts";
 import {drawDot, getCoordinatesSplit} from "./utils.ts";
 
@@ -8,7 +8,8 @@ export class Player implements Drawable, Acting, Healthy  {
     private _color: string;
 
     private _status: PlayerStatus;
-    private _weapons: [Weapon] = []
+    private _weapons: Weapon[] = []
+    private _items: Item[] = []
 
     // temp
     private _speed: Vector;
@@ -45,6 +46,10 @@ export class Player implements Drawable, Acting, Healthy  {
         }
         weapon.setOffset(points[points.length - 1].multiply(weapon.getSize()))
         this._weapons.push(weapon)
+    }
+
+    addItem(item: Item) {
+        this._items.push(item)
     }
 
     move(direction: Vector) {
@@ -171,6 +176,31 @@ export class PlayerStats {
         this._pullRange *= 1.1;
         this._weaponRange *= 1.25
         this._weaponRangeFactor += 0.1
+    }
+
+
+    set speed(value: number) {
+        this._speed = value;
+    }
+
+    set size(value: number) {
+        this._size = value;
+    }
+
+    set health(value: number) {
+        this._health = value;
+    }
+
+    set pullRange(value: number) {
+        this._pullRange = value;
+    }
+
+    set weaponRange(value: number) {
+        this._weaponRange = value;
+    }
+
+    set weaponRangeFactor(value: number) {
+        this._weaponRangeFactor = value;
     }
 
     get speed(): number {

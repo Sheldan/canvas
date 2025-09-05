@@ -1,7 +1,8 @@
-import type {Drop} from "./interfaces.ts";
+import type {Drop, Item} from "./interfaces.ts";
 import {World} from "./World.ts";
 import {drawDot, moveInDirectionOf} from "./utils.ts";
 import {Vector} from "./base.ts";
+import {rarityColor} from "./items.ts";
 
 export abstract class BasicDrop implements Drop {
     protected world: World;
@@ -120,4 +121,37 @@ export class LevelDrop extends BasicDrop {
         return drop;
     }
 
+}
+
+export class ItemDrop extends BasicDrop {
+
+    private item: Item;
+
+
+    constructor(world: World, position: Vector, item: Item) {
+        super(world, position);
+        this.item = item;
+    }
+
+    pickup() {
+        this.item.pickup(this.world.player, this.world)
+    }
+
+    draw(ctx: CanvasRenderingContext2D) {
+        ctx.fillStyle = rarityColor(this.item.getRarity())
+        ctx.fillText(this.item.name() + '', this._position.x, this._position.y)
+    }
+
+    static spawnItemDrop(world: World, item: Item, position?: Vector) {
+        world.addDrop(this.createItemDrop(world, item, position))
+    }
+
+    static createItemDrop(world: World, item: Item, position?: Vector) {
+        if(!position) {
+            position = world.randomPlace()
+        }
+        let drop = new ItemDrop(world, position, item)
+        drop.size = 3
+        return drop
+    }
 }

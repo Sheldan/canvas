@@ -1,10 +1,11 @@
-import type {Acting, Drawable, Healthy, Placeable, Shooting} from "./interfaces.ts";
+import type {Acting, ChanceEntry, Drawable, Healthy, Placeable, Shooting} from "./interfaces.ts";
 import {drawDot, moveInDirectionOf} from "./utils.ts";
 import {Vector} from "./base.ts";
 import {World} from "./World.ts";
 import type {Projectile} from "./projectile.ts";
 import {ProjectileStats, StraightProjectile} from "./projectile.ts";
-import {HealthPack, LevelDrop, MoneyDrop} from "./drop.ts";
+import {HealthPack, ItemDrop, LevelDrop, MoneyDrop} from "./drop.ts";
+import {ItemManagement} from "./items.ts";
 
 export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
     protected _position: Vector;
@@ -12,8 +13,11 @@ export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
     protected world: World;
     protected size: number
     protected status: EnemyStatus = new EnemyStatus(10);
+    protected drops: KillChanceTable;
 
     constructor(position: Vector) {
+        this.drops = new KillChanceTable();
+        this.drops.addDrop( {chance: 10, creationMethod: this.spawnMoney})
         this._position = position.clone();
     }
 
@@ -41,7 +45,14 @@ export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
     }
 
     die() {
-        MoneyDrop.spawnMoneyDrop(this.world, this._position);
+        let draw = this.drops.draw();
+        if(draw) {
+            draw.creationMethod(this)
+        }
+    }
+
+    spawnMoney(enemy: Enemy) {
+        MoneyDrop.spawnMoneyDrop(enemy.world, enemy._position);
     }
 
     getSize() {
@@ -225,9 +236,9 @@ export class ContainerEnemy extends Enemy {
         super(position);
         this.status.health = 5;
         this.drops = new KillChanceTable();
-        this.drops.addDrop( {chance: 50, creationMethod: this.spawnHealthPack})
-        this.drops.addDrop( {chance: 50, creationMethod: this.spawnLevelUp})
-        this.drops.addDrop( {chance: 10, creationMethod: this.spawnEnemy})
+        ItemManagement.getItemsWithRarityFactor().forEach(drop => {
+            this.drops.addDrop(drop)
+        })
         this.drops.calculateProbs()
     }
 
@@ -245,7 +256,11 @@ export class ContainerEnemy extends Enemy {
     }
 
     die() {
-        this.drops.draw().creationMethod(this)
+        let draw = this.drops.draw();
+        if(draw) {
+            let item = draw.creationMethod(this);
+            ItemDrop.spawnItemDrop(this.world, item, this._position)
+        }
     }
 
     spawnHealthPack(enemy: ContainerEnemy) {
@@ -282,10 +297,6 @@ export class ContainerEnemy extends Enemy {
     }
 }
 
-export interface ChanceEntry {
-    chance: number;
-    creationMethod: (any: any) => void;
-}
 
 export class KillChanceTable {
     private chances: ChanceEntry[] = []
@@ -300,6 +311,9 @@ export class KillChanceTable {
     }
 
     draw() {
+        if(this.chances.length === 0) {
+            return undefined;
+        }
         let change = Math.random();
         for (const value of this.chances) {
             change -= value.chance;

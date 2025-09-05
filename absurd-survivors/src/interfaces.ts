@@ -1,4 +1,7 @@
 import {Vector} from "./base.ts";
+import type {Player} from "./Player.ts";
+import type {Rarity} from "./items.ts";
+import type {World} from "./World.ts";
 
 export interface Acting {
     act()
@@ -13,6 +16,17 @@ export interface Healthy {
 export interface Leveling {
     increaseLevel();
     level()
+}
+
+export interface Item {
+    pickup(player: Player, world: World);
+    name(): string
+    getRarity(): Rarity;
+}
+
+export interface ChanceEntry {
+    chance: number;
+    creationMethod: (any: any) => any;
 }
 
 export interface Drop extends Drawable, Acting {

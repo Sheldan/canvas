@@ -4,10 +4,10 @@ import {docReady} from "canvas-common";
 import {World} from "./World.ts";
 import {Player} from "./Player.ts";
 import {Vector} from "./base.ts";
-import {BasicEnemy, ContainerEnemy, Enemy, HealthEnemy, ShootingEnemy} from "./Enemies.ts";
+import {BasicEnemy, ContainerEnemy, HealthEnemy, ShootingEnemy} from "./Enemies.ts";
 import {HUD} from "./ui.ts";
-import {HomingPistol, Pistol, SpreadWeapon} from "./weapons.ts";
-import {MoneyDrop} from "./drop.ts";
+import {Pistol} from "./weapons.ts";
+import {ItemManagement} from "./items.ts";
 
 
 let hud: HUD;
@@ -122,9 +122,9 @@ docReady(function () {
     }, 10_000)
 
     player.addWeapon(Pistol.generatePistol(world))
-    player.addWeapon(HomingPistol.generateHomingPistol(world))
-    player.addWeapon(SpreadWeapon.generateSpreadWeapon(world))
     hud = new HUD(world);
+
+    ItemManagement.initializeItems()
 
     requestAnimationFrame(updateCanvas);
 
