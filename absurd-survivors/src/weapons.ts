@@ -105,7 +105,7 @@ export class HomingPistol extends RangeWeapon {
             offset = new Vector(5, 5)
         }
         let stats = new WeaponStats()
-                                    .withProjectileSpeed(1)
+                                    .withProjectileSpeed(3)
                                     .withDamage(3)
                                     .withShootInterval(50)
         let pistol = new HomingPistol(world, stats)
@@ -144,7 +144,7 @@ export class Pistol extends RangeWeapon {
             offset = new Vector(5, 5)
         }
         let stats = new WeaponStats()
-            .withProjectileSpeed(2)
+            .withProjectileSpeed(4)
             .withDamage(4)
             .withShootInterval(25)
         let pistol = new Pistol(world, stats)
@@ -193,7 +193,7 @@ export class SpreadWeapon extends RangeWeapon {
             offset = new Vector(5, 5)
         }
         let stats = new WeaponStats()
-            .withProjectileSpeed(1)
+            .withProjectileSpeed(3)
             .withDamage(3)
             .withShootInterval(40)
         let pistol = new SpreadWeapon(world, stats)
