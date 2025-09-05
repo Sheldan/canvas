@@ -103,7 +103,7 @@ docReady(function () {
 
     ctx = canvas.getContext("2d");
     config = new Config();
-    let player = Player.generatePlayer();
+    let player = Player.generatePlayer(new Vector(window.innerWidth /2, window.innerHeight / 2));
 
     world = new World(player, ctx, new Vector(window.innerWidth,  window.innerHeight));
     state = new WorldState();
