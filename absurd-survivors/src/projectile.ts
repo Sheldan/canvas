@@ -1,4 +1,4 @@
-import type {Acting, Placeable, Healthy} from "./interfaces.ts";
+import type {Acting, Placeable, Healthy, Weapon} from "./interfaces.ts";
 import type {Vector} from "./base.ts";
 import {World} from "./World.ts";
 import {Cooldown, DeadPoint, Point, Vector} from "./base.ts";
@@ -12,6 +12,8 @@ import {
     toRad
 } from "./utils.ts";
 import {InstanceOfUtils} from "./instance.ts";
+import {MeleeWeapon} from "./weapons.ts";
+import type {Enemy} from "./Enemies.ts";
 
 export abstract class Projectile implements Acting, Placeable {
 
@@ -47,6 +49,7 @@ export abstract class Projectile implements Acting, Placeable {
                 this.status.collisionCooldown.resetCooldown()
             }
         } else if(this.parent === this.world.player) {
+            // TODO think why this was done, why do I need to calculate the newest target on _each_ act?
             let closestTargetTo = this.world.getClosestTargetToButNot(this.position, this.lastColliding);
             if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
                 let target: Placeable = closestTargetTo[1]!;
@@ -121,6 +124,62 @@ export class StraightProjectile extends Projectile {
     static createStraightProjectile(world: World, start: Vector, targetPosition: Vector, parent: any, stats: ProjectileStats, color?: string) {
         let dirVector = Vector.createVector(targetPosition, start).normalize().multiply(stats.speed);
         let projectile = new StraightProjectile(start, dirVector, stats, world, parent)
+        projectile.color = color === undefined ? 'red' : color!;
+        world.addProjectile(projectile)
+        return projectile;
+    }
+}
+
+export class WeaponProjectile extends Projectile {
+    private weapon: MeleeWeapon;
+    private movingBack: boolean = false;
+    private target: Vector;
+    private lastHit: Enemy[] = []
+
+    constructor(position: Vector, speedVec: Vector, stats: ProjectileStats, world: World, parent: any, weapon: MeleeWeapon, target: Vector) {
+        super(position, speedVec, stats, world, parent);
+        this.weapon = weapon;
+        this.target = target.clone()
+    }
+
+    draw(ctx: CanvasRenderingContext2D) {
+        drawDot(this.position, this.stats.size, 'pink', ctx) // todo render the weapon instead
+    }
+
+    act() {
+        this.move()
+        // TODO It seems that the projectile doesnt _quite_ hit the enemy, but is just getting close to it
+        let hitEnemies = this.world.getAllInRange(this.position, this.stats.size * 2);
+        hitEnemies.forEach(value => {
+            if(this.lastHit.indexOf(value) !== -1) {
+                if(InstanceOfUtils.instanceOfHealthy(value)) {
+                    let healthy = value as Healthy;
+                    healthy.takeDamage(this.stats.damage)
+                }
+            }
+        })
+        this.lastHit = hitEnemies;
+    }
+
+    move() {
+        super.move()
+        if(!this.movingBack) {
+            this.position = straightMove(this.position, this.speedVec)
+            if(this.position.distanceTo(this.target) < this.stats.size) {
+                this.movingBack = true;
+            }
+        } else {
+            this.position = moveInDirectionOf(this.position, this.world.player.position, this.speedVec.vecLength())
+        }
+        if(this.movingBack && this.position.distanceTo(this.world.player.position) < (this.stats.size + this.world.player.stats.size)) {
+            this.weapon.reset();
+            this.die()
+        }
+    }
+
+    static createWeaponProjectile(world: World, start: Vector, targetPosition: Vector, parent: any, stats: ProjectileStats, weapon: MeleeWeapon, color?: string) {
+        let dirVector = Vector.createVector(targetPosition, start).normalize().multiply(stats.speed);
+        let projectile = new WeaponProjectile(start, dirVector, stats, world, parent, weapon, targetPosition)
         projectile.color = color === undefined ? 'red' : color!;
         world.addProjectile(projectile)
         return projectile;

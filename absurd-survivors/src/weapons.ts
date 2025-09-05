@@ -1,7 +1,7 @@
 import type {Weapon} from "./interfaces.ts";
 import {drawDot, toRad} from "./utils.ts";
 import {Player} from "./Player.ts";
-import {HomingProjectile, Projectile, ProjectileStats, StraightProjectile} from "./projectile.ts";
+import {HomingProjectile, Projectile, ProjectileStats, StraightProjectile, WeaponProjectile} from "./projectile.ts";
 import {World} from "./World.ts";
 import {Vector} from "./base.ts";
 
@@ -74,6 +74,57 @@ export abstract class RangeWeapon extends BasicWeapon {
 
     calculateRange(): number {
         return this.world.player.stats.effectiveWeaponRange + this.stats.effectiveWeaponRange;
+    }
+}
+
+
+export abstract class MeleeWeapon extends RangeWeapon {
+    protected launched: boolean;
+
+    act() {
+        if(this.shootCooldown <= 0) {
+            if(this.createProjectile()) {
+                this.shootCooldown = 1;
+            }
+        }
+    }
+
+    reset() {
+        this.shootCooldown = 0
+    }
+}
+export class Dagger extends MeleeWeapon {
+
+    createProjectile(): boolean {
+        let range = this.calculateRange()
+        let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position, range);
+        if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
+            let stats = new ProjectileStats()
+                .withPiercings(1000)
+                .withSize(3)
+                .withDamage(this.stats.damage)
+                .withSpeed(this.stats.projectileSpeed);
+            let projectile = WeaponProjectile.createWeaponProjectile(this.world, this.getPosition(), closestTargetTo[1]!.getPosition(), this.player, stats, this)
+            this.projectiles.push(projectile)
+            return true
+        } else {
+            return false;
+        }
+    }
+
+    static createDagger(world: World, offset?: Vector) {
+        if(!offset) {
+            offset = new Vector(5, 5)
+        }
+        let stats = new WeaponStats()
+            .withProjectileSpeed(3)
+            .withDamage(15)
+            .withShootInterval(50)
+        let pistol = new Dagger(world, stats)
+        pistol.offset = offset;
+        pistol.size = 4;
+        pistol.color = 'gray';
+        return pistol;
     }
 }
 

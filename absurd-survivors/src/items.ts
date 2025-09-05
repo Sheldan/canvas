@@ -1,7 +1,7 @@
 import type {ChanceEntry, Item} from "./interfaces.ts";
 import {Player} from "./Player.ts";
 import {randomItem} from "./utils.ts";
-import {HomingPistol, Pistol, SpreadWeapon} from "./weapons.ts";
+import {Dagger, HomingPistol, Pistol, SpreadWeapon} from "./weapons.ts";
 import type {World} from "./World.ts";
 
 export enum Rarity {
@@ -40,6 +40,7 @@ export class ItemManagement {
         this.ITEMS.push(new HomingPistolItem())
         this.ITEMS.push(new PistolItem())
         this.ITEMS.push(new SpreadWeaponItem())
+        this.ITEMS.push(new DaggerWeaponItem())
     }
 }
 
@@ -91,7 +92,7 @@ export class SpeedUp extends BaseItem {
     }
 
     getRarity(): Rarity {
-        return Rarity.COMMON;
+        return Rarity.LEGENDARY;
     }
 }
 
@@ -154,4 +155,20 @@ export class SpreadWeaponItem extends BaseItem {
         return Rarity.EPIC;
     }
 }
+
+export class DaggerWeaponItem extends BaseItem {
+    pickup(player: Player, world: World) {
+        player.addWeapon(Dagger.createDagger(world))
+        super.pickup(player, world)
+    }
+
+    name() {
+        return 'dagger'
+    }
+
+    getRarity(): Rarity {
+        return Rarity.EPIC;
+    }
+}
+
 

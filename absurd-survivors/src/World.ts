@@ -115,6 +115,17 @@ export class World {
         }
     }
 
+    getAllInRange(point: Vector, range: number): Enemy[] {
+        let found = [];
+        this._enemies.items.forEach(enemy => {
+            let distance = point.distanceTo(enemy.getPosition());
+            if(range && distance < range) {
+                found.push(enemy)
+            }
+        });
+        return found;
+    }
+
     get player(): Player {
         return this._player;
     }
