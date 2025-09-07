@@ -1,7 +1,7 @@
 import type {ChanceEntry, Item} from "./interfaces.ts";
 import {Player} from "./Player.ts";
 import {randomItem} from "./utils.ts";
-import {Dagger, HomingPistol, Pistol, SpreadWeapon} from "./weapons.ts";
+import {ChainBall, HomingPistol, Pistol, SpreadWeapon} from "./weapons.ts";
 import type {World} from "./World.ts";
 
 export enum Rarity {
@@ -40,7 +40,8 @@ export class ItemManagement {
         this.ITEMS.push(new HomingPistolItem())
         this.ITEMS.push(new PistolItem())
         this.ITEMS.push(new SpreadWeaponItem())
-        this.ITEMS.push(new DaggerWeaponItem())
+        this.ITEMS.push(new ChainBallWeaponItem())
+        this.ITEMS.push(new PullRangeUp())
     }
 }
 
@@ -93,6 +94,21 @@ export class SpeedUp extends BaseItem {
 
     getRarity(): Rarity {
         return Rarity.LEGENDARY;
+    }
+}
+
+export class PullRangeUp extends BaseItem {
+    pickup(player: Player, world: World) {
+        player.stats.pullRange *= 1.1
+        super.pickup(player, world)
+    }
+
+    name() {
+        return 'pull range'
+    }
+
+    getRarity(): Rarity {
+        return Rarity.COMMON;
     }
 }
 
@@ -156,14 +172,14 @@ export class SpreadWeaponItem extends BaseItem {
     }
 }
 
-export class DaggerWeaponItem extends BaseItem {
+export class ChainBallWeaponItem extends BaseItem {
     pickup(player: Player, world: World) {
-        player.addWeapon(Dagger.createDagger(world))
+        player.addWeapon(ChainBall.createChainBall(world))
         super.pickup(player, world)
     }
 
     name() {
-        return 'dagger'
+        return 'chain ball'
     }
 
     getRarity(): Rarity {

@@ -167,6 +167,7 @@ export class WeaponProjectile extends Projectile {
             this.position = straightMove(this.position, this.speedVec)
             if(this.position.distanceTo(this.target) < this.stats.size) {
                 this.movingBack = true;
+                this.speedVec = this.speedVec.multiply(3)
             }
         } else {
             this.position = moveInDirectionOf(this.position, this.world.player.position, this.speedVec.vecLength())

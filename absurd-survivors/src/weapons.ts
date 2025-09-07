@@ -93,7 +93,7 @@ export abstract class MeleeWeapon extends RangeWeapon {
         this.shootCooldown = 0
     }
 }
-export class Dagger extends MeleeWeapon {
+export class ChainBall extends MeleeWeapon {
 
     createProjectile(): boolean {
         let range = this.calculateRange()
@@ -112,7 +112,7 @@ export class Dagger extends MeleeWeapon {
         }
     }
 
-    static createDagger(world: World, offset?: Vector) {
+    static createChainBall(world: World, offset?: Vector) {
         if(!offset) {
             offset = new Vector(5, 5)
         }
@@ -120,7 +120,7 @@ export class Dagger extends MeleeWeapon {
             .withProjectileSpeed(3)
             .withDamage(15)
             .withShootInterval(50)
-        let pistol = new Dagger(world, stats)
+        let pistol = new ChainBall(world, stats)
         pistol.offset = offset;
         pistol.size = 4;
         pistol.color = 'gray';
