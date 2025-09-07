@@ -39,6 +39,15 @@ export interface Placeable {
     getPosition(): Vector;
 }
 
+export interface MouseInteracting {
+    hit(pos: Vector): boolean
+    clickAction(pos: Vector): void
+}
+
+export interface MouseInterActingContainer {
+    mouseDown(pos: Vector)
+}
+
 export interface Projectile extends Drawable {
 
 }

@@ -1,18 +1,74 @@
-import type {Drawable, DrawContainer} from "./interfaces.ts";
+import type {Drawable, DrawContainer, MouseInteracting, MouseInterActingContainer} from "./interfaces.ts";
 import {World} from "./World.ts";
 import {Vector} from "./base.ts";
+import {rectPointIntersection} from "./utils.ts";
 
 export class HUD implements DrawContainer {
     private health: PlayerInfo;
+    private controls: Controls;
     private world: World;
 
-    constructor(world: World) {
+    constructor(world: World, keys: any) {
         this.world = world;
         this.health = new PlayerInfo(world);
+        this.controls = new Controls(world, keys);
     }
 
     draw(ctx: CanvasRenderingContext2D) {
         this.health.draw(ctx)
+        this.controls.draw(ctx)
+    }
+
+    mouseDown(event: MouseEvent) {
+        let pos = new Vector(event.x, event.y)
+        this.controls.mouseDown(pos)
+    }
+
+    mouseUp(event: MouseEvent) {
+        let pos = new Vector(event.x, event.y)
+        this.controls.mouseUp(pos)
+    }
+
+}
+
+export class Controls implements DrawContainer, MouseInterActingContainer {
+
+    private world: World;
+    private buttons: RectButton[] = []
+    private lastHitButton: RectButton | undefined;
+
+    constructor(world: World, keys: any) {
+        this.world = world;
+
+        this.buttons = [
+            new KeyboardButton(new Vector(this.world.size.x - 150, this.world.size.y - 150), new Vector(50, 50), 'W', keys),
+            new KeyboardButton(new Vector(this.world.size.x - 150, this.world.size.y - 100), new Vector(50, 50), 'S', keys),
+            new KeyboardButton(new Vector(this.world.size.x - 100, this.world.size.y - 100), new Vector(50, 50), 'D', keys),
+            new KeyboardButton(new Vector(this.world.size.x - 200, this.world.size.y - 100), new Vector(50, 50), 'A', keys)
+        ]
+    }
+
+    draw(ctx: CanvasRenderingContext2D) {
+        this.buttons.forEach(button => {
+            button.draw(ctx)
+        })
+    }
+
+    mouseDown(pos: Vector) {
+        this.lastHitButton = undefined;
+        for (const button of this.buttons) {
+            if(button.hit(pos)) {
+                button.clickAction(pos)
+                this.lastHitButton = button;
+                return
+            }
+        }
+    }
+
+    mouseUp(pos: Vector) {
+       if(this.lastHitButton) {
+           this.lastHitButton.releaseAction(pos)
+       }
     }
 
 }
@@ -48,6 +104,69 @@ export class PlayerInfo implements DrawContainer {
         }
     }
 
+}
+
+export class RectButton implements Drawable, MouseInteracting {
+    protected position: Vector;
+    protected size: Vector;
+    protected borderColor: string = 'light-gray';
+    protected contentColor: string = 'gray';
+    protected label: string;
+    protected action: () => void;
+    protected releaseLambda?: () => void;
+
+    constructor(position: Vector, size: Vector, label: string,  actionLambda: () => void, releaseLambda?: () => void) {
+        this.position = position;
+        this.size = size;
+        this.label = label;
+        this.action = actionLambda;
+        this.releaseLambda = releaseLambda;
+    }
+
+    draw(ctx: CanvasRenderingContext2D) {
+        ctx.beginPath()
+        ctx.fillStyle = this.contentColor;
+        ctx.strokeStyle = this.borderColor;
+        ctx.rect(this.position.x, this.position.y, this.size.x, this.size.y)
+        ctx.fill()
+        ctx.stroke();
+        ctx.fillStyle = 'black'
+        ctx.fillText(this.label, this.position.x + this.size.x / 2, this.position.y + this.size.y / 2)
+        ctx.closePath()
+    }
+
+    getPosition(): Vector {
+        return this.position;
+    }
+
+    getSize() {
+    }
+
+    move(any?: any) {
+    }
+
+    clickAction(pos: Vector) {
+        this.action()
+    }
+
+    releaseAction(pos: Vector) {
+        if(this.releaseLambda) {
+            this.releaseLambda()
+        }
+    }
+
+    hit(pos: Vector): boolean {
+        return rectPointIntersection(this.position, this.size, pos)
+    }
+}
+
+export class KeyboardButton extends RectButton {
+    constructor(position: Vector, size: Vector, key: string, keys: any) {
+        super(position, size, key.toUpperCase(),
+            () => { keys[key.toLowerCase()].state = true},
+            () => { keys[key.toLowerCase()].state = false}
+        )
+    }
 }
 
 export class StatLabel implements Drawable {

@@ -82,3 +82,14 @@ export function getCoordinatesSplit(amount: number) {
 export function randomItem(items: any[]) {
     return items[Math.floor(Math.random() * items.length)]
 }
+
+export function rectPointIntersection(topLeft: Vector, size: Vector, point: Vector) {
+    if (topLeft.x + size.x >= point.x &&
+        topLeft.x <= point.x &&
+        topLeft.y + size.y >= point.y &&
+        topLeft.y <= point.y) {
+        return true
+    } else {
+        return false;
+    }
+}

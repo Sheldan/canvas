@@ -125,7 +125,22 @@ docReady(function () {
     }, 10_000)
 
     player.addWeapon(Pistol.generatePistol(world))
-    hud = new HUD(world);
+    hud = new HUD(world, keys);
+
+    canvas.onmousedown = (event) => {
+        hud.mouseDown(event)
+    }
+    canvas.onmouseup = (event) => {
+        hud.mouseUp(event)
+    }
+
+    canvas.touchstart = (event) => {
+        hud.mouseDown(event)
+    }
+
+    canvas.touchend = (event) => {
+        hud.mouseUp(event)
+    }
 
     ItemManagement.initializeItems()
 
