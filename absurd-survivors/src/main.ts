@@ -110,8 +110,11 @@ docReady(function () {
 
     setInterval(() => {
         BasicEnemy.spawnBasicEnemy(world)
-        ShootingEnemy.spawnShootingEnemy(world)
     }, 1_000)
+
+    setInterval(() => {
+        ShootingEnemy.spawnShootingEnemy(world)
+    }, 3_000)
 
     setInterval(() => {
         HealthEnemy.spawnHealthEnemy(world)

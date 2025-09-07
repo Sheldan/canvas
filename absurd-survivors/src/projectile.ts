@@ -49,7 +49,6 @@ export abstract class Projectile implements Acting, Placeable {
                 this.status.collisionCooldown.resetCooldown()
             }
         } else if(this.parent === this.world.player) {
-            // TODO think why this was done, why do I need to calculate the newest target on _each_ act?
             let closestTargetTo = this.world.getClosestTargetToButNot(this.position, this.lastColliding);
             if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
                 let target: Placeable = closestTargetTo[1]!;

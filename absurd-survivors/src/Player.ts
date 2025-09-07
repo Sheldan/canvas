@@ -162,12 +162,21 @@ export class PlayerStatus {
 }
 
 export class PlayerStats {
-    constructor(private _speed: number,
-                private _size: number,
-                private _health: number,
-                private _pullRange: number,
-                private _weaponRange: number,
-                private _weaponRangeFactor: number) {
+
+    private _speed: number;
+    private _size: number;
+    private _health: number;
+    private _pullRange: number;
+    private _weaponRange: number;
+    private _weaponRangeFactor: number;
+
+    constructor() {
+        this._speed = 3;
+        this._size = 5;
+        this._health = 10;
+        this._pullRange = 150;
+        this._weaponRange = 250;
+        this._weaponRangeFactor = 1;
     }
 
     increaseLevel() {
@@ -228,6 +237,6 @@ export class PlayerStats {
     }
 
     public static defaultPlayerStats(): PlayerStats {
-        return new PlayerStats(3, 5, 10, 150, 250, 1);
+        return new PlayerStats();
     }
 }

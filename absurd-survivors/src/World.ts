@@ -90,6 +90,24 @@ export class World {
         return this.getClosestTargetToButNot(point, undefined, range)
     }
 
+    getFarthestTargetButWithin(point: Vector, range?: number): [number, Placeable | undefined] | undefined {
+        let currentTarget;
+        let currentDistance = Number.MAX_SAFE_INTEGER;
+        this._enemies.items.forEach(enemy => {
+            let distance = point.distanceTo(enemy.getPosition());
+            if(range && distance > range) {
+                return;
+            }
+            if((range - distance) < currentDistance) {
+                currentDistance = distance;
+                currentTarget = enemy
+            }
+        })
+        if(currentTarget) {
+            return [currentDistance, currentTarget];
+        }
+    }
+
     getClosestTargetToButNot(point: Vector, placeable?: Placeable, range?: number): [number, Placeable | undefined] | undefined {
         return this.getClosestTargetToButNotArray(point, [placeable], range)
     }

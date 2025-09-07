@@ -97,7 +97,7 @@ export class ChainBall extends MeleeWeapon {
 
     createProjectile(): boolean {
         let range = this.calculateRange()
-        let closestTargetTo = this.world.getClosestTargetTo(this.world.player.position, range);
+        let closestTargetTo = this.world.getFarthestTargetButWithin(this.world.player.position, range);
         if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
             let stats = new ProjectileStats()
                 .withPiercings(1000)
@@ -267,6 +267,11 @@ export class WeaponStats {
 
     constructor() {
         this._weaponRangeFactor = 1
+        this._weaponRange = 0
+        this._projectilePiercings = 0
+        this._projectileSpeed = 100
+        this._damage = 1
+        this._shootInterval = 50
     }
 
     increase() {
