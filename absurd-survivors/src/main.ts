@@ -128,19 +128,29 @@ docReady(function () {
     hud = new HUD(world, keys);
 
     canvas.onmousedown = (event) => {
-        hud.mouseDown(event)
+        event.preventDefault()
+        let pos = new Vector(event.x, event.y)
+        hud.mouseDown(pos)
     }
     canvas.onmouseup = (event) => {
-        hud.mouseUp(event)
+        event.preventDefault()
+        let pos = new Vector(event.x, event.y)
+        hud.mouseUp(pos)
     }
 
-    canvas.touchstart = (event) => {
-        hud.mouseDown(event)
-    }
+    canvas.addEventListener("touchstart", (event) => {
+        event.preventDefault()
+        let touch = event.touches[0]
+        let pos = new Vector(touch.clientX, touch.clientY)
+        hud.mouseDown(pos)
+    });
 
-    canvas.touchend = (event) => {
-        hud.mouseUp(event)
-    }
+    canvas.addEventListener("touchend",  (event) => {
+        event.preventDefault()
+        let touch = event.touches[0]
+        let pos = new Vector(event.clientX, event.clientY)
+        hud.mouseUp(pos)
+    });
 
     ItemManagement.initializeItems()
 

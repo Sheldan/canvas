@@ -19,13 +19,11 @@ export class HUD implements DrawContainer {
         this.controls.draw(ctx)
     }
 
-    mouseDown(event: MouseEvent) {
-        let pos = new Vector(event.x, event.y)
+    mouseDown(pos: Vector) {
         this.controls.mouseDown(pos)
     }
 
-    mouseUp(event: MouseEvent) {
-        let pos = new Vector(event.x, event.y)
+    mouseUp(pos: Vector) {
         this.controls.mouseUp(pos)
     }
 
@@ -39,12 +37,12 @@ export class Controls implements DrawContainer, MouseInterActingContainer {
 
     constructor(world: World, keys: any) {
         this.world = world;
-
+        let gapSize = 10;
         this.buttons = [
-            new KeyboardButton(new Vector(this.world.size.x - 150, this.world.size.y - 150), new Vector(50, 50), 'W', keys),
+            new KeyboardButton(new Vector(this.world.size.x - 150, this.world.size.y - 150 - gapSize), new Vector(50, 50), 'W', keys),
             new KeyboardButton(new Vector(this.world.size.x - 150, this.world.size.y - 100), new Vector(50, 50), 'S', keys),
-            new KeyboardButton(new Vector(this.world.size.x - 100, this.world.size.y - 100), new Vector(50, 50), 'D', keys),
-            new KeyboardButton(new Vector(this.world.size.x - 200, this.world.size.y - 100), new Vector(50, 50), 'A', keys)
+            new KeyboardButton(new Vector(this.world.size.x - 100 + gapSize, this.world.size.y - 100), new Vector(50, 50), 'D', keys),
+            new KeyboardButton(new Vector(this.world.size.x - 200 - gapSize, this.world.size.y - 100), new Vector(50, 50), 'A', keys)
         ]
     }
 
