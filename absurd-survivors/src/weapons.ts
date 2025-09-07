@@ -1,7 +1,14 @@
 import type {Weapon} from "./interfaces.ts";
 import {drawDot, toRad} from "./utils.ts";
 import {Player} from "./Player.ts";
-import {HomingProjectile, Projectile, ProjectileStats, StraightProjectile, WeaponProjectile} from "./projectile.ts";
+import {
+    HomingProjectile,
+    Projectile,
+    ProjectileStats,
+    StraightProjectile,
+    ChainBallProjectile,
+    StraightMeleeWeaponProjectile
+} from "./projectile.ts";
 import {World} from "./World.ts";
 import {Vector} from "./base.ts";
 
@@ -84,15 +91,67 @@ export abstract class MeleeWeapon extends RangeWeapon {
     act() {
         if(this.shootCooldown <= 0) {
             if(this.createProjectile()) {
+                this.launched = true;
                 this.shootCooldown = 1;
             }
+        }
+        if(!this.launched) {
+            this.shootCooldown -= 1;
         }
     }
 
     reset() {
-        this.shootCooldown = 0
+        this.shootCooldown = this.stats.shootInterval
+        this.launched = false;
+    }
+
+    calculateRange(): number {
+        return this.stats.effectiveWeaponRange;
     }
 }
+
+export class Spear extends MeleeWeapon {
+    protected launched: boolean;
+
+    createProjectile(): boolean {
+        let range = this.calculateRange()
+        let closestTargetTo = this.world.getFarthestTargetButWithin(this.world.player.position, range);
+        if(closestTargetTo !== undefined && closestTargetTo[1] !== undefined) {
+            let stats = new ProjectileStats()
+                .withPiercings(1000)
+                .withSize(3)
+                .withDamage(this.stats.damage)
+                .withSpeed(this.stats.projectileSpeed);
+            let offsetVector = Vector.createVector(closestTargetTo[1]!.getPosition(), this.player.position).multiply(1.1);
+            if(offsetVector.vecLength() < 15) {
+                offsetVector = offsetVector.normalize().multiply(40)
+            }
+            let projectile = StraightMeleeWeaponProjectile.createStraightMeleeProjectile(this.world, new Vector(0, 0), offsetVector, this.player, stats, this)
+            this.projectiles.push(projectile)
+            return true
+        } else {
+            return false;
+        }
+    }
+
+    static createSpear(world: World, offset?: Vector) {
+        if(!offset) {
+            offset = new Vector(5, 5)
+        }
+        let stats = new WeaponStats()
+            .withProjectileSpeed(5)
+            .withDamage(15)
+            .withWeaponRange(150)
+            .withShootInterval(50)
+        let pistol = new Spear(world, stats)
+        pistol.offset = offset;
+        pistol.size = 7;
+        pistol.color = 'brown';
+        return pistol;
+    }
+
+}
+
 export class ChainBall extends MeleeWeapon {
 
     createProjectile(): boolean {
@@ -104,7 +163,7 @@ export class ChainBall extends MeleeWeapon {
                 .withSize(3)
                 .withDamage(this.stats.damage)
                 .withSpeed(this.stats.projectileSpeed);
-            let projectile = WeaponProjectile.createWeaponProjectile(this.world, this.getPosition(), closestTargetTo[1]!.getPosition(), this.player, stats, this)
+            let projectile = ChainBallProjectile.createChainBallProjectile(this.world, this.getPosition(), closestTargetTo[1]!.getPosition(), this.player, stats, this)
             this.projectiles.push(projectile)
             return true
         } else {
@@ -119,7 +178,8 @@ export class ChainBall extends MeleeWeapon {
         let stats = new WeaponStats()
             .withProjectileSpeed(3)
             .withDamage(15)
-            .withShootInterval(50)
+            .withWeaponRange(150)
+            .withShootInterval(20)
         let pistol = new ChainBall(world, stats)
         pistol.offset = offset;
         pistol.size = 4;
@@ -267,7 +327,7 @@ export class WeaponStats {
 
     constructor() {
         this._weaponRangeFactor = 1
-        this._weaponRange = 0
+        this._weaponRange = 50
         this._projectilePiercings = 0
         this._projectileSpeed = 100
         this._damage = 1

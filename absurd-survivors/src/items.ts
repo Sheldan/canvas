@@ -1,7 +1,7 @@
 import type {ChanceEntry, Item} from "./interfaces.ts";
 import {Player} from "./Player.ts";
 import {randomItem} from "./utils.ts";
-import {ChainBall, HomingPistol, Pistol, SpreadWeapon} from "./weapons.ts";
+import {ChainBall, HomingPistol, Pistol, Spear, SpreadWeapon} from "./weapons.ts";
 import type {World} from "./World.ts";
 
 export enum Rarity {
@@ -42,6 +42,7 @@ export class ItemManagement {
         this.ITEMS.push(new SpreadWeaponItem())
         this.ITEMS.push(new ChainBallWeaponItem())
         this.ITEMS.push(new PullRangeUp())
+        this.ITEMS.push(new SpearWeaponItem())
     }
 }
 
@@ -186,5 +187,21 @@ export class ChainBallWeaponItem extends BaseItem {
         return Rarity.EPIC;
     }
 }
+
+export class SpearWeaponItem extends BaseItem {
+    pickup(player: Player, world: World) {
+        player.addWeapon(Spear.createSpear(world))
+        super.pickup(player, world)
+    }
+
+    name() {
+        return 'spear'
+    }
+
+    getRarity(): Rarity {
+        return Rarity.EPIC;
+    }
+}
+
 
 

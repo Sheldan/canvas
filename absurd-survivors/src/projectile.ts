@@ -12,7 +12,7 @@ import {
     toRad
 } from "./utils.ts";
 import {InstanceOfUtils} from "./instance.ts";
-import {MeleeWeapon} from "./weapons.ts";
+import {ChainBall, MeleeWeapon} from "./weapons.ts";
 import type {Enemy} from "./Enemies.ts";
 
 export abstract class Projectile implements Acting, Placeable {
@@ -129,13 +129,13 @@ export class StraightProjectile extends Projectile {
     }
 }
 
-export class WeaponProjectile extends Projectile {
-    private weapon: MeleeWeapon;
+export class ChainBallProjectile extends Projectile {
+    private weapon: ChainBall;
     private movingBack: boolean = false;
     private target: Vector;
     private lastHit: Enemy[] = []
 
-    constructor(position: Vector, speedVec: Vector, stats: ProjectileStats, world: World, parent: any, weapon: MeleeWeapon, target: Vector) {
+    constructor(position: Vector, speedVec: Vector, stats: ProjectileStats, world: World, parent: any, weapon: ChainBall, target: Vector) {
         super(position, speedVec, stats, world, parent);
         this.weapon = weapon;
         this.target = target.clone()
@@ -177,9 +177,71 @@ export class WeaponProjectile extends Projectile {
         }
     }
 
-    static createWeaponProjectile(world: World, start: Vector, targetPosition: Vector, parent: any, stats: ProjectileStats, weapon: MeleeWeapon, color?: string) {
+    static createChainBallProjectile(world: World, start: Vector, targetPosition: Vector, parent: any, stats: ProjectileStats, weapon: MeleeWeapon, color?: string) {
         let dirVector = Vector.createVector(targetPosition, start).normalize().multiply(stats.speed);
-        let projectile = new WeaponProjectile(start, dirVector, stats, world, parent, weapon, targetPosition)
+        let projectile = new ChainBallProjectile(start, dirVector, stats, world, parent, weapon, targetPosition)
+        projectile.color = color === undefined ? 'red' : color!;
+        world.addProjectile(projectile)
+        return projectile;
+    }
+}
+
+export class StraightMeleeWeaponProjectile extends Projectile {
+
+    private weapon: MeleeWeapon;
+    private movingBack: boolean = false;
+    private target: Vector;
+    private lastHit: Enemy[] = []
+
+    constructor(position: Vector, speedVec: Vector, stats: ProjectileStats, world: World, parent: any, weapon: ChainBall, target: Vector) {
+        super(position, speedVec, stats, world, parent);
+        this.weapon = weapon;
+        this.target = target.clone()
+    }
+
+    draw(ctx: CanvasRenderingContext2D) {
+        let position = this.getRealPosition();
+        drawDot(position, this.stats.size, 'brown', ctx) // todo render the weapon instead
+    }
+
+    getRealPosition(): Vector {
+        return this.world.player.getPosition().add(this.position)
+    }
+
+    act() {
+        this.move()
+        let hitEnemies = this.world.getAllInRange(this.getRealPosition(), this.stats.size * 2);
+        hitEnemies.forEach(value => {
+            if(this.lastHit.indexOf(value) !== -1) {
+                if(InstanceOfUtils.instanceOfHealthy(value)) {
+                    let healthy = value as Healthy;
+                    healthy.takeDamage(this.stats.damage)
+                }
+            }
+        })
+        this.lastHit = hitEnemies;
+    }
+
+    move() {
+        super.move()
+        if(!this.movingBack) {
+            this.position = straightMove(this.position, this.speedVec)
+            if(this.position.distanceTo(this.target) < this.stats.size) {
+                this.movingBack = true;
+                this.speedVec = this.speedVec.multiply(3)
+            }
+        } else {
+            this.position = moveInDirectionOf(this.position, new Vector(0, 0), this.speedVec.vecLength())
+        }
+        if(this.movingBack && this.position.distanceTo(new Vector(0, 0)) < (this.stats.size + this.world.player.stats.size)) {
+            this.weapon.reset();
+            this.die()
+        }
+    }
+
+    static createStraightMeleeProjectile(world: World, start: Vector, targetPosition: Vector, parent: any, stats: ProjectileStats, weapon: MeleeWeapon, color?: string) {
+        let dirVector = Vector.createVector(targetPosition, start).normalize().multiply(stats.speed);
+        let projectile = new StraightMeleeWeaponProjectile(start, dirVector, stats, world, parent, weapon, targetPosition)
         projectile.color = color === undefined ? 'red' : color!;
         world.addProjectile(projectile)
         return projectile;
