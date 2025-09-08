@@ -53,7 +53,7 @@ export class Controls implements DrawContainer, MouseInterActingContainer {
     constructor(world: World, keys: any) {
         this.world = world;
         this.keys = keys;
-        this.size = 50;
+        this.size = 60;
     }
 
     draw(ctx: CanvasRenderingContext2D) {
