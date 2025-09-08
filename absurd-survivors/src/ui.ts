@@ -88,7 +88,7 @@ export class Controls implements DrawContainer, MouseInterActingContainer {
     mouseMove(pos: Vector) {
         if(this.isPressed()) {
             let diff = Vector.createVector(pos, this.centerPosition!);
-            if(!isNaN(diff.x) && !isNaN(diff.y)) {
+            if(isNaN(diff.x) || isNaN(diff.y)) {
                 return;
             }
             diff = diff.normalize();
