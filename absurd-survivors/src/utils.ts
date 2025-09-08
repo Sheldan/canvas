@@ -7,6 +7,10 @@ export function fillDot(position: Vector, size: number, color: string, ctx: Canv
     ctx.fill();
 }
 
+export function isMobile() {
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
+
 export function drawDot(position: Vector, size: number, color: string, ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
     ctx.strokeStyle = color;

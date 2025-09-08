@@ -1,34 +1,44 @@
 import type {Drawable, DrawContainer, MouseInteracting, MouseInterActingContainer} from "./interfaces.ts";
 import {World} from "./World.ts";
 import {Vector} from "./base.ts";
-import {drawDot, fillDot, rectPointIntersection} from "./utils.ts";
+import {drawDot, fillDot, isMobile, rectPointIntersection} from "./utils.ts";
 
 export class HUD implements DrawContainer {
     private health: PlayerInfo;
-    private controls: Controls;
+    private controls: Controls | undefined;
     private world: World;
 
     constructor(world: World, keys: any) {
         this.world = world;
         this.health = new PlayerInfo(world);
-        this.controls = new Controls(world, keys);
+        if (isMobile()) {
+            this.controls = new Controls(world, keys);
+        }
     }
 
     draw(ctx: CanvasRenderingContext2D) {
         this.health.draw(ctx)
-        this.controls.draw(ctx)
+        if(this.controls) {
+            this.controls.draw(ctx)
+        }
     }
 
     mouseDown(pos: Vector) {
-        this.controls.mouseDown(pos)
+        if(this.controls) {
+            this.controls.mouseDown(pos)
+        }
     }
 
     mouseUp(pos: Vector) {
-        this.controls.mouseUp(pos)
+        if(this.controls) {
+            this.controls.mouseUp(pos)
+        }
     }
 
     mouseMove(pos: Vector) {
-        this.controls.mouseMove(pos)
+        if(this.controls) {
+            this.controls.mouseMove(pos)
+        }
     }
 
 }
