@@ -44,7 +44,7 @@ function updateCanvas() {
         world.draw()
         for(let key in keys) {
             if(keys[key].state) {
-                keys[key].fun()
+                keys[key].fun(keys[key].intensity)
             }
         }
     } else {
@@ -65,29 +65,31 @@ function makeKey(char, fun) {
 }
 
 let keys = {};
-makeKey('w', function () {
-    world.movePlayer(new Vector(0, -world.player.stats.speed))
+makeKey('w', function (intensity: number) {
+    world.movePlayer(new Vector(0, -world.player.stats.speed * intensity))
 })
-makeKey('s', function () {
-    world.movePlayer(new Vector(0, world.player.stats.speed))
+makeKey('s', function (intensity: number) {
+    world.movePlayer(new Vector(0, world.player.stats.speed * intensity))
 })
-makeKey('a', function () {
-    world.movePlayer(new Vector(-world.player.stats.speed, 0))
+makeKey('a', function (intensity: number) {
+    world.movePlayer(new Vector(-world.player.stats.speed * intensity, 0))
 })
-makeKey('d', function () {
-    world.movePlayer(new Vector(world.player.stats.speed, 0))
+makeKey('d', function (intensity: number) {
+    world.movePlayer(new Vector(world.player.stats.speed * intensity, 0))
 })
 
 
 function keyUp(event) {
     if(event.key in keys) {
         keys[event.key].state = false;
+        keys[event.key].intensity = 0;
     }
 }
 
 function keyDown(event) {
     if(event.key in keys) {
         keys[event.key].state = true;
+        keys[event.key].intensity = 1;
     }
 }
 
@@ -138,6 +140,12 @@ docReady(function () {
         hud.mouseUp(pos)
     }
 
+    canvas.onmousemove = (event) => {
+        event.preventDefault()
+        let pos = new Vector(event.x, event.y)
+        hud.mouseMove(pos)
+    }
+
     canvas.addEventListener("touchstart", (event) => {
         event.preventDefault()
         let touch = event.touches[0]
@@ -147,9 +155,15 @@ docReady(function () {
 
     canvas.addEventListener("touchend",  (event) => {
         event.preventDefault()
-        let touch = event.touches[0]
         let pos = new Vector(event.clientX, event.clientY)
         hud.mouseUp(pos)
+    });
+
+    canvas.addEventListener("touchmove",  (event) => {
+        event.preventDefault()
+        let touch = event.touches[0]
+        let pos = new Vector(touch.clientX, touch.clientY)
+        hud.mouseMove(pos)
     });
 
     ItemManagement.initializeItems()

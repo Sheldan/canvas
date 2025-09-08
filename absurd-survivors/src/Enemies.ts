@@ -1,5 +1,5 @@
 import type {Acting, ChanceEntry, Drawable, Healthy, Placeable, Shooting} from "./interfaces.ts";
-import {drawDot, moveInDirectionOf} from "./utils.ts";
+import {fillDot, moveInDirectionOf} from "./utils.ts";
 import {Vector} from "./base.ts";
 import {World} from "./World.ts";
 import type {Projectile} from "./projectile.ts";
@@ -77,7 +77,7 @@ export class BasicEnemy extends Enemy {
     protected impactInterval: number = 60;
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this._position, this.getSize(), this.color, ctx)
+        fillDot(this._position, this.getSize(), this.color, ctx)
     }
 
 
@@ -192,7 +192,7 @@ export class HealthEnemy extends Enemy {
     protected color: string;
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this._position, this.size, this.color, ctx)
+        fillDot(this._position, this.size, this.color, ctx)
     }
 
 
@@ -245,7 +245,7 @@ export class ContainerEnemy extends Enemy {
     protected color: string;
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this._position, this.size, this.color, ctx)
+        fillDot(this._position, this.size, this.color, ctx)
     }
 
     move() {

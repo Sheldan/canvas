@@ -1,5 +1,5 @@
 import type {Weapon} from "./interfaces.ts";
-import {drawDot, toRad} from "./utils.ts";
+import {fillDot, toRad} from "./utils.ts";
 import {Player} from "./Player.ts";
 import {
     HomingProjectile,
@@ -191,7 +191,7 @@ export class ChainBall extends MeleeWeapon {
 export class HomingPistol extends RangeWeapon {
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this.getPosition(), 1, this.color, ctx)
+        fillDot(this.getPosition(), 1, this.color, ctx)
     }
 
     createProjectile(): boolean {
@@ -230,7 +230,7 @@ export class HomingPistol extends RangeWeapon {
 export class Pistol extends RangeWeapon {
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this.getPosition(), 1, this.color, ctx)
+        fillDot(this.getPosition(), 1, this.color, ctx)
     }
 
     private createProjectile(): boolean {
@@ -268,7 +268,7 @@ export class Pistol extends RangeWeapon {
 
 export class SpreadWeapon extends RangeWeapon {
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this.getPosition(), 1, this.color, ctx)
+        fillDot(this.getPosition(), 1, this.color, ctx)
     }
 
     private createProjectile(): boolean {

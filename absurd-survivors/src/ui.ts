@@ -1,7 +1,7 @@
 import type {Drawable, DrawContainer, MouseInteracting, MouseInterActingContainer} from "./interfaces.ts";
 import {World} from "./World.ts";
 import {Vector} from "./base.ts";
-import {rectPointIntersection} from "./utils.ts";
+import {drawDot, fillDot, rectPointIntersection} from "./utils.ts";
 
 export class HUD implements DrawContainer {
     private health: PlayerInfo;
@@ -27,46 +27,76 @@ export class HUD implements DrawContainer {
         this.controls.mouseUp(pos)
     }
 
+    mouseMove(pos: Vector) {
+        this.controls.mouseMove(pos)
+    }
+
 }
 
 export class Controls implements DrawContainer, MouseInterActingContainer {
 
     private world: World;
-    private buttons: RectButton[] = []
-    private lastHitButton: RectButton | undefined;
+    private centerPosition: Vector | undefined;
+    private keys: any;
+    private size: number;
 
     constructor(world: World, keys: any) {
         this.world = world;
-        let gapSize = 10;
-        this.buttons = [
-            new KeyboardButton(new Vector(this.world.size.x - 150, this.world.size.y - 150 - gapSize), new Vector(50, 50), 'W', keys),
-            new KeyboardButton(new Vector(this.world.size.x - 150, this.world.size.y - 100), new Vector(50, 50), 'S', keys),
-            new KeyboardButton(new Vector(this.world.size.x - 100 + gapSize, this.world.size.y - 100), new Vector(50, 50), 'D', keys),
-            new KeyboardButton(new Vector(this.world.size.x - 200 - gapSize, this.world.size.y - 100), new Vector(50, 50), 'A', keys)
-        ]
+        this.keys = keys;
+        this.size = 50;
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        this.buttons.forEach(button => {
-            button.draw(ctx)
-        })
-    }
-
-    mouseDown(pos: Vector) {
-        this.lastHitButton = undefined;
-        for (const button of this.buttons) {
-            if(button.hit(pos)) {
-                button.clickAction(pos)
-                this.lastHitButton = button;
-                return
-            }
+        if(this.isPressed()) {
+            drawDot(this.centerPosition!, this.size, 'white', ctx)
         }
     }
 
+    isPressed() {
+        return this.centerPosition !== undefined;
+    }
+
+    mouseDown(pos: Vector) {
+        this.centerPosition = pos
+    }
+
     mouseUp(pos: Vector) {
-       if(this.lastHitButton) {
-           this.lastHitButton.releaseAction(pos)
-       }
+        this.centerPosition = undefined;
+        let keys = ['a', 's', 'd', 'w']
+        keys.forEach(key => {
+            this.keys[key].state = false;
+            this.keys[key].intensity = 0;
+        })
+        this.keys['a'].state = false
+    }
+
+    setKeyTo(key: string, state: boolean, value: number) {
+        this.keys[key].state = state;
+        this.keys[key].intensity = value;
+    }
+
+    mouseMove(pos: Vector) {
+        if(this.isPressed()) {
+            let diff = Vector.createVector(pos, this.centerPosition!);
+            if(diff.vecLength() > this.size && !isNaN(diff.x) && !isNaN(diff.y)) {
+                return;
+            }
+            diff = diff.normalize();
+            if(diff.x > 0) {
+                this.setKeyTo('a', false, 0)
+                this.setKeyTo('d', true, Math.abs(diff.x))
+            } else if(diff.x < 0){
+                this.setKeyTo('d', false, 0)
+                this.setKeyTo('a', true, Math.abs(diff.x))
+            }
+            if(diff.y > 0) {
+                this.setKeyTo('w', false, 0)
+                this.setKeyTo('s', true, Math.abs(diff.y))
+            } else if(diff.y < 0) {
+                this.setKeyTo('s', false, 0)
+                this.setKeyTo('w', true, Math.abs(diff.y))
+            }
+        }
     }
 
 }

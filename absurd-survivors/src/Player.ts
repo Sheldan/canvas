@@ -1,6 +1,6 @@
 import type {Acting, Drawable, Healthy, Item, Leveling, Weapon} from "./interfaces.ts";
 import {Vector} from "./base.ts";
-import {drawDot, getCoordinatesSplit} from "./utils.ts";
+import {fillDot, getCoordinatesSplit} from "./utils.ts";
 
 export class Player implements Drawable, Acting, Healthy  {
     private _position: Vector;
@@ -20,7 +20,7 @@ export class Player implements Drawable, Acting, Healthy  {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this.position, this._stats.size, this._color, ctx)
+        fillDot(this.position, this._stats.size, this._color, ctx)
         this._weapons.forEach(weapon => weapon.draw(ctx))
     }
 

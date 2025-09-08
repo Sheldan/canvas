@@ -1,10 +1,17 @@
 import {Vector} from "./base.ts";
 
-export function drawDot(position: Vector, size: number, color: string, ctx: CanvasRenderingContext2D) {
+export function fillDot(position: Vector, size: number, color: string, ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
     ctx.fillStyle = color;
     ctx.arc(position.x, position.y, size, 0, 2 * Math.PI);
     ctx.fill();
+}
+
+export function drawDot(position: Vector, size: number, color: string, ctx: CanvasRenderingContext2D) {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.arc(position.x, position.y, size, 0, 2 * Math.PI);
+    ctx.stroke();
 }
 
 export function moveInDirectionOf(position: Vector, target: Vector, speedFactor: number): Vector {

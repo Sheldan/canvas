@@ -1,6 +1,6 @@
 import type {Drop, Item} from "./interfaces.ts";
 import {World} from "./World.ts";
-import {drawDot, moveInDirectionOf} from "./utils.ts";
+import {fillDot, moveInDirectionOf} from "./utils.ts";
 import {Vector} from "./base.ts";
 import {rarityColor} from "./items.ts";
 
@@ -49,7 +49,7 @@ export class MoneyDrop extends BasicDrop {
     private worth: number;
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this._position, this.size, this._color, ctx)
+        fillDot(this._position, this.size, this._color, ctx)
     }
 
     pickup() {
@@ -76,7 +76,7 @@ export class HealthPack extends BasicDrop {
     private healAmount: number;
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this._position, this.size, this._color, ctx)
+        fillDot(this._position, this.size, this._color, ctx)
     }
 
     pickup() {
@@ -101,7 +101,7 @@ export class HealthPack extends BasicDrop {
 
 export class LevelDrop extends BasicDrop {
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this._position, this.size, this._color, ctx)
+        fillDot(this._position, this.size, this._color, ctx)
     }
 
     pickup() {

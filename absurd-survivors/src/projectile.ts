@@ -4,7 +4,7 @@ import {World} from "./World.ts";
 import {Cooldown, DeadPoint, Point, Vector} from "./base.ts";
 import {
     circleLineCollision,
-    drawDot,
+    fillDot,
     getCoordinatesSplit,
     moveInDirectionOf,
     pointOnLineWithinLine,
@@ -90,7 +90,7 @@ export abstract class Projectile implements Acting, Placeable {
     };
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this.position, this.stats.size, this.color, ctx)
+        fillDot(this.position, this.stats.size, this.color, ctx)
     }
 
     move() {
@@ -142,7 +142,7 @@ export class ChainBallProjectile extends Projectile {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        drawDot(this.position, this.stats.size, 'pink', ctx) // todo render the weapon instead
+        fillDot(this.position, this.stats.size, 'pink', ctx) // todo render the weapon instead
     }
 
     act() {
@@ -201,7 +201,7 @@ export class StraightMeleeWeaponProjectile extends Projectile {
 
     draw(ctx: CanvasRenderingContext2D) {
         let position = this.getRealPosition();
-        drawDot(position, this.stats.size, 'brown', ctx) // todo render the weapon instead
+        fillDot(position, this.stats.size, 'brown', ctx) // todo render the weapon instead
     }
 
     getRealPosition(): Vector {
