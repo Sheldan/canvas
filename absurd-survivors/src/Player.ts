@@ -21,6 +21,7 @@ export class Player implements Drawable, Acting, Healthy  {
 
     constructor(position: Vector) {
         this._position = position;
+        this._effectiveStats = new PlayerStats()
     }
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -38,6 +39,7 @@ export class Player implements Drawable, Acting, Healthy  {
         let tempStats = new PlayerStats();
         tempStats.resetToBasic()
         player._tempStats = tempStats;
+        player.statsChanged()
         player._speed = new Vector(0, 0)
         player._status = new PlayerStatus(10, 0, 0);
         return player;

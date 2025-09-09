@@ -1,8 +1,9 @@
 import type {ChanceEntry, Item} from "./interfaces.ts";
-import {Player, PlayerStats} from "./Player.ts";
+import {Player} from "./Player.ts";
 import {randomItem} from "./utils.ts";
 import {ChainBall, HomingPistol, Pistol, Spear, SpreadWeapon} from "./weapons.ts";
 import type {World} from "./World.ts";
+import {PlayerStats} from "./stats.ts";
 
 export enum Rarity {
     GARBAGE= 'GARBAGE',

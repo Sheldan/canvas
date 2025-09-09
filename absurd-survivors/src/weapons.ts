@@ -4,13 +4,13 @@ import {Player} from "./Player.ts";
 import {
     HomingProjectile,
     Projectile,
-    ProjectileStats,
     StraightProjectile,
     ChainBallProjectile,
     StraightMeleeWeaponProjectile
 } from "./projectile.ts";
 import {World} from "./World.ts";
 import {Vector} from "./base.ts";
+import {ProjectileStats} from "./stats.ts";
 
 export abstract class BasicWeapon implements Weapon {
     protected offset: Vector;
