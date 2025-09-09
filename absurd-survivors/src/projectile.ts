@@ -1,7 +1,7 @@
-import type {Acting, Placeable, Healthy, Weapon} from "./interfaces.ts";
+import type {Acting, Placeable, Healthy } from "./interfaces.ts";
 import type {Vector} from "./base.ts";
 import {World} from "./World.ts";
-import {Cooldown, DeadPoint, Point, Vector} from "./base.ts";
+import {DeadPoint, Vector} from "./base.ts";
 import {
     circleLineCollision,
     fillDot,
@@ -14,6 +14,8 @@ import {
 import {InstanceOfUtils} from "./instance.ts";
 import {ChainBall, MeleeWeapon} from "./weapons.ts";
 import type {Enemy} from "./Enemies.ts";
+import {ProjectileStats} from "./stats.ts";
+import {ProjectileStatus} from "./status.ts";
 
 export abstract class Projectile implements Acting, Placeable {
 
@@ -322,100 +324,3 @@ export class HomingProjectile extends Projectile {
     }
 }
 
-export class ProjectileStatus {
-    private _piercingsLeft: number;
-    private _collisionCooldown: Cooldown;
-
-    constructor(piercingsLeft: number) {
-        this._piercingsLeft = piercingsLeft;
-        this._collisionCooldown = new Cooldown(10)
-    }
-
-    get piercingsLeft(): number {
-        return this._piercingsLeft;
-    }
-
-    hasPiercingLeft(): boolean {
-        return this.piercingsLeft > 0;
-    }
-
-
-    get collisionCooldown(): Cooldown {
-        return this._collisionCooldown;
-    }
-
-    decreasePiercings() {
-        this._piercingsLeft -= 1;
-    }
-
-}
-
-export class ProjectileStats {
-
-    private _piercings: number;
-    private _size: number;
-    private _damage: number;
-    private _speed: number;
-    private _deathSplit: number;
-    private _deathSplitChance: number;
-
-    constructor() {
-        this._size = 1
-    }
-
-    withPiercings(value: number) {
-        this._piercings = value;
-        return this;
-    }
-
-    withSize(value: number) {
-        this._size = Math.max(value, 1);
-        return this;
-    }
-
-    withDamage(value: number) {
-        this._damage = value;
-        return this;
-    }
-
-    withSpeed(value: number) {
-        this._speed = value;
-        return this;
-    }
-
-    withDeathSplit(value: number) {
-        this._deathSplit = value;
-        return this;
-    }
-
-    withDeathSplitChance(value: number) {
-        this._deathSplitChance = value;
-        return this;
-    }
-
-    get piercings(): number {
-        return this._piercings;
-    }
-
-    get size(): number {
-        return this._size;
-    }
-
-
-    get speed(): number {
-        return this._speed;
-    }
-
-    get damage(): number {
-        return this._damage;
-    }
-
-
-    get deathSplitChance(): number {
-        return this._deathSplitChance;
-    }
-
-    get deathSplit(): number {
-        return this._deathSplit;
-    }
-}

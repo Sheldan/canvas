@@ -3,9 +3,11 @@ import {fillDot, moveInDirectionOf} from "./utils.ts";
 import {Vector} from "./base.ts";
 import {World} from "./World.ts";
 import type {Projectile} from "./projectile.ts";
-import {ProjectileStats, StraightProjectile} from "./projectile.ts";
+import {StraightProjectile} from "./projectile.ts";
 import {HealthPack, ItemDrop, LevelDrop, MoneyDrop} from "./drop.ts";
 import {ItemManagement} from "./items.ts";
+import {ProjectileStats} from "./stats.ts";
+import {EnemyStatus} from "./status.ts";
 
 export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
     protected _position: Vector;
@@ -162,24 +164,6 @@ export class ShootingEnemy extends BasicEnemy implements Shooting {
         shootingEnemy.impactDamage = 2;
         shootingEnemy.shootInterval = 100
         return shootingEnemy
-    }
-}
-
-export class EnemyStatus {
-    constructor(private _health: number) {
-    }
-
-
-    get health(): number {
-        return this._health;
-    }
-
-    get dead(): boolean {
-        return this._health <= 0;
-    }
-
-    set health(value: number) {
-        this._health = value;
     }
 }
 
