@@ -1,5 +1,5 @@
 import type {ChanceEntry, Item} from "./interfaces.ts";
-import {Player} from "./Player.ts";
+import {Player, PlayerStats} from "./Player.ts";
 import {randomItem} from "./utils.ts";
 import {ChainBall, HomingPistol, Pistol, Spear, SpreadWeapon} from "./weapons.ts";
 import type {World} from "./World.ts";
@@ -85,7 +85,7 @@ export abstract class BaseItem implements Item {
 
 export class SpeedUp extends BaseItem {
     pickup(player: Player, world: World) {
-        player.stats.speed += 1
+        player.changeBaseStat(1, PlayerStats.increaseSpeed)
         super.pickup(player, world)
     }
 
@@ -100,7 +100,7 @@ export class SpeedUp extends BaseItem {
 
 export class PullRangeUp extends BaseItem {
     pickup(player: Player, world: World) {
-        player.stats.pullRange *= 1.1
+        player.changeBaseStat(1.1, PlayerStats.factorPullRange)
         super.pickup(player, world)
     }
 
@@ -115,7 +115,7 @@ export class PullRangeUp extends BaseItem {
 
 export class HealthUp extends BaseItem {
     pickup(player: Player, world: World) {
-        player.stats.health += 1
+        player.changeBaseStat(1, PlayerStats.increaseHealth)
         super.pickup(player, world)
     }
 

@@ -27,10 +27,10 @@ export abstract class BasicDrop implements Drop {
 
     act() {
         let distanceToPlayer = this._position.distanceTo(this.world.player.position);
-        if(distanceToPlayer < (this.world.player.stats.size + this.size)) {
+        if(distanceToPlayer < (this.world.player.effectiveStats.size + this.size)) {
             this.pickup()
             this.world.removeDrop(this)
-        } else if(distanceToPlayer < this.world.player.stats.pullRange) {
+        } else if(distanceToPlayer < this.world.player.effectiveStats.pullRange) {
             let speedFactor = 125 / distanceToPlayer;
             this._position = moveInDirectionOf(this._position, this.world.player.position,  speedFactor)
         }

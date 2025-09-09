@@ -66,16 +66,16 @@ function makeKey(char, fun) {
 
 let keys = {};
 makeKey('w', function (intensity: number) {
-    world.movePlayer(new Vector(0, -world.player.stats.speed * intensity))
+    world.movePlayer(new Vector(0, -world.player.effectiveStats.speed * intensity))
 })
 makeKey('s', function (intensity: number) {
-    world.movePlayer(new Vector(0, world.player.stats.speed * intensity))
+    world.movePlayer(new Vector(0, world.player.effectiveStats.speed * intensity))
 })
 makeKey('a', function (intensity: number) {
-    world.movePlayer(new Vector(-world.player.stats.speed * intensity, 0))
+    world.movePlayer(new Vector(-world.player.effectiveStats.speed * intensity, 0))
 })
 makeKey('d', function (intensity: number) {
-    world.movePlayer(new Vector(world.player.stats.speed * intensity, 0))
+    world.movePlayer(new Vector(world.player.effectiveStats.speed * intensity, 0))
 })
 
 

@@ -120,14 +120,14 @@ export class PlayerInfo implements DrawContainer {
 
     constructor(world: World) {
         this.world = world;
-        this.bar = new InfoBar(new Vector(0, 50), 50, 150, () => 'Health', () => this.world.player.status.health, () => this.world.player.stats.health)
+        this.bar = new InfoBar(new Vector(0, 50), 50, 150, () => 'Health', () => this.world.player.status.health, () => this.world.player.effectiveStats.health)
         this.statLabelBase = new Vector(0, 150)
         this.statLabels = [
             new StatLabel(() => 'Money', () => this.world.player.status.wealth),
             new StatLabel(() => 'Level', () => this.world.player.status.level),
-            new StatLabel(() => 'Speed', () => Math.floor(this.world.player.stats.speed)),
-            new StatLabel(() => 'Pull range', () => Math.floor(this.world.player.stats.pullRange)),
-            new StatLabel(() => 'Weapon range', () => Math.floor(this.world.player.stats.effectiveWeaponRange))
+            new StatLabel(() => 'Speed', () => Math.floor(this.world.player.effectiveStats.speed)),
+            new StatLabel(() => 'Pull range', () => Math.floor(this.world.player.effectiveStats.pullRange)),
+            new StatLabel(() => 'Weapon range', () => Math.floor(this.world.player.effectiveStats.effectiveWeaponRange))
         ]
     }
 

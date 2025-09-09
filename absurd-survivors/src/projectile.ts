@@ -44,7 +44,7 @@ export abstract class Projectile implements Acting, Placeable {
     act() {
         this.move()
         if(this.parent !== this.world.player) {
-            if(this.position.distanceTo(this.world.player.position) < (this.stats.size + this.world.player.stats.size) && this.status.collisionCooldown.cooledDown()) {
+            if(this.position.distanceTo(this.world.player.position) < (this.stats.size + this.world.player.effectiveStats.size) && this.status.collisionCooldown.cooledDown()) {
                 this.impactPlayer()
                 this.status.collisionCooldown.resetCooldown()
             }
@@ -171,7 +171,7 @@ export class ChainBallProjectile extends Projectile {
         } else {
             this.position = moveInDirectionOf(this.position, this.world.player.position, this.speedVec.vecLength())
         }
-        if(this.movingBack && this.position.distanceTo(this.world.player.position) < (this.stats.size + this.world.player.stats.size)) {
+        if(this.movingBack && this.position.distanceTo(this.world.player.position) < (this.stats.size + this.world.player.effectiveStats.size)) {
             this.weapon.reset();
             this.die()
         }
@@ -233,7 +233,7 @@ export class StraightMeleeWeaponProjectile extends Projectile {
         } else {
             this.position = moveInDirectionOf(this.position, new Vector(0, 0), this.speedVec.vecLength())
         }
-        if(this.movingBack && this.position.distanceTo(new Vector(0, 0)) < (this.stats.size + this.world.player.stats.size)) {
+        if(this.movingBack && this.position.distanceTo(new Vector(0, 0)) < (this.stats.size + this.world.player.effectiveStats.size)) {
             this.weapon.reset();
             this.die()
         }

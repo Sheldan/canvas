@@ -4,7 +4,9 @@ import {fillDot, getCoordinatesSplit} from "./utils.ts";
 
 export class Player implements Drawable, Acting, Healthy  {
     private _position: Vector;
-    private _stats: PlayerStats;
+    private _baseStats: PlayerStats;
+    private _effectiveStats: PlayerStats;
+    private _tempStats: PlayerStats;
     private _color: string;
 
     private _status: PlayerStatus;
@@ -20,7 +22,7 @@ export class Player implements Drawable, Acting, Healthy  {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        fillDot(this.position, this._stats.size, this._color, ctx)
+        fillDot(this.position, this._effectiveStats.size, this._color, ctx)
         this._weapons.forEach(weapon => weapon.draw(ctx))
     }
 
@@ -30,7 +32,10 @@ export class Player implements Drawable, Acting, Healthy  {
         }
         let player = new Player(position);
         player._color = 'blue';
-        player._stats = PlayerStats.defaultPlayerStats();
+        player._baseStats = PlayerStats.defaultPlayerStats();
+        let tempStats = new PlayerStats();
+        tempStats.resetToBasic()
+        player._tempStats = tempStats;
         player._speed = new Vector(0, 0)
         player._status = new PlayerStatus(10, 0, 0);
         return player;
@@ -60,9 +65,15 @@ export class Player implements Drawable, Acting, Healthy  {
         this._status.health -= damage;
     }
 
+    statsChanged() {
+        this._effectiveStats.resetToBasic()
+        this._effectiveStats.mergeStats(this._baseStats)
+        this._effectiveStats.mergeStats(this._tempStats)
+    }
+
     heal(amount: number) {
         this._status.health +=  amount;
-        this._status.health = Math.min(this._status.health, this._stats.health)
+        this._status.health = Math.min(this._status.health, this._effectiveStats.health)
     }
 
     get health(): number {
@@ -77,8 +88,8 @@ export class Player implements Drawable, Acting, Healthy  {
         return this._color;
     }
 
-    get stats(): PlayerStats {
-        return this._stats;
+    get effectiveStats(): PlayerStats {
+        return this._effectiveStats;
     }
 
     get status(): PlayerStatus {
@@ -101,19 +112,30 @@ export class Player implements Drawable, Acting, Healthy  {
     }
 
     getSize() {
-        return this.stats.size
+        return this._effectiveStats.size
     }
 
     dead() {
         return this.status.dead
     }
 
+    changeBaseStat(value: number, statFun: (stats: PlayerStats, value: number) => void) {
+        this._baseStats.changeStat(value, statFun)
+        this.statsChanged()
+    }
+
+    changeTempStat(value: number, statFun: (stats: PlayerStats, value: number) => void) {
+        this._tempStats.changeStat(value, statFun)
+        this.statsChanged()
+    }
+
     increaseLevel() {
         this.status.increaseLevel()
-        this.stats.increaseLevel()
+        this._baseStats.increaseLevel()
         this._weapons.forEach(weapon => {
             weapon.increaseLevel()
         })
+        this.statsChanged()
     }
 
     level() {
@@ -179,6 +201,14 @@ export class PlayerStats {
         this._weaponRangeFactor = 1;
     }
 
+    resetToBasic() {
+        this._speed = 0;
+        this._health = 0;
+        this._pullRange = 0;
+        this._weaponRange = 0;
+        this._weaponRangeFactor = 1
+    }
+
     increaseLevel() {
         this._speed *= 1.1;
         this._health += 1
@@ -187,29 +217,42 @@ export class PlayerStats {
         this._weaponRangeFactor += 0.1
     }
 
-
-    set speed(value: number) {
-        this._speed = value;
+    mergeStats(otherStats: PlayerStats) {
+        this._speed += otherStats._speed;
+        this._health += otherStats._health;
+        this._pullRange += otherStats._pullRange;
+        this._weaponRange += otherStats._weaponRange
+        this._weaponRangeFactor += otherStats._weaponRangeFactor;
     }
 
-    set size(value: number) {
-        this._size = value;
+    clone()  {
+        let newStats = new PlayerStats();
+        newStats.mergeStats(this)
+        return newStats;
     }
 
-    set health(value: number) {
-        this._health = value;
+    changeStat(value: number, statFun: (stats: PlayerStats, value: number) => void) {
+        statFun(this, value)
     }
 
-    set pullRange(value: number) {
-        this._pullRange = value;
+    static increaseSpeed(stats: PlayerStats, value: number) {
+        stats._speed += value
     }
 
-    set weaponRange(value: number) {
-        this._weaponRange = value;
+    static factorSpeed(stats: PlayerStats, value: number) {
+        stats._speed *= value
     }
 
-    set weaponRangeFactor(value: number) {
-        this._weaponRangeFactor = value;
+    static increasePullRange(stats: PlayerStats, value: number) {
+        stats._pullRange += value
+    }
+
+    static factorPullRange(stats: PlayerStats, value: number) {
+        stats._pullRange += value
+    }
+
+    static increaseHealth(stats: PlayerStats, value: number) {
+        stats._health += value
     }
 
     get speed(): number {

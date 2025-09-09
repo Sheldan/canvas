@@ -80,7 +80,7 @@ export abstract class RangeWeapon extends BasicWeapon {
     }
 
     calculateRange(): number {
-        return this.world.player.stats.effectiveWeaponRange + this.stats.effectiveWeaponRange;
+        return this.world.player.effectiveStats.effectiveWeaponRange + this.stats.effectiveWeaponRange;
     }
 }
 
