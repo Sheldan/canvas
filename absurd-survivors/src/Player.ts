@@ -3,6 +3,8 @@ import {Vector} from "./base.ts";
 import {fillDot, getCoordinatesSplit} from "./utils.ts";
 import {PlayerStats} from "./stats.ts";
 import {PlayerStatus} from "./status.ts";
+import {World} from "./World.ts";
+import {HealingParticle} from "./particles.ts";
 
 export class Player implements Drawable, Acting, Healthy  {
     private _position: Vector;
@@ -14,10 +16,13 @@ export class Player implements Drawable, Acting, Healthy  {
     private _status: PlayerStatus;
     private _weapons: Weapon[] = []
     private _items: Item[] = []
+    private _healTick: number = 0;
+    private static readonly HEAL_TICK_INTERVAL = 20;
+    private _world: World;
 
     // temp
     private _speed: Vector;
-
+    private _toHeal: number = 0;
 
     constructor(position: Vector) {
         this._position = position;
@@ -59,6 +64,10 @@ export class Player implements Drawable, Acting, Healthy  {
 
     addItem(item: Item) {
         this._items.push(item)
+    }
+
+    set world(value: World) {
+        this._world = value;
     }
 
     move(direction: Vector) {
@@ -144,6 +153,24 @@ export class Player implements Drawable, Acting, Healthy  {
 
     level() {
         return this.status.level
+    }
+
+    isHurt() {
+        return this.health < this._effectiveStats.health
+    }
+
+    tick(seconds: number, tick: number) {
+        this._healTick += 1;
+        if((this._healTick % Player.HEAL_TICK_INTERVAL) == 0 && this.isHurt()) {
+            let healed = this._effectiveStats.healthRegen / seconds
+            this._toHeal += healed;
+            if(this._toHeal >= 1) {
+                let toHealNow = this._toHeal - (this._toHeal % 1);
+                this._toHeal -= toHealNow;
+                this.heal(toHealNow);
+                HealingParticle.spawnHealingParticle(this._world, toHealNow, this.position)
+            }
+        }
     }
 }
 

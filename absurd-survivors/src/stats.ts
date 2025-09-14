@@ -7,6 +7,7 @@ export class PlayerStats {
     private _pullRange: number;
     private _weaponRange: number;
     private _weaponRangeFactor: number;
+    private _healthRegen: number;
 
     constructor() {
         this._speed = 3;
@@ -15,6 +16,7 @@ export class PlayerStats {
         this._pullRange = 150;
         this._weaponRange = 250;
         this._weaponRangeFactor = 1;
+        this._healthRegen = 0.001;
     }
 
     resetToBasic() {
@@ -22,7 +24,8 @@ export class PlayerStats {
         this._health = 0;
         this._pullRange = 0;
         this._weaponRange = 0;
-        this._weaponRangeFactor = 1
+        this._weaponRangeFactor = 1;
+        this._healthRegen = 0.1;
     }
 
     increaseLevel() {
@@ -31,6 +34,7 @@ export class PlayerStats {
         this._pullRange *= 1.1;
         this._weaponRange *= 1.25
         this._weaponRangeFactor += 0.1
+        this._healthRegen += 0.1
     }
 
     mergeStats(otherStats: PlayerStats) {
@@ -39,6 +43,7 @@ export class PlayerStats {
         this._pullRange += otherStats._pullRange;
         this._weaponRange += otherStats._weaponRange
         this._weaponRangeFactor += otherStats._weaponRangeFactor;
+        this._healthRegen += otherStats._healthRegen;
     }
 
     clone() {
@@ -89,6 +94,10 @@ export class PlayerStats {
 
     get weaponRange(): number {
         return this._weaponRange
+    }
+
+    get healthRegen(): number {
+        return this._healthRegen;
     }
 
     get effectiveWeaponRange(): number {

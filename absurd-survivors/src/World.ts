@@ -2,20 +2,25 @@ import {Enemy} from "./Enemies.ts";
 import {Player} from "./Player.ts";
 import {Projectile } from "./projectile.ts";
 import {Vector} from "./base.ts";
-import type {Drop, Placeable} from "./interfaces.ts";
+import type {Drop, Particle, Placeable} from "./interfaces.ts";
 
 export class World {
     private _enemies: ObjectContainer<Enemy> = new ObjectContainer<Enemy>()
     private _projectiles: ObjectContainer<Projectile> = new ObjectContainer<Projectile>();
     private _drops: ObjectContainer<Drop> = new ObjectContainer<Drop>();
+    private _particles: ObjectContainer<Particle> = new ObjectContainer();
     private _player: Player;
     private readonly _ctx: CanvasRenderingContext2D;
     private _size: Vector;
+    private _tick: number = 0;
+    private static readonly TICK_INTERVAL = 10;
+    private timeStamp: Date;
 
     constructor(player: Player, ctx: CanvasRenderingContext2D, size: Vector) {
         this._player = player;
         this._ctx = ctx;
         this._size = size;
+        this.timeStamp = new Date();
     }
 
     enemiesAct() {
@@ -25,17 +30,24 @@ export class World {
         this._projectiles.clean()
         this._drops.items.forEach(drop => drop.act())
         this._drops.clean()
+        this._particles.items.forEach(particle => particle.act())
+        this._particles.clean()
     }
 
     draw() {
         this._enemies.items.forEach(enemy => enemy.draw(this._ctx))
         this._drops.items.forEach(drop => drop.draw(this._ctx))
         this._projectiles.items.forEach(projectile => projectile.draw(this._ctx))
+        this._particles.items.forEach(particle => particle.draw(this._ctx))
         this._player.draw(this._ctx);
     }
 
     addProjectile(projectile: Projectile) {
         this._projectiles.add(projectile)
+    }
+
+    addParticle(particle: Particle) {
+        this._particles.add(particle)
     }
 
     addDrop(drop: Drop)  {
@@ -44,6 +56,10 @@ export class World {
 
     removeDrop(drop: Drop) {
         this._drops.scheduleRemoval(drop)
+    }
+
+    removeParticle(particle: Particle) {
+        this._particles.scheduleRemoval(particle)
     }
 
     removeEnemy(enemy: Enemy) {
@@ -69,9 +85,19 @@ export class World {
         return Math.max(this.size.x, this.size.y)
     }
 
-
     get size(): Vector {
         return this._size;
+    }
+
+    tick() {
+        this._tick += 1;
+        if((this._tick % World.TICK_INTERVAL) == 0) {
+            let currentTimeStamp = new Date();
+            let seconds = (currentTimeStamp.getTime() - this.timeStamp.getTime()) / 1000;
+            this._player.tick(seconds, this._tick);
+            this._particles.items.forEach(particle => particle.tick(seconds, this._tick))
+            this.timeStamp = currentTimeStamp;
+        }
     }
 
     outside(position: Vector): boolean {

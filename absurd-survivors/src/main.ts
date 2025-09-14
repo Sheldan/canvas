@@ -9,7 +9,6 @@ import {HUD} from "./ui.ts";
 import {Pistol} from "./weapons.ts";
 import {ItemManagement} from "./items.ts";
 
-
 let hud: HUD;
 let world: World;
 let config: Config;
@@ -39,6 +38,7 @@ function updateCanvas() {
     ctx.clearRect(0, 0, world.size.x, world.size.y);
     hud.draw(ctx)
     if(!state.ended) {
+        world.tick()
         world.enemiesAct()
         world.player.act()
         world.draw()
@@ -108,6 +108,7 @@ docReady(function () {
     let player = Player.generatePlayer(new Vector(window.innerWidth /2, window.innerHeight / 2));
 
     world = new World(player, ctx, new Vector(window.innerWidth,  window.innerHeight));
+    player.world = world; // not sure if this is great design
     state = new WorldState();
 
     setInterval(() => {

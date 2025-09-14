@@ -42,6 +42,9 @@ export abstract class BasicDrop implements Drop {
         return this.size
     }
 
+    tick(seconds: number, tick: number) {
+    }
+
 }
 
 export class MoneyDrop extends BasicDrop {

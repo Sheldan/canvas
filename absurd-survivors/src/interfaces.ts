@@ -5,6 +5,7 @@ import type {World} from "./World.ts";
 
 export interface Acting {
     act()
+    tick(seconds: number, tick: number)
 }
 
 export interface Healthy {
@@ -31,6 +32,10 @@ export interface ChanceEntry {
 
 export interface Drop extends Drawable, Acting {
     pickup()
+}
+
+export interface Particle extends Drawable, Placeable, Acting {
+
 }
 
 export interface Placeable {
