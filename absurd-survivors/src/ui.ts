@@ -127,7 +127,8 @@ export class PlayerInfo implements DrawContainer {
             new StatLabel(() => 'Level', () => this.world.player.status.level),
             new StatLabel(() => 'Speed', () => Math.floor(this.world.player.effectiveStats.speed)),
             new StatLabel(() => 'Pull range', () => Math.floor(this.world.player.effectiveStats.pullRange)),
-            new StatLabel(() => 'Weapon range', () => Math.floor(this.world.player.effectiveStats.effectiveWeaponRange))
+            new StatLabel(() => 'Weapon range', () => Math.floor(this.world.player.effectiveStats.effectiveWeaponRange)),
+            new StatLabel(() => 'Damage', () => Math.floor(this.world.player.effectiveStats.effectiveDamage))
         ]
     }
 

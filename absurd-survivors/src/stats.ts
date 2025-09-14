@@ -8,6 +8,8 @@ export class PlayerStats {
     private _weaponRange: number;
     private _weaponRangeFactor: number;
     private _healthRegen: number;
+    private _damage: number;
+    private _damageFactor: number;
 
     constructor() {
         this._speed = 3;
@@ -17,6 +19,8 @@ export class PlayerStats {
         this._weaponRange = 250;
         this._weaponRangeFactor = 1;
         this._healthRegen = 0.001;
+        this._damage = 0;
+        this._damageFactor = 0;
     }
 
     resetToBasic() {
@@ -25,7 +29,9 @@ export class PlayerStats {
         this._pullRange = 0;
         this._weaponRange = 0;
         this._weaponRangeFactor = 1;
-        this._healthRegen = 0.1;
+        this._healthRegen = 0.001;
+        this._damage = 0;
+        this._damageFactor = 0;
     }
 
     increaseLevel() {
@@ -35,6 +41,8 @@ export class PlayerStats {
         this._weaponRange *= 1.25
         this._weaponRangeFactor += 0.1
         this._healthRegen += 0.1
+        this._damage += 1;
+        this._damageFactor += 0.1;
     }
 
     mergeStats(otherStats: PlayerStats) {
@@ -44,6 +52,8 @@ export class PlayerStats {
         this._weaponRange += otherStats._weaponRange
         this._weaponRangeFactor += otherStats._weaponRangeFactor;
         this._healthRegen += otherStats._healthRegen;
+        this._damage += otherStats._damage;
+        this._damageFactor += otherStats._damageFactor
     }
 
     clone() {
@@ -62,6 +72,22 @@ export class PlayerStats {
 
     static factorSpeed(stats: PlayerStats, value: number) {
         stats._speed *= value
+    }
+
+    static factorDamage(stats: PlayerStats, value: number) {
+        stats._damage *= value
+    }
+
+    static increaseDamage(stats: PlayerStats, value: number) {
+        stats._damage += value
+    }
+
+    static factorDamageFactor(stats: PlayerStats, value: number) {
+        stats._damageFactor *= value
+    }
+
+    static increaseDamageFactor(stats: PlayerStats, value: number) {
+        stats._damageFactor += value
     }
 
     static increasePullRange(stats: PlayerStats, value: number) {
@@ -102,6 +128,10 @@ export class PlayerStats {
 
     get effectiveWeaponRange(): number {
         return this._weaponRange * this._weaponRangeFactor;
+    }
+
+    get effectiveDamage(): number {
+        return this._damage * this._damageFactor;
     }
 
     public static defaultPlayerStats(): PlayerStats {
@@ -177,5 +207,29 @@ export class ProjectileStats {
 
     get deathSplit(): number {
         return this._deathSplit;
+    }
+}
+
+export class EnemyStats {
+    private _healthFactor: number;
+    private _baseHealth: number;
+
+    constructor() {
+        this._healthFactor = 1;
+        this._baseHealth = 10
+    }
+
+    withHealthFactor(healthFactor: number) {
+        this._healthFactor = healthFactor;
+        return this
+    }
+
+    withBaseHealth(baseHealth: number) {
+        this._baseHealth = baseHealth;
+        return this
+    }
+
+    getEffectiveHealth() {
+        return this._baseHealth * this._healthFactor
     }
 }

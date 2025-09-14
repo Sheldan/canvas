@@ -50,6 +50,10 @@ export abstract class BasicWeapon implements Weapon {
         return this.size;
     }
 
+    getDamage() {
+        return this.stats.damage + this.player.effectiveStats.effectiveDamage;
+    }
+
     getOffset(): Vector {
         return this.offset;
     }
@@ -120,7 +124,7 @@ export class Spear extends MeleeWeapon {
             let stats = new ProjectileStats()
                 .withPiercings(1000)
                 .withSize(3)
-                .withDamage(this.stats.damage)
+                .withDamage(this.getDamage())
                 .withSpeed(this.stats.projectileSpeed);
             let offsetVector = Vector.createVector(closestTargetTo[1]!.getPosition(), this.player.position).multiply(1.1);
             if(offsetVector.vecLength() < 15) {
@@ -161,7 +165,7 @@ export class ChainBall extends MeleeWeapon {
             let stats = new ProjectileStats()
                 .withPiercings(1000)
                 .withSize(3)
-                .withDamage(this.stats.damage)
+                .withDamage(this.getDamage())
                 .withSpeed(this.stats.projectileSpeed);
             let projectile = ChainBallProjectile.createChainBallProjectile(this.world, this.getPosition(), closestTargetTo[1]!.getPosition(), this.player, stats, this)
             this.projectiles.push(projectile)
@@ -201,7 +205,7 @@ export class HomingPistol extends RangeWeapon {
             let stats = new ProjectileStats()
                 .withPiercings(this.stats.projectilePiercings)
                 .withSize(1)
-                .withDamage(this.stats.damage)
+                .withDamage(this.getDamage())
                 .withSpeed(this.stats.projectileSpeed);
             let projectile = HomingProjectile.createHomingProjectile(this.world, this.getPosition(), this.player, closestTargetTo[1]!, stats, 'yellow')
             this.projectiles.push(projectile)
@@ -240,7 +244,7 @@ export class Pistol extends RangeWeapon {
             let stats = new ProjectileStats()
                 .withPiercings(this.stats.projectilePiercings)
                 .withSize(1)
-                .withDamage(this.stats.damage)
+                .withDamage(this.getDamage())
                 .withSpeed(this.stats.projectileSpeed);
             let projectile = StraightProjectile.createStraightProjectile(this.world, this.getPosition(), closestTargetTo[1]!.getPosition(), this.player, stats, 'pink')
             this.projectiles.push(projectile)
@@ -278,7 +282,7 @@ export class SpreadWeapon extends RangeWeapon {
             let stats = new ProjectileStats()
                 .withPiercings(this.stats.projectilePiercings)
                 .withSize(1)
-                .withDamage(this.stats.damage)
+                .withDamage(this.getDamage())
                 .withSpeed(this.stats.projectileSpeed);
             let targetPosition = closestTargetTo[1]!.getPosition();
             let weaponPosition = this.getPosition();

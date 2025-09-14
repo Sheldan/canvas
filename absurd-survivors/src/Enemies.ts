@@ -6,7 +6,7 @@ import type {Projectile} from "./projectile.ts";
 import {StraightProjectile} from "./projectile.ts";
 import {HealthPack, ItemDrop, LevelDrop, MoneyDrop} from "./drop.ts";
 import {ItemManagement} from "./items.ts";
-import {ProjectileStats} from "./stats.ts";
+import {EnemyStats, ProjectileStats} from "./stats.ts";
 import {EnemyStatus} from "./status.ts";
 import {NumberDisplayParticle} from "./particles.ts";
 
@@ -15,13 +15,15 @@ export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
     protected speed: number;
     protected world: World;
     protected size: number
-    protected status: EnemyStatus = new EnemyStatus(10);
+    protected status: EnemyStatus;
     protected drops: KillChanceTable;
 
-    constructor(position: Vector) {
+    constructor(position: Vector, enemyStats: EnemyStats) {
         this.drops = new KillChanceTable();
         this.drops.addDrop( {chance: 10, creationMethod: this.spawnMoney})
         this._position = position.clone();
+        let health = enemyStats.getEffectiveHealth()
+        this.status = new EnemyStatus(health);
     }
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -74,8 +76,8 @@ export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
 
 export class BasicEnemy extends Enemy {
 
-    constructor(position: Vector) {
-        super(position);
+    constructor(position: Vector, enemyStats: EnemyStats) {
+        super(position, enemyStats);
     }
 
     protected color: string;
@@ -109,7 +111,8 @@ export class BasicEnemy extends Enemy {
         if(position === undefined) {
             position = world.randomPlace()
         }
-        let basicEnemy = new BasicEnemy(position);
+        let enemyStats = new EnemyStats().withHealthFactor(world.getEnemyHealthFactor());
+        let basicEnemy = new BasicEnemy(position, enemyStats);
         basicEnemy.size = 5;
         basicEnemy.world = world;
         basicEnemy.speed = 0.5;
@@ -125,8 +128,8 @@ export class ShootingEnemy extends BasicEnemy implements Shooting {
     private shootInterval: number;
     private projectiles: Projectile[] = []
 
-    constructor(position: Vector) {
-        super(position);
+    constructor(position: Vector, enemyStats: EnemyStats) {
+        super(position, enemyStats);
     }
 
     removeProjectile(projectile: Projectile) {
@@ -161,7 +164,8 @@ export class ShootingEnemy extends BasicEnemy implements Shooting {
         if(position === undefined) {
             position = world.randomPlace()
         }
-        let shootingEnemy = new ShootingEnemy(position);
+        let enemyStats = new EnemyStats().withHealthFactor(world.getEnemyHealthFactor());;
+        let shootingEnemy = new ShootingEnemy(position, enemyStats);
         shootingEnemy.size = 5;
         shootingEnemy.world = world;
         shootingEnemy.speed = 0.5;
@@ -174,8 +178,8 @@ export class ShootingEnemy extends BasicEnemy implements Shooting {
 
 export class HealthEnemy extends Enemy {
 
-    constructor(position: Vector) {
-        super(position);
+    constructor(position: Vector, enemyStats: EnemyStats) {
+        super(position, enemyStats);
     }
 
     protected color: string;
@@ -204,7 +208,8 @@ export class HealthEnemy extends Enemy {
         if(position === undefined) {
             position = world.randomPlace()
         }
-        let basicEnemy = new HealthEnemy(position);
+        let enemyStats = new EnemyStats().withHealthFactor(world.getEnemyHealthFactor());;
+        let basicEnemy = new HealthEnemy(position, enemyStats);
         basicEnemy.size = 5;
         basicEnemy.world = world;
         basicEnemy.speed = 0;
@@ -221,8 +226,8 @@ export class HealthEnemy extends Enemy {
 export class ContainerEnemy extends Enemy {
 
     private drops: KillChanceTable;
-    constructor(position: Vector) {
-        super(position);
+    constructor(position: Vector, enemyStats: EnemyStats) {
+        super(position, enemyStats);
         this.status.health = 5;
         this.drops = new KillChanceTable();
         ItemManagement.getItemsWithRarityFactor().forEach(drop => {
@@ -272,7 +277,8 @@ export class ContainerEnemy extends Enemy {
         if(position === undefined) {
             position = world.randomPlace()
         }
-        let basicEnemy = new ContainerEnemy(position);
+        let enemyStats = new EnemyStats().withHealthFactor(world.getEnemyHealthFactor());;
+        let basicEnemy = new ContainerEnemy(position, enemyStats);
         basicEnemy.size = 5;
         basicEnemy.world = world;
         basicEnemy.speed = 0;

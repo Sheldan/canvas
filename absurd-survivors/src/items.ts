@@ -44,6 +44,10 @@ export class ItemManagement {
         this.ITEMS.push(new ChainBallWeaponItem())
         this.ITEMS.push(new PullRangeUp())
         this.ITEMS.push(new SpearWeaponItem())
+        this.ITEMS.push(new DamageUpFactor())
+        this.ITEMS.push(new DamageFactorUp())
+        this.ITEMS.push(new DamageFactorUpFactor())
+        this.ITEMS.push(new DamageUp())
     }
 }
 
@@ -206,5 +210,62 @@ export class SpearWeaponItem extends BaseItem {
     }
 }
 
+export class DamageFactorUpFactor extends BaseItem {
+    pickup(player: Player, world: World) {
+        player.changeBaseStat(1, PlayerStats.factorDamageFactor)
+        super.pickup(player, world)
+    }
 
+    name() {
+        return 'damageFactorUpFactor'
+    }
 
+    getRarity(): Rarity {
+        return Rarity.LEGENDARY;
+    }
+}
+
+export class DamageUp extends BaseItem {
+    pickup(player: Player, world: World) {
+        player.changeBaseStat(1, PlayerStats.increaseDamage)
+        super.pickup(player, world)
+    }
+
+    name() {
+        return 'damageUp'
+    }
+
+    getRarity(): Rarity {
+        return Rarity.COMMON;
+    }
+}
+
+export class DamageUpFactor extends BaseItem {
+    pickup(player: Player, world: World) {
+        player.changeBaseStat(1, PlayerStats.factorDamage)
+        super.pickup(player, world)
+    }
+
+    name() {
+        return 'damageUpFactor'
+    }
+
+    getRarity(): Rarity {
+        return Rarity.LEGENDARY;
+    }
+}
+
+export class DamageFactorUp extends BaseItem {
+    pickup(player: Player, world: World) {
+        player.changeBaseStat(1, PlayerStats.increaseDamageFactor)
+        super.pickup(player, world)
+    }
+
+    name() {
+        return 'damageFactorUp'
+    }
+
+    getRarity(): Rarity {
+        return Rarity.UNCOMMON;
+    }
+}

@@ -38,7 +38,7 @@ function updateCanvas() {
     ctx.clearRect(0, 0, world.size.x, world.size.y);
     hud.draw(ctx)
     if(!state.ended) {
-        world.tick()
+        world.triggerTick()
         world.enemiesAct()
         world.player.act()
         world.draw()

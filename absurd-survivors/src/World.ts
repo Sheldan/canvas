@@ -15,12 +15,14 @@ export class World {
     private _tick: number = 0;
     private static readonly TICK_INTERVAL = 10;
     private timeStamp: Date;
+    private startTimeStamp: Date;
 
     constructor(player: Player, ctx: CanvasRenderingContext2D, size: Vector) {
         this._player = player;
         this._ctx = ctx;
         this._size = size;
         this.timeStamp = new Date();
+        this.startTimeStamp = new Date();
     }
 
     enemiesAct() {
@@ -80,7 +82,6 @@ export class World {
         this._player.position.y = Math.max(this._player.getSize(), this._player.position.y)
     }
 
-
     maxValue() {
         return Math.max(this.size.x, this.size.y)
     }
@@ -89,7 +90,19 @@ export class World {
         return this._size;
     }
 
-    tick() {
+    get tick(): number {
+        return this._tick;
+    }
+
+    getSecondsPassed() {
+        return (this.timeStamp.getTime() - this.startTimeStamp.getTime()) / 1000
+    }
+
+    getEnemyHealthFactor() {
+        return this.getSecondsPassed() / 30;
+    }
+
+    triggerTick() {
         this._tick += 1;
         if((this._tick % World.TICK_INTERVAL) == 0) {
             let currentTimeStamp = new Date();
