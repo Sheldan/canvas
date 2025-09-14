@@ -116,7 +116,9 @@ export class PullRangeUp extends BaseItem {
 
 export class HealthUp extends BaseItem {
     pickup(player: Player, world: World) {
-        player.changeBaseStat(1, PlayerStats.increaseHealth)
+        let healthAmount = 1;
+        player.changeBaseStat(healthAmount, PlayerStats.increaseHealth)
+        player.heal(healthAmount)
         super.pickup(player, world)
     }
 

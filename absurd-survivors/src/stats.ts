@@ -64,7 +64,7 @@ export class PlayerStats {
     }
 
     static factorPullRange(stats: PlayerStats, value: number) {
-        stats._pullRange += value
+        stats._pullRange *= value
     }
 
     static increaseHealth(stats: PlayerStats, value: number) {
