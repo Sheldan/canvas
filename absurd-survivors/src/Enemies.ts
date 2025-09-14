@@ -8,6 +8,7 @@ import {HealthPack, ItemDrop, LevelDrop, MoneyDrop} from "./drop.ts";
 import {ItemManagement} from "./items.ts";
 import {ProjectileStats} from "./stats.ts";
 import {EnemyStatus} from "./status.ts";
+import {NumberDisplayParticle} from "./particles.ts";
 
 export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
     protected _position: Vector;
@@ -40,6 +41,7 @@ export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
 
     takeDamage(damage: number) {
         this.status.health -= damage;
+        NumberDisplayParticle.spawnNumberParticle(this.world, damage, this._position, 'white')
         if(this.status.dead) {
             this.die()
             this.world.removeEnemy(this)
@@ -63,6 +65,9 @@ export abstract class Enemy implements Placeable, Drawable, Acting, Healthy {
 
     dead() {
         return this.status.dead
+    }
+
+    tick(seconds: number, tick: number) {
     }
 
 }

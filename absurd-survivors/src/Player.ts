@@ -4,7 +4,7 @@ import {fillDot, getCoordinatesSplit} from "./utils.ts";
 import {PlayerStats} from "./stats.ts";
 import {PlayerStatus} from "./status.ts";
 import {World} from "./World.ts";
-import {HealingParticle} from "./particles.ts";
+import { NumberDisplayParticle} from "./particles.ts";
 
 export class Player implements Drawable, Acting, Healthy  {
     private _position: Vector;
@@ -75,6 +75,7 @@ export class Player implements Drawable, Acting, Healthy  {
     }
 
     takeDamage(damage: number) {
+        NumberDisplayParticle.spawnNumberParticle(this._world, damage, this._position, 'red')
         this._status.health -= damage;
     }
 
@@ -168,7 +169,7 @@ export class Player implements Drawable, Acting, Healthy  {
                 let toHealNow = this._toHeal - (this._toHeal % 1);
                 this._toHeal -= toHealNow;
                 this.heal(toHealNow);
-                HealingParticle.spawnHealingParticle(this._world, toHealNow, this.position)
+                NumberDisplayParticle.spawnNumberParticle(this._world, toHealNow, this.position, 'green')
             }
         }
     }

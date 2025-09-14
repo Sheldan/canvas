@@ -32,38 +32,44 @@ abstract class BaseParticle implements Particle {
 
     tick(seconds: number, tick: number) {
     }
-
 }
 
-export class HealingParticle extends BaseParticle {
-    private healthAmount: number;
+export class NumberDisplayParticle extends BaseParticle {
+    private number: number;
     private secondsToDisplay: number = 2;
     private alreadyDisplayed: number = 0;
+    private color: string;
 
-    constructor(position: Vector, world: World, healthAmount: number) {
+    constructor(position: Vector, world: World, healthAmount: number, color: string) {
         super(position, world);
-        this.healthAmount = healthAmount;
+        this.number = healthAmount;
+        this.color = color
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = 'green';
-        ctx.fillText(this.healthAmount + '', this._position.x, this._position.y);
+        ctx.fillStyle = this.color;
+        ctx.fillText(this.number + '', this._position.x, this._position.y);
     }
-
-    static spawnHealingParticle(world: World, health: number, position: Vector) {
-        world.addParticle(this.createHealingParticle(world, health, position))
-    }
-
-    static createHealingParticle(world: World, health: number, position: Vector) {
-        let healingParticle = new HealingParticle(position, world, health)
-        return healingParticle
-    }
-
 
     tick(seconds: number, tick: number) {
         this.alreadyDisplayed += seconds;
         if(this.alreadyDisplayed > this.secondsToDisplay) {
             this.world.removeParticle(this)
         }
+    }
+
+    static spawnNumberParticle(world: World, health: number, position: Vector, color?: string) {
+        if(!color) {
+            color = 'red'
+        }
+        world.addParticle(this.createNumberParticle(world, health, position, color))
+    }
+
+    static createNumberParticle(world: World, health: number, position: Vector, color?: string) {
+        if(!color) {
+            color = 'red'
+        }
+        let particle = new NumberDisplayParticle(position, world, health, color)
+        return particle
     }
 }
